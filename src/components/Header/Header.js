@@ -1,10 +1,9 @@
 import React from "react";
-import { useEffect } from "react";
-import headerJS from "../../../static/js/header";
+import { useIntl, Link } from "gatsby-plugin-intl";
+import Language from "./Language";
 const Header = () => {
-  useEffect(() => {
-    headerJS();
-  },[])
+  const intl = useIntl();
+
   return ( 
     <header className="f-header js-f-header position-relative">
       <div className="f-header__mobile-content container max-width-lg">
@@ -34,7 +33,7 @@ const Header = () => {
           </div>
 
           <ul className="f-header__list flex-grow flex-basis-0 justify-center@md">
-            <li className="f-header__item"><a href="#0" className="f-header__link">About</a></li>
+            <li className="f-header__item"><a href="#0" className="f-header__link">{intl.formatMessage({ id: "home" })}</a></li>
             <li className="f-header__item"><a href="#0" className="f-header__link">
                 <span>Solutions</span>
                 <svg className="f-header__dropdown-icon icon" aria-hidden="true" viewBox="0 0 12 12">
@@ -55,10 +54,7 @@ const Header = () => {
             <li className="f-header__item"><a href="#0" className="f-header__link">Contact</a></li>
           </ul>
 
-          <ul className="f-header__list flex-grow flex-basis-0 justify-end@md">
-            <li className="f-header__item"><a href="#0" className="f-header__link">Login</a></li>
-            <li className="f-header__item"><a href="#0" className="f-header__btn btn btn--primary">Button</a></li>
-          </ul>
+          <Language />
         </div>
       </div>
     </header>

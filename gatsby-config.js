@@ -13,13 +13,69 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
+    
+    {
+      resolve: `gatsby-source-wordpress`,
+      options: {
+        minimizeDeprecationNotice: true,
+        url: `http://cms.iberiainfo.org/graphql`,
+        protocol: 'http',
+        hostingWPCOM: false,
+        production: {
+          hardCacheMediaFiles: true,
+        },
+        develop: {
+          hardCacheMediaFiles: true,
+        },
+        useACF: false,
+        verboseOutput: false,
+        perPage: 100,
+        concurrentRequests: 10,
+        type: {
+          MediaItem: {
+            localFile: {
+              maxFileSizeBytes: 52428800,
+              requestConcurrency: 1,
+            },
+          },
+        },
+        includedRoutes: [
+          "**/categories",
+          "**/posts",
+          "**/pages",
+          "**/media",
+          "**/tags",
+          "**/taxonomies",
+          "**/users",
+        ],
+        excludedRoutes: ["**/*/*/posts/1456"],
+        normalizer: function({entities}) {
+          return entities
+        }
+      }
+    },
+    
+    
+    {
+      resolve: `gatsby-plugin-intl`,
+      options: {
+        // language JSON resource path
+        path: `${__dirname}/src/intl`,
+        // supported language
+        languages: [`es`, `ge`],
+        // language file path
+        defaultLanguage: `es`,
+        // option to redirect to `/ko` when connecting `/`
+        redirect: true,
+      },
+    },
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-codyhouse`,
+        name: `iberia`,
         short_name: `starter`,
         start_url: `/`,
         background_color: `#2a6df4`,

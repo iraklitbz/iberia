@@ -1,12 +1,11 @@
 import React from "react";
-import Header from "../components/Header/Header";
-import { useEffect } from "react";
+import MainLayout from "../layouts/MainLayout";
+import Hero from "../components/Hero/Hero";
 const IndexPage = () => {
-  useEffect(() => {
-    document.getElementsByTagName("html")[0].className += " js";
-  }, []);
   return (
-    <Header />
+   <MainLayout>
+     <Hero />
+   </MainLayout>
   )
 }
 
