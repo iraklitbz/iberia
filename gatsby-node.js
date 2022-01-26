@@ -1,13 +1,21 @@
 const path = require(`path`)
-const { slash } = require(`gatsby-core-utils`)
 const { paginate } = require('gatsby-awesome-pagination');
 
-// Implement the Gatsby API “createPages”. This is
-// called after the Gatsby bootstrap is finished so you have
-// access to any information necessary to programmatically
-// create pages.
-// Will create pages for WordPress pages (route : /{slug})
-// Will create pages for WordPress posts (route : /post/{slug})
+// pages locale
+exports.onCreatePage = ({ page, actions }) => {
+  const { createPage, deletePage } = actions
+  deletePage(page)
+  // You can access the variable "locale" in your page queries now
+  createPage({
+      ...page,
+      context: {
+          ...page.context,
+          locale: page.context.intl.language,
+      },
+  })
+}
+
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
@@ -21,6 +29,12 @@ exports.createPages = async ({ graphql, actions }) => {
           nodes {
             id
             title
+            content
+            featuredImage{
+              node {
+                sourceUrl
+              }
+            }
             categories {
               nodes {
                   name
@@ -95,8 +109,7 @@ exports.createPages = async ({ graphql, actions }) => {
       path: `/${element.slug}`,
       component: path.resolve(`src/templates/post.js`),
       context: {
-        data: element,
-         language,
+        data: element
       }
     })
   });

@@ -2,6 +2,7 @@ import React from "react";
 import PropType, { element } from 'prop-types';
 import { Link } from 'gatsby';
 const Pagination = ({pageContext}) => {
+    console.log('ika', pageContext)
   const { previousPagePath,nextPagePath, numberOfPages } = pageContext;
   let arrPagination = Array.apply(null, {length: numberOfPages +1}).map(Number.call, Number);
   console.log(numberOfPages)
