@@ -40,16 +40,35 @@ exports.createPages = async ({ graphql, actions }) => {
                   name
               }
           }
-          tags {
-              nodes {
-                  name
-              }
-          }
           slug
           }
         }
       }
-  `)
+  `);
+
+  const postsgeo = await graphql(`
+      query getPost {
+        allWpNew {
+          nodes {
+            id
+            title
+            content
+            featuredImage{
+              node {
+                sourceUrl
+              }
+            }
+            geocategories {
+              nodes {
+                  name
+              }
+          }
+          
+          slug
+          }
+        }
+      }
+  `);
   
 
   // Check for any errors
@@ -58,7 +77,8 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
    // Create your paginated events
-   paginate({
+   paginate(
+    {
     createPage,
     items: result.data.allWpPost.nodes,
     itemsPerPage: 4, // How many items you want per page
@@ -151,7 +171,109 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     })
   });
+
+
+
+     // Georgian
+     paginate(
+      {
+      createPage,
+      items: postsgeo.data.allWpNew.nodes,
+      itemsPerPage: 4, // How many items you want per page
+      pathPrefix: '/events', // Creates pages like `/blog`, `/blog/2`, etc
+      component: path.resolve(`src/templates/events.js`), // Just like `createPage()`
+    });
+  
+    postsgeo.data.allWpNew.nodes.forEach(element => {
+      createPage({
+        path: `/${element.slug}`,
+        component: path.resolve(`src/templates/post.js`),
+        context: {
+          data: element
+        }
+      })
+    });
+  
+     // Create your paginated actividades
+     paginate({
+      createPage,
+      items: postsgeo.data.allWpNew.nodes,
+      itemsPerPage: 4, // How many items you want per page
+      pathPrefix: '/activities', // Creates pages like `/blog`, `/blog/2`, etc
+      component: path.resolve(`src/templates/activities.js`), // Just like `createPage()`
+    });
+  
+    postsgeo.data.allWpNew.nodes.forEach(element => {
+      createPage({
+        path: `/${element.slug}`,
+        component: path.resolve(`src/templates/post.js`),
+        context: {
+          data: element
+        }
+      })
+    });
+  
+     // Create your paginated news
+     paginate({
+      createPage,
+      items: postsgeo.data.allWpNew.nodes,
+      itemsPerPage: 4, // How many items you want per page
+      pathPrefix: '/news', // Creates pages like `/blog`, `/blog/2`, etc
+      component: path.resolve(`src/templates/news.js`), // Just like `createPage()`
+    });
+  
+    postsgeo.data.allWpNew.nodes.forEach(element => {
+      createPage({
+        path: `/${element.slug}`,
+        component: path.resolve(`src/templates/post.js`),
+        context: {
+          data: element
+        }
+      })
+    });
+  
+     // Create your paginated programs
+     paginate({
+      createPage,
+      items: postsgeo.data.allWpNew.nodes,
+      itemsPerPage: 4, // How many items you want per page
+      pathPrefix: '/programs', // Creates pages like `/blog`, `/blog/2`, etc
+      component: path.resolve(`src/templates/programs.js`), // Just like `createPage()`
+    });
+  
+    postsgeo.data.allWpNew.nodes.forEach(element => {
+      createPage({
+        path: `/${element.slug}`,
+        component: path.resolve(`src/templates/post.js`),
+        context: {
+          data: element
+        }
+      })
+    });
+  
+     // Create your paginated tours
+     paginate({
+      createPage,
+      items: postsgeo.data.allWpNew.nodes,
+      itemsPerPage: 4, // How many items you want per page
+      pathPrefix: '/tours', // Creates pages like `/blog`, `/blog/2`, etc
+      component: path.resolve(`src/templates/tours.js`), // Just like `createPage()`
+    });
+  
+    postsgeo.data.allWpNew.nodes.forEach(element => {
+      createPage({
+        path: `/${element.slug}`,
+        component: path.resolve(`src/templates/post.js`),
+        context: {
+          data: element
+        }
+      })
+    });
+
+  
 }
 
 
  
+/* in georgian*/
+

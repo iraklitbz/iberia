@@ -47,11 +47,9 @@ module.exports = {
           "**/tags",
           "**/taxonomies",
           "**/users",
-        ],
-        excludedRoutes: ["**/*/*/posts/1456"],
-        normalizer: function({entities}) {
-          return entities
-        }
+          "**/geocategories",
+          "**/news",
+        ]
       }
     },
     
