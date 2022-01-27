@@ -1,11 +1,15 @@
 import React from "react";
 import PropType, { element } from 'prop-types';
 import { Link } from 'gatsby';
-const Pagination = ({pageContext}) => {
-    console.log('ika', pageContext)
-  const { previousPagePath,nextPagePath, numberOfPages } = pageContext;
+const Pagination = ({posts, pageContext}) => {
+  const numberOfArray = Number(posts.length);
+
+
+  const { previousPagePath,nextPagePath, limit } = pageContext;
+  const numberOfPages = Math.ceil(numberOfArray / limit);
+  console.log(numberOfArray)
+  console.log(limit)
   let arrPagination = Array.apply(null, {length: numberOfPages +1}).map(Number.call, Number);
-  console.log(numberOfPages)
   return ( 
   <>
       {numberOfPages <= 1 ? null : 

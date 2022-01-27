@@ -63,7 +63,7 @@ const BlogList = ({posts, pageContext}) => {
                
                 </div>
 
-                <Pagination pageContext={pageContext} />
+                <Pagination posts={posts} pageContext={pageContext} />
             </div>
             </div>
 
