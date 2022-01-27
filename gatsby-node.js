@@ -5,7 +5,6 @@ const { paginate } = require('gatsby-awesome-pagination');
 exports.onCreatePage = ({ page, actions }) => {
   const { createPage, deletePage } = actions
   deletePage(page)
-  // You can access the variable "locale" in your page queries now
   createPage({
       ...page,
       context: {
@@ -18,7 +17,6 @@ exports.onCreatePage = ({ page, actions }) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-
   // The “graphql” function allows us to run arbitrary
   // queries against the local Gatsby GraphQL schema. Think of
   // it like the site has a built-in database constructed
@@ -50,6 +48,7 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
   `)
+
   
 
   // Check for any errors
@@ -97,6 +96,15 @@ exports.createPages = async ({ graphql, actions }) => {
 
    // Create your paginated news
    paginate({
+    createPage,
+    items: result.data.allWpPost.nodes,
+    itemsPerPage: 4, // How many items you want per page
+    pathPrefix: '/news', // Creates pages like `/blog`, `/blog/2`, etc
+    component: path.resolve(`src/templates/news.js`), // Just like `createPage()`
+  });
+
+    // Create your paginated news
+    paginate({
     createPage,
     items: result.data.allWpPost.nodes,
     itemsPerPage: 4, // How many items you want per page
