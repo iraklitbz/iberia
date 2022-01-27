@@ -7,7 +7,7 @@ import { useIntl } from "gatsby-plugin-intl";
 const News = ({data, pageContext}) => {
     const intl = useIntl();
     let posts = {};
-
+    console.log('---------------------------',pageContext)
     if(intl.locale === 'es') {
       posts = data.allWpPost.nodes;
     } else if(intl.locale === 'ge') {
