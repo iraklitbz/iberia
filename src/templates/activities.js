@@ -8,11 +8,7 @@ import SEO from "../components/seo";
 const Activities = ({data, pageContext}) => {
     const {language} = pageContext;
     const intl = useIntl();
-    useEffect(() => {
-        if(language === 'ge' && intl.originalPath === intl.originalPath) {
-            navigate('/activities-ge')
-          } 
-    },[])
+
     return ( 
         <MainLayout>
             <SEO

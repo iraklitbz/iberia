@@ -5,22 +5,18 @@ import BlogList from "../../components/BlogList/BlogList";
 import { navigate, useIntl } from "gatsby-plugin-intl";
 import SEO from "../../components/seo";
 
-const Events = ({data, pageContext}) => {
+
+const Activities = ({data, pageContext}) => {
     const {language} = pageContext;
     const intl = useIntl();
-    useEffect(() => {
-        if(language === 'es' && intl.originalPath === intl.originalPath) {
-            navigate('/events')
-          } 
-    },[])
     return ( 
         <MainLayout>
-             <SEO
+            <SEO
                 lang={intl.locale}
                 title={intl.formatMessage({ id: "titlenews" })}
                 keywords={[`iberia`, `news`, `georgia`]}
             />
-             <BlogList 
+              <BlogList 
                 posts={data.allWpNew.nodes}
                 pageContext={pageContext}
             />
@@ -28,11 +24,11 @@ const Events = ({data, pageContext}) => {
      );
 }
  
-export default Events ;
+export default Activities;
 export const query = graphql`
 query($skip: Int!, $limit: Int!) {
     allWpNew(
-    filter: {geocategories: {nodes: {elemMatch: {name: {eq: "ღონისძიებები"}}}}}
+    filter: {geocategories: {nodes: {elemMatch: {name: {eq: "activities"}}}}}
     skip: $skip
     limit: $limit
     ) {

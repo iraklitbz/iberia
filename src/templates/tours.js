@@ -8,11 +8,7 @@ import SEO from "../components/seo";
 const Tours = ({data, pageContext}) => {
     const {language} = pageContext;
     const intl = useIntl();
-    useEffect(() => {
-        if(language === 'ge' && intl.originalPath === intl.originalPath) {
-            navigate('/tours-ge')
-          } 
-    },[])
+
     return ( 
         <MainLayout>
              <SEO

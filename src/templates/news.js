@@ -8,11 +8,7 @@ import SEO from "../components/seo";
 const News = ({data, pageContext}) => {
     const {language} = pageContext;
     const intl = useIntl();
-    useEffect(() => {
-        if(language === 'ge' && intl.originalPath === intl.originalPath) {
-            navigate('/news-ge')
-          } 
-    },[])
+
    
     return ( 
         <MainLayout>
@@ -34,7 +30,7 @@ export default News ;
 export const query = graphql`
 query($skip: Int!, $limit: Int!) {
     allWpPost(
-        filter: {categories: {nodes: {elemMatch: {name: {eq: "news"}}}}}
+    filter: {categories: {nodes: {elemMatch: {name: {eq: "news"}}}}}
     skip: $skip
     limit: $limit
     ) {
