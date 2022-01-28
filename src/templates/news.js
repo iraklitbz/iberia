@@ -1,14 +1,23 @@
-import React from "react";
-import {graphql} from 'gatsby';
+import React, { useEffect } from "react";
+import {graphql, navigate} from 'gatsby';
 import MainLayout from "../layouts/MainLayout";
 import BlogList from "../components/BlogList/BlogList";
+import { useIntl } from "gatsby-plugin-intl";
+import SEO from "../components/seo";
 
 const News = ({data, pageContext}) => {
+    const {language} = pageContext;
+    const intl = useIntl();
 
-
+   
     return ( 
         <MainLayout>
-            
+             <SEO
+                lang={intl.locale}
+                title={intl.formatMessage({ id: "titlenews" })}
+                keywords={[`iberia`, `news`, `georgia`]}
+            />
+                    
             <BlogList 
                 posts={data.allWpPost.nodes}
                 pageContext={pageContext}
@@ -19,9 +28,9 @@ const News = ({data, pageContext}) => {
  
 export default News ;
 export const query = graphql`
-query($skip: Int!, $limit: Int!, $locale: String) {
+query($skip: Int!, $limit: Int!) {
     allWpPost(
-        filter: {tags: {nodes: {elemMatch: {name: {eq: $locale}}}}, categories: {nodes: {elemMatch: {name: {eq: "news"}}}}}
+    filter: {categories: {nodes: {elemMatch: {name: {eq: "news"}}}}}
     skip: $skip
     limit: $limit
     ) {
@@ -40,15 +49,10 @@ query($skip: Int!, $limit: Int!, $locale: String) {
                 name
             }
         }
-        tags {
-            nodes {
-                name
-            }
-        }
+   
         slug
         excerpt
     }
   }
-  
 }
 `

@@ -1,37 +1,40 @@
 import React, { useEffect } from "react";
-import {graphql, navigate} from 'gatsby';
-import MainLayout from "../layouts/MainLayout";
-import BlogList from "../components/BlogList/BlogList";
-import { useIntl } from "gatsby-plugin-intl";
-import SEO from "../components/seo";
+import {graphql} from 'gatsby';
+import MainLayout from "../../layouts/MainLayout";
+import BlogList from "../../components/BlogList/BlogList";
+import { navigate, useIntl } from "gatsby-plugin-intl";
+import SEO from "../../components/seo";
 
-const Programs = ({data, pageContext}) => {
+const News = ({data, pageContext}) => {
+
     const {language} = pageContext;
     const intl = useIntl();
  
+    
     return ( 
         <MainLayout>
-            <SEO
+             <SEO
                 lang={intl.locale}
                 title={intl.formatMessage({ id: "titlenews" })}
                 keywords={[`iberia`, `news`, `georgia`]}
             />
+                    
             <BlogList 
-                posts={data.allWpPost.nodes}
+                posts={data.allWpNew.nodes}
                 pageContext={pageContext}
             />
         </MainLayout>
      );
 }
  
-export default Programs ;
+export default News ;
 export const query = graphql`
 query($skip: Int!, $limit: Int!) {
-    allWpPost(
-    filter: {categories: {nodes: {elemMatch: {name: {eq: "programs"}}}}}
-    skip: $skip
-    limit: $limit
-    ) {
+  allWpNew(
+    filter: {geocategories: {nodes: {elemMatch: {name: {eq: "news"}}}}}
+        skip: $skip
+        limit: $limit
+        ) {
         nodes {
             id
             title
@@ -39,19 +42,18 @@ query($skip: Int!, $limit: Int!) {
             content
             featuredImage{
                 node {
-                  sourceUrl
+                sourceUrl
                 }
-              }
-            categories {
+            }
+            geocategories {
                 nodes {
                     name
                 }
             }
-       
+
             slug
             excerpt
         }
-  }
-  
+        }
 }
 `

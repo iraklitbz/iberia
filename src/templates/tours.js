@@ -1,21 +1,23 @@
-import React from "react";
-import {graphql} from 'gatsby';
+import React, { useEffect } from "react";
+import {graphql, navigate} from 'gatsby';
 import MainLayout from "../layouts/MainLayout";
+import BlogList from "../components/BlogList/BlogList";
 import { useIntl } from "gatsby-plugin-intl";
-import EventsList from "../components/EventsList/EventsList";
+import SEO from "../components/seo";
 
 const Tours = ({data, pageContext}) => {
+    const {language} = pageContext;
     const intl = useIntl();
-    let posts = {};
-    if(intl.locale === 'es') {
-        posts = data.allWpPost.nodes;
-      } else if(intl.locale === 'ge') {
-        posts = data.allWpPost.nodes;
-    }
+
     return ( 
         <MainLayout>
-            <EventsList 
-                posts={posts}
+             <SEO
+                lang={intl.locale}
+                title={intl.formatMessage({ id: "titlenews" })}
+                keywords={[`iberia`, `news`, `georgia`]}
+            />
+            <BlogList 
+                posts={data.allWpPost.nodes}
                 pageContext={pageContext}
             />
         </MainLayout>
@@ -24,27 +26,31 @@ const Tours = ({data, pageContext}) => {
  
 export default Tours ;
 export const query = graphql`
-query($skip: Int!, $limit: Int!, $language: String) {
+query($skip: Int!, $limit: Int!) {
     allWpPost(
-    filter: {tags: {nodes: {elemMatch: {name: {eq: $language}}}}, categories: {nodes: {elemMatch: {name: {eq: "tours"}}}}}
+    filter: {categories: {nodes: {elemMatch: {name: {eq: "tours"}}}}}
     skip: $skip
     limit: $limit
     ) {
-    nodes {
-        id
-        title
-        categories {
-            nodes {
-                name
+        nodes {
+            id
+            title
+            date
+            content
+            featuredImage{
+                node {
+                  sourceUrl
+                }
+              }
+            categories {
+                nodes {
+                    name
+                }
             }
+       
+            slug
+            excerpt
         }
-        tags {
-            nodes {
-                name
-            }
-        }
-        slug
-    }
   }
   
 }

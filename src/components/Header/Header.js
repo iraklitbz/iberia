@@ -34,20 +34,39 @@ const Header = () => {
 
           <ul className="f-header__list flex-grow flex-basis-0 justify-center@md">
             <li className="f-header__item"><Link to="/" className="f-header__link">{intl.formatMessage({ id: "home" })}</Link></li>
-            <li className="f-header__item"><Link to="/news" className="f-header__link">
+            {intl.locale === 'es' 
+            ? 
+             <li className="f-header__item"><Link to={`/news`} className="f-header__link">
                 <span>Noticias</span>
                 <svg className="f-header__dropdown-icon icon" aria-hidden="true" viewBox="0 0 12 12">
                   <path d="M9.943,4.269A.5.5,0,0,0,9.5,4h-7a.5.5,0,0,0-.41.787l3.5,5a.5.5,0,0,0,.82,0l3.5-5A.5.5,0,0,0,9.943,4.269Z" />
                 </svg>
               </Link>
 
-              <ul className="f-header__dropdown">
-                <li><Link to="/events" className="f-header__dropdown-link">Eventos</Link></li>
-                <li><Link to="/activities" className="f-header__dropdown-link">Actividades</Link></li>
-                <li><Link to="/programs" className="f-header__dropdown-link">Programas</Link></li>
-                <li><Link to="/tours" className="f-header__dropdown-link">Guias</Link></li>
-              </ul>
-            </li>
+                <ul className="f-header__dropdown">
+                      <li><Link to="/events" className="f-header__dropdown-link">Eventos</Link></li>
+                      <li><Link to="/activities" className="f-header__dropdown-link">Actividades</Link></li>
+                      <li><Link to="/programs" className="f-header__dropdown-link">Programas</Link></li>
+                      <li><Link to="/tours" className="f-header__dropdown-link">Guias</Link></li>
+                    </ul>
+                  </li>
+                  : 
+                  <li className="f-header__item"><Link to={`/news-ge`} className="f-header__link">
+                  <span>Noticias</span>
+                  <svg className="f-header__dropdown-icon icon" aria-hidden="true" viewBox="0 0 12 12">
+                    <path d="M9.943,4.269A.5.5,0,0,0,9.5,4h-7a.5.5,0,0,0-.41.787l3.5,5a.5.5,0,0,0,.82,0l3.5-5A.5.5,0,0,0,9.943,4.269Z" />
+                  </svg>
+                </Link>
+
+                <ul className="f-header__dropdown">
+                  <li><Link to="/events-ge" className="f-header__dropdown-link">Eventos</Link></li>
+                  <li><Link to="/activities-ge" className="f-header__dropdown-link">Actividades</Link></li>
+                  <li><Link to="/programs-ge" className="f-header__dropdown-link">Programas</Link></li>
+                  <li><Link to="/tours-ge" className="f-header__dropdown-link">Guias</Link></li>
+                </ul>
+              </li>
+            
+            }
             <li className="f-header__item"><Link to="/about-us" className="f-header__link">Sobre nosotros</Link></li>
             <li className="f-header__item"><Link to="/service" className="f-header__link">Servicios</Link></li>
             <li className="f-header__item"><Link to="/contact" className="f-header__link">Contacto</Link></li>
@@ -61,3 +80,4 @@ const Header = () => {
 }
  
 export default Header;
+
