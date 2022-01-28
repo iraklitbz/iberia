@@ -1,23 +1,29 @@
-import React from "react";
-import {graphql} from 'gatsby';
+import React, { useEffect } from "react";
+import {graphql, navigate} from 'gatsby';
 import MainLayout from "../layouts/MainLayout";
 import BlogList from "../components/BlogList/BlogList";
 import { useIntl } from "gatsby-plugin-intl";
+import SEO from "../components/seo";
 
 const News = ({data, pageContext}) => {
+    const {language} = pageContext;
     const intl = useIntl();
-    let posts = {};
-    console.log('---------------------------',pageContext)
-    if(intl.locale === 'es') {
-      posts = data.allWpPost.nodes;
-    } else if(intl.locale === 'ge') {
-      posts = data.allWpNew.nodes;
-    }
+    useEffect(() => {
+        if(language === 'ge' && intl.originalPath === intl.originalPath) {
+            navigate('/news-ge')
+          } 
+    },[])
+   
     return ( 
         <MainLayout>
-            
+             <SEO
+                lang={intl.locale}
+                title={intl.formatMessage({ id: "titlenews" })}
+                keywords={[`iberia`, `news`, `georgia`]}
+            />
+                    
             <BlogList 
-                posts={posts}
+                posts={data.allWpPost.nodes}
                 pageContext={pageContext}
             />
         </MainLayout>
@@ -52,34 +58,5 @@ query($skip: Int!, $limit: Int!) {
         excerpt
     }
   }
-
-  allWpNew(
-    filter: {geocategories: {nodes: {elemMatch: {name: {eq: "სიახლე"}}}}}
-    skip: $skip
-    limit: $limit
-    ) {
-    nodes {
-        id
-        title
-        date
-        content
-        featuredImage{
-            node {
-            sourceUrl
-            }
-        }
-        geocategories {
-            nodes {
-                name
-            }
-        }
-     
-        slug
-        excerpt
-    }
-    }
-
-
-  
 }
 `

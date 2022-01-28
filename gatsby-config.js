@@ -65,6 +65,7 @@ module.exports = {
         defaultLanguage: `es`,
         // option to redirect to `/ko` when connecting `/`
         redirect: true,
+        redirectComponent: require.resolve(`./src/components/redirect.js`)
       },
     },
     `gatsby-plugin-image`,

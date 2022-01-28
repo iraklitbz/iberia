@@ -38,7 +38,7 @@ const MainLayout = ({children, className}) => {
           
         
         <Header />
-        { children }
+          { children }
         <Footer />
     </div>
    );
