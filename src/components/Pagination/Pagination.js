@@ -1,14 +1,8 @@
 import React from "react";
 import PropType, { element } from 'prop-types';
 import { Link } from 'gatsby';
-const Pagination = ({posts, pageContext}) => {
-  const numberOfArray = Number(posts.length);
-
-
-  const { previousPagePath,nextPagePath, limit } = pageContext;
-  const numberOfPages = Math.ceil(numberOfArray / limit);
-  console.log(numberOfArray)
-  console.log(limit)
+const Pagination = ({pageContext}) => {
+  const { previousPagePath,nextPagePath, numberOfPages } = pageContext;
   let arrPagination = Array.apply(null, {length: numberOfPages +1}).map(Number.call, Number);
   return ( 
   <>

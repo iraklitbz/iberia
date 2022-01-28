@@ -47,11 +47,9 @@ module.exports = {
           "**/tags",
           "**/taxonomies",
           "**/users",
-        ],
-        excludedRoutes: ["**/*/*/posts/1456"],
-        normalizer: function({entities}) {
-          return entities
-        }
+          "**/geocategories",
+          "**/news",
+        ]
       }
     },
     
@@ -66,7 +64,7 @@ module.exports = {
         // language file path
         defaultLanguage: `es`,
         // option to redirect to `/ko` when connecting `/`
-        redirect: true,
+        redirect: false,
       },
     },
     `gatsby-plugin-image`,

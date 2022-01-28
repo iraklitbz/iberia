@@ -11,17 +11,19 @@ import { useEffect } from "react";
 
 
 const MainLayout = ({children, className}) => {
+
   const intl = useIntl();
   useEffect(() => {
     document.getElementsByTagName("html")[0].className += " js";
   }, []);
   return ( 
+    
       <div className={`main ${className || ''}`}> 
        <Helmet>
         <script src={withPrefix('Util.js')} type="text/javascript" />
        </Helmet>
 
-        { intl.locale === 'en' ? 
+        { intl.locale === 'es' ? 
           <Global styles={css`
               :root {
                 --font-primary: 'Montserrat', sans-serif;

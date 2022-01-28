@@ -5,7 +5,6 @@ import BlogList from "../components/BlogList/BlogList";
 
 const News = ({data, pageContext}) => {
 
-    console.log('ika',data)
 
     return ( 
         <MainLayout>
@@ -50,18 +49,6 @@ query($skip: Int!, $limit: Int!, $locale: String) {
         excerpt
     }
   }
-
-  allWpCategory {
-    nodes {
-        posts {
-          nodes {
-            title
-          }
-        }
-      }
-    }
-
-
   
 }
 `
