@@ -18,23 +18,26 @@ exports.onCreatePage = ({ page, actions }) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage, createRedirect } = actions;
-  const categoria = ['events','news','programs','tours','activities' ]
+  const categorias = ['events','news','programs','tours','activities' ]
 
-  categoria.forEach(element)
+  categorias.forEach(element => {
       createRedirect({
-        fromPath: '/ge/news',
+        fromPath: `/ge/${element}`,
         exactPath: true,
         isPermanent: false,
         redirectInBrowser: true,
-        toPath: '/ge/news-ge'
-    });
+        toPath: `/ge/${element}-ge`
+      });
       createRedirect({
-        fromPath: '/es/news-ge',
+        fromPath: `/es/${element}-ge`,
         exactPath: true,
         isPermanent: false,
         redirectInBrowser: true,
-        toPath: '/es/news'
+        toPath: `/es/${element}`
     });
+  })
+
+     
  
 /*es*/ 
 const activities = await graphql(`
