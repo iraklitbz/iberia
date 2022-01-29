@@ -1,13 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {graphql} from 'gatsby';
 import MainLayout from "../../layouts/MainLayout";
 import BlogList from "../../components/BlogList/BlogList";
-import { navigate, useIntl } from "gatsby-plugin-intl";
+import { useIntl } from "gatsby-plugin-intl";
 import SEO from "../../components/seo";
 
 
 const Activities = ({data, pageContext}) => {
-    const {language} = pageContext;
     const intl = useIntl();
     return ( 
         <MainLayout>

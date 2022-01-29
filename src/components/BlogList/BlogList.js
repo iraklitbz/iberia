@@ -1,6 +1,5 @@
 import React from "react";
 import Pagination from "../Pagination/Pagination";
-import { Link } from "gatsby-plugin-intl";
 import moment from "moment";
 const BlogList = ({posts, pageContext}) => {
    

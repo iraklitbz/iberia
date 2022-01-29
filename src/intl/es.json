@@ -1,4 +1,25 @@
 {
     "titlenews": "Noticias news",
-    "home": "Inicio"
+    "home": "Inicio",
+    "aboutus": "Sobre nosotros",
+    "contactus": "Contacto",
+    "news": "Noticias",
+    "events": "Eventos",
+    "activities": "Actividades",
+    "programs": "Programas",
+    "tours": "Guías",
+    "aboutus1_html": "El centro educativo y cultural “<strong>Iberia</strong>” , que fue fundado en Madrid por la asociación de la cámara comercial española- georgiana , entró Georgia en 2016. Su objetivo , con apoyo de los universidades españoles o otras estructuras educativas , es la popularización de idioma y cultura española en Georgia. El centro español “Iberia” trabaja en estrecha colaboración con los universidades de ciudades diferentes , institutos y colegios profesionales. Con mediación del centro, la Universidad de Alcalá y ochos universidades de Georgia han redactado un memorando de cooperación mutua, sobre cuya base ya ha comenzado la cooperación entre ellos.",
+    "aboutus2": "El objetivo del centro es acercar a cada miembro a España, de cualquiera forma que elijan. Eso será un estudio a largo plazo o excursiones culturales y eductivos cortos . También, encontrar y conectar socios, que tienen pasatiempos y ocupaciones diversos. Todos los miembros de nuestro centro participarán en todos los eventos, que organización realiza entre España y Georgia.",
+    "aboutus3_html": "Nuestro socio, la asociacion de la cámara comercial española-georgiana y <strong>AEDHE</strong> (Organización del negocio) de Alcalá, nos dan la oportunidad de ayudar a nuestros miembros en las relaciones con España, tanto en el sector turístico como en el empresarial.",
+    "contact1": "Contacta con nosotros",
+    "contact2": "Si tienes alguna consulta, ¡no dudes en preguntarnos!",
+    "contact3": "He leído y acepto la",
+    "contact4": "Este campo es obligatorio",
+    "contactprivacity": "política de privacidad",
+    "contacttu": "Tu",
+    "contactname": "Nombre",
+    "contactemail": "Email",
+    "contactphone": "Teléfono",
+    "contacttext": "Mensaje",
+    "contactsend": "Enviar"
 }

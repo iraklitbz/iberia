@@ -1,5 +1,5 @@
 import React from "react";
-import PropType, { element } from 'prop-types';
+import PropType from 'prop-types';
 import { Link } from 'gatsby';
 const Pagination = ({ pageContext}) => {
   const { previousPagePath,nextPagePath, numberOfPages } = pageContext;
