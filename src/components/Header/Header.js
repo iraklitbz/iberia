@@ -28,10 +28,10 @@ const Header = () => {
       <div className="f-header__mobile-content container max-width-lg">
         <Link className={isScrollOK ? 'f-header__logo active' : 'f-header__logo'} to="/">
             <div className="small-logo-icon">
-                  <img width="45px"  src="http://cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
+                  <img width="45px"  src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img src="http://cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
+                  <img src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
               </div>
         </Link>
 
@@ -48,7 +48,7 @@ const Header = () => {
                   <img width="45px"  src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img src="http://cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
+                  <img src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
                 </div>
             </Link>
           </div>
