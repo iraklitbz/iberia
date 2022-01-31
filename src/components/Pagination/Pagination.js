@@ -1,7 +1,8 @@
 import React from "react";
 import PropType from 'prop-types';
-import { Link } from 'gatsby';
+import { useIntl, Link } from "gatsby-plugin-intl";
 const Pagination = ({ pageContext}) => {
+  const intl = useIntl();
   const { previousPagePath,nextPagePath, numberOfPages } = pageContext;
   let arrPagination = Array.apply(null, {length: numberOfPages +1}).map(Number.call, Number);
   return ( 
@@ -13,7 +14,7 @@ const Pagination = ({ pageContext}) => {
           
             <Link to={previousPagePath} className={`pagination__item ${!previousPagePath ? "pagination__item--disabled" : ""}`} aria-label="Go to previous page">
               <svg className="icon icon--xs margin-right-xxxs flip-x" viewBox="0 0 16 16"><polyline points="6 2 12 8 6 14" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
-              <span>Prev</span>
+              <span>{intl.formatMessage({ id: "prev" })}</span>
             </Link>
           
             
@@ -33,7 +34,7 @@ const Pagination = ({ pageContext}) => {
           <li>
           
               <Link to={nextPagePath} className={`pagination__item ${!nextPagePath ? "pagination__item--disabled" : ""}`} aria-label="Go to next page">
-                <span>Next</span>
+                <span>{intl.formatMessage({ id: "next" })}</span>
                 <svg className="icon icon--xs margin-left-xxxs" viewBox="0 0 16 16"><polyline points="6 2 12 8 6 14" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
               </Link> 
               

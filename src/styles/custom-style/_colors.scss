@@ -1,5 +1,4 @@
 @use '../base' as *;
-
 // --------------------------------
 
 // (START) Global editor code https://codyhouse.co/ds/globals/colors
@@ -13,6 +12,12 @@
   @include defineColorHSL(--color-primary, 250, 84%, 54%);
   @include defineColorHSL(--color-primary-light, 250, 84%, 60%);
   @include defineColorHSL(--color-primary-lighter, 250, 84%, 67%);
+
+  @include defineColorHSL(--color-secundary-darker, 346, 76%, 48%);
+  @include defineColorHSL(--color-secundary-dark, 346, 76%, 54%);
+  @include defineColorHSL(--color-secundary, 346, 76%, 60%);
+  @include defineColorHSL(--color-secundary-light, 346, 76%, 66%);
+  @include defineColorHSL(--color-secundary-lighter, 346, 76%, 73%);
 
   @include defineColorHSL(--color-accent-darker, 342, 89%, 38%);
   @include defineColorHSL(--color-accent-dark, 342, 89%, 43%);
@@ -64,6 +69,12 @@
   @include defineColorHSL(--color-primary, 250, 93%, 65%);
   @include defineColorHSL(--color-primary-light, 250, 93%, 69%);
   @include defineColorHSL(--color-primary-lighter, 250, 93%, 72%);
+
+  @include defineColorHSL(--color-secundary-darker, 346, 76%, 48%);
+  @include defineColorHSL(--color-secundary-dark, 346, 76%, 54%);
+  @include defineColorHSL(--color-secundary, 346, 76%, 60%);
+  @include defineColorHSL(--color-secundary-light, 346, 76%, 66%);
+  @include defineColorHSL(--color-secundary-lighter, 346, 76%, 73%);
 
   @include defineColorHSL(--color-accent-darker, 342, 92%, 41%);
   @include defineColorHSL(--color-accent-dark, 342, 92%, 47%);

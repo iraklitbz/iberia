@@ -11,7 +11,7 @@
   --search-input-icon-size: 1em;
   --search-input-shortcut-margin: 0.325em;
   --f-header-height: 50px;
-  --f-header-logo-width: 104px;
+  --f-header-logo-width: 200px;
 
   @include breakpoint(md) {
     --f-header-height: 70px;
@@ -260,7 +260,13 @@
 .f-header {
   height: var(--f-header-height);
   width: 100%;
-  z-index: var(--z-index-header, 3); 
+    background-color: var(--color-bg);
+    top: 0;
+    z-index: var(--z-index-header,3);
+    -webkit-box-shadow: 0 5px 20px -3px rgb(0 0 0 / 10%);
+    box-shadow: 0 5px 20px -3px rgb(0 0 0 / 10%);
+
+
 
   &::before { /* used in JS to detect menu style */
     display: none;
@@ -282,13 +288,41 @@
 }
 
 .f-header__logo {
-  display: block;
+  display: flex;
   width: var(--f-header-logo-width);
   flex-shrink: 0;
   text-decoration: none;
+  align-items: center;
+
 
   svg, img {
     display: block;
+  }
+  .small-logo-icon {
+    width: 45px;
+    height: 45px;
+    margin-right: var(--space-xs);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    img {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: 100px;
+      transition: top 0.4s ease-in;
+      &.active {
+        top: 5px;
+      }
+    }
+    
+  }
+  .logo-name {
+    width: 120px;
+    img {
+      width: 100%;
+    }
   }
 }
 
@@ -337,6 +371,11 @@
 
 .f-header__nav-logo-wrapper {
   display: none; /* hide logo nav on small devices */
+}
+.navbar-menu {
+ .navbar-menu-primary {
+   margin-right: var(--space-md);
+ }
 }
 
 .f-header__item {
@@ -433,6 +472,17 @@
 
   .f-header__nav-logo-wrapper {
     display: flex;
+    position: relative;
+    transition: left 0.4s ease-in-out;
+    left: -50px;
+    &.active {
+      left: 0px;
+      .small-logo-icon {
+        img {
+          top: 5px
+        }
+      }
+    }
   }
 
   .f-header__nav-grid,
@@ -542,3 +592,39 @@ html:not(.js) {
     transform: translateY(0);
   }
 }
+
+.lang-list {
+  .f-header__link {
+    height: 37px;
+    width: 37px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    &.active {
+      background-color: var(--color-secundary);
+      color: #fff;
+    }
+  }
+}
+
+.f-header__mobile-content {
+  .f-header__logo {
+    display: flex;
+    position: relative;
+    transition: left 0.4s ease-in-out;
+    left: -50px;
+    &.active {
+      left: 0px;
+      .small-logo-icon {
+        img {
+          top: 5px
+        }
+      }
+    }
+  }
+}
+

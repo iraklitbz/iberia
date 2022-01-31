@@ -48,6 +48,7 @@
 body {
   font-family: var(--font-primary);
   --body-font-weight: 500;
+  padding-top: var(--f-header-height);
 }
 
 h1, h2, h3, h4 {

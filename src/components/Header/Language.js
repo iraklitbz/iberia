@@ -8,17 +8,16 @@ const languageName = {
 
 const Language = () => {
   return (
-    <ul className="f-header__list lang-list">
+    <ul className="f-header__list lang-list margin-left-sm@md">
       <IntlContextConsumer>
         {({ languages, language: currentLocale }) =>
           languages.map(language => (
             <a
-              className="f-header__link"
               key={language}
               onClick={() => changeLocale(language)}
-              style={{
-                color: currentLocale === language ? 'var(--color-primary)' : 'var(--color-contrast-high)'
-              }}
+              className={
+               currentLocale === language ? 'f-header__link active' : 'f-header__link'
+              }
             >
               {languageName[language]}
             </a>
