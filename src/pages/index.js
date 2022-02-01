@@ -62,7 +62,6 @@ const IndexPage = () => {
     } else if(intl.locale === 'ge') {
       posts = data.allWpNew.nodes;
     }
-    console.log(posts)
   return (
    <MainLayout>
      <Hero />
