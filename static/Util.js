@@ -579,3 +579,4 @@ Math.easeOutElastic = function (t, b, c, d) {
     if(Util.hasClass(mainNav[0], 'hide-nav--fixed')) Util.addClass(mainNav[0], 'hide-nav--has-bg');
   }
 }());
+

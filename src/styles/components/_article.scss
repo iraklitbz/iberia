@@ -44,6 +44,8 @@ Usage: codyhouse.co/license
 }
 
 .story__title {
+  font-weight: bold;
+  font-size: var(--text-md);
   a {
     color: var(--color-contrast-higher);
     text-decoration: none;

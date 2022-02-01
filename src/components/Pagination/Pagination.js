@@ -2,6 +2,7 @@ import React from "react";
 import PropType from 'prop-types';
 import { useIntl, Link } from "gatsby-plugin-intl";
 const Pagination = ({ pageContext}) => {
+  console.log('holaaaa', pageContext.intl.originalPath)
   const intl = useIntl();
   const { previousPagePath,nextPagePath, numberOfPages } = pageContext;
   let arrPagination = Array.apply(null, {length: numberOfPages +1}).map(Number.call, Number);
@@ -23,7 +24,7 @@ const Pagination = ({ pageContext}) => {
           {
           arrPagination.slice(1).map((element, index) => (
               <li key={index} className="display@sm">
-                <Link to={index === 0 ? '/news' : `/news/${index + 1}`} className="pagination__item" activeClassName="active" aria-label="Go to page 20">{element}</Link>
+                <Link to={index === 0 ? `${pageContext.intl.originalPath}` : `${pageContext.intl.originalPath}/${index + 1}`} className="pagination__item" activeClassName="active" aria-label="Go to page 20">{element}</Link>
             </li>
           ))
         }

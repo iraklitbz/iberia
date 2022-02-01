@@ -31,7 +31,7 @@ const Header = () => {
                   <img width="45px"  src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
+                  <img width="120px" height="36px" src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
               </div>
         </Link>
 
@@ -48,7 +48,7 @@ const Header = () => {
                   <img width="45px"  src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
+                  <img width="120px" height="36px" src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_text.svg" />
                 </div>
             </Link>
           </div>

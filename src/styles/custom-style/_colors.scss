@@ -63,6 +63,7 @@
 }
 
 [data-theme="dark"] {
+
   // main
   @include defineColorHSL(--color-primary-darker, 250, 93%, 57%);
   @include defineColorHSL(--color-primary-dark, 250, 93%, 61%);
@@ -107,7 +108,7 @@
   // background
   @include defineColorHSL(--color-bg-darker, 204, 15%, 6%);
   @include defineColorHSL(--color-bg-dark, 203, 18%, 9%);
-  @include defineColorHSL(--color-bg, 203, 24%, 13%);
+  @include defineColorHSL(--color-bg, 250, 93%, 65%);
   @include defineColorHSL(--color-bg-light, 203, 18%, 17%);
   @include defineColorHSL(--color-bg-lighter, 204, 15%, 20%);
 
@@ -118,9 +119,6 @@
   @include defineColorHSL(--color-contrast-high, 223, 8%, 82%);
   @include defineColorHSL(--color-contrast-higher, 240, 100%, 99%);
 
-  // font rendering
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 // --------------------------------

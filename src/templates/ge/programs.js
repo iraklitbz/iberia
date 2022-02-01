@@ -1,13 +1,13 @@
 import React from "react";
 import {graphql} from 'gatsby';
 import MainLayout from "../../layouts/MainLayout";
-import BlogList from "../../components/BlogList/BlogList";
+import EventsList from "../../components/EventsList/EventsList";
 import { useIntl } from "gatsby-plugin-intl";
 import SEO from "../../components/seo";
 
 const Programs = ({data, pageContext}) => {
     const intl = useIntl();
-  
+ 
     return ( 
         <MainLayout>
              <SEO
@@ -16,7 +16,7 @@ const Programs = ({data, pageContext}) => {
                 keywords={[`iberia`, `news`, `georgia`]}
             />
                     
-            <BlogList 
+            <EventsList 
                 posts={data.allWpNew.nodes}
                 pageContext={pageContext}
             />

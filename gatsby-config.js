@@ -28,7 +28,7 @@ module.exports = {
       options: {
         minimizeDeprecationNotice: true,
         url: `https://cms.iberiainfo.org/graphql`,
-        protocol: 'https',
+        protocol: `https`,
         hostingWPCOM: false,
         production: {
           hardCacheMediaFiles: true,

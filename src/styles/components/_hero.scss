@@ -40,10 +40,10 @@
     position: relative;
     justify-content: center;
     z-index: 1000;
-    @include breakpoint(sm) {
+    @include breakpoint(md) {
       width: 60%;
      }
-    @include breakpoint(md) {
+    @include breakpoint(lg) {
       flex-grow: 1;
       width: initial;
      }
@@ -65,10 +65,10 @@
   
     line-height: 1.4;
     margin-left: var(--space-lg);
-    @include breakpoint(sm) {
+    @include breakpoint(md) {
       width: 40%;
      }
-     @include breakpoint(md) {
+     @include breakpoint(lg) {
       max-width: 430px;
       width: 100%;
      }

@@ -362,7 +362,7 @@ paginate({
 paginate({
   createPage,
   items: programs.data.allWpPost.nodes,
-  itemsPerPage: 4, // How many items you want per page
+  itemsPerPage: 7, // How many items you want per page
   pathPrefix: `/programs`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/programs.js`), // Just like `createPage()`
 });
@@ -408,7 +408,7 @@ paginate({
 paginate({
   createPage,
   items: programsgeo.data.allWpNew.nodes,
-  itemsPerPage: 4, // How many items you want per page
+  itemsPerPage: 7, // How many items you want per page
   pathPrefix: `/programs-ge`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/ge/programs.js`), // Just like `createPage()`
 });

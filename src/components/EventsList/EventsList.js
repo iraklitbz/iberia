@@ -1,51 +1,34 @@
 import React from "react";
 import Pagination from "../Pagination/Pagination";
-import { Link } from "gatsby-plugin-intl";
+import { Link, useIntl } from "gatsby-plugin-intl";
+import moment from "moment";
 const EventsList = ({posts, pageContext}) => {
-   
+    const intl = useIntl();
     return ( 
-        <section className="feature-v8 padding-bottom-xxl">
-            <div className="feature-v8__main-content bg-contrast-lower bg-opacity-50% padding-top-xxl">
-                <div className="container max-width-adaptive-lg">
-                <div className="grid gap-md justify-between@md">
-                    <div className="col-6@md">
-                    <div className="text-component">
-                        <h1>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</h1>
-                    </div>
-                    </div>
+        <div className="container max-width-adaptive-lg padding-y-xl">
+            <div className="grid gap-sm">
 
-                    <div className="col-5@md">
-                    <div className="text-component">
-                        <p className="color-contrast-medium">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus asperiores laudantium at sunt voluptatibus a distinctio adipisci dicta, explicabo quidem.</p>
-                    </div>
-                    </div>
-                </div>
-                </div>
+                {posts.map((element, index) => (
+                    <Link key={element.id} to="/" className={`card-v9 radius-md ${index === 0 || index === 3  ? 'col-8@md' : 'col-4@md'}`} style={{backgroundImage: `url("${element.featuredImage.node.sourceUrl}")`}}>
+                        <div className="card-v9__content padding-md">
+                        <div className="padding-bottom-xxxl max-width-xxs">
+                            <p className="text-sm color-contrast-higher color-opacity-50% margin-bottom-xxs"><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></p>
+                            <h2 id="card-title-1" className="text-xl">{element.title}</h2>
+                        </div>
+                        {console.log(element.featuredImage)}
+
+                        <div className="margin-top-auto">
+                            <span className="card-v9__btn"><i>{intl.formatMessage({ id: "more" })}</i></span>
+                        </div>
+                        </div>
+                    </Link>
+                ))}    
+           
+            
+                <Pagination posts={posts} pageContext={pageContext} />
             </div>
+        </div>
 
-            <div className="container max-width-adaptive-lg">
-                <ul className="feature-v8__sub-content grid gap-lg">
-                {posts.map((element) => (
-                    <li key={element.id} className="col-4@md">
-                        <Link to={`/${element.slug}`} className="block margin-bottom-sm">
-                        <figure className="td-card js-td-card">
-                            {/* <img className="block width-100% shadow-md radius-lg" src={element.thumb.localFile.publicURL} /> */}
-                
-                        </figure>
-
-                        <footer className="padding-sm">
-                            <p className="text-sm color-contrast-medium margin-bottom-sm">Label</p>
-                            <div className="text-component">
-                            <h4 className="story-v2__headline"><span className="card-v8__title">{element.title}</span></h4>
-                            </div>
-                        </footer>
-                        </Link>
-                     </li>
-                    ))}
-                </ul>
-                <Pagination pageContext={pageContext} />
-            </div>
-            </section>
      );
 }
  

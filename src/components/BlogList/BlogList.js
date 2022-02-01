@@ -18,10 +18,9 @@ const BlogList = ({posts, pageContext}) => {
 
                         <div className="story__content">
                         <div className="margin-bottom-xs">
-                            <a className="story__category" href="#0">
-                            <svg className="icon margin-right-xxxs" aria-hidden="true" viewBox="0 0 16 16"><g strokeWidth='1' stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'><circle cx='8' cy='7' r='1.5'></circle><path d='M12.121,14.263a7.5,7.5,0,1,0-8.242,0'></path><path d='M12.377,11.32a5.5,5.5,0,1,0-8.754,0'></path><path d='M6.605,10.5H9.4a1,1,0,0,1,1,1.1L10,15.5H6l-.39-3.9A1,1,0,0,1,6.605,10.5Z'></path></g></svg>
-                            <i>Noticias</i>
-                            </a>
+                            <span className="story__category">
+                            <i><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></i>
+                            </span>
                         </div>
                 
                         <div className="text-component">
@@ -30,7 +29,7 @@ const BlogList = ({posts, pageContext}) => {
                             
                         </div>
                 
-                        <p className="story__meta"><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></p>
+                     
                         </div>
                     </article>
                     : 
@@ -48,8 +47,7 @@ const BlogList = ({posts, pageContext}) => {
                         <div className="story__content">
                         <div className="margin-bottom-xs">
                             <a className="story__category" href="#0">
-                            <svg className="icon margin-right-xxxs" aria-hidden="true" viewBox="0 0 16 16"><g strokeWidth='1' fill='none' stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'><rect x='0.5' y='1.5' width='15' height='13' rx='1' ry='1'></rect><polygon points='5.5 4.5 11 8 5.5 11.5 5.5 4.5'></polygon></g></svg>
-                            <i>Noticias</i>
+                            <i><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></i>
                             </a>
                         </div>
                 
@@ -58,7 +56,7 @@ const BlogList = ({posts, pageContext}) => {
                             
                         </div>
                 
-                        <p className="story__meta margin-top-xs"><time>{moment(element.date).subtract(10, 'days').calendar()}</time></p>
+                      
                         </div>
                     </article>
                  ))}

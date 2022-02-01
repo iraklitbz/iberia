@@ -8,6 +8,7 @@
     "events": "Eventos",
     "activities": "Actividades",
     "programs": "Programas",
+    "more": "Leer más",
     "tours": "Guías",
     "next": "Siguiente",
     "prev": "Anterior",
@@ -26,6 +27,11 @@
     "contacttext": "Mensaje",
     "contactsend": "Enviar",
     "home2": "<strong>Centro</strong> cultural y educativo <strong>español</strong>",
-    "home3": "Lugar donde los amantes del <strong>español como lengua extranjera pueden abordar su estudio o perfeccionamiento si ya tienen conocimientos previos, a través de la ejecución de <strong>juegos, lecturas, vídeos</strong>, mucha práctica, siempre con el apoyo que nos brinda la gramática."
+    "home3": "Lugar donde los amantes del <strong>español como lengua extranjera pueden abordar su estudio o perfeccionamiento si ya tienen conocimientos previos, a través de la ejecución de <strong>juegos, lecturas, vídeos</strong>, mucha práctica, siempre con el apoyo que nos brinda la gramática.",
+    "home4": "Noticias del día",
+    "home5": "Haz que tu experiencia sea única. <strong>Viaja</strong> y <strong>estudia</strong> por varias universidades <strong>españolas</strong>",
+    "home6": "y no lo olvides:",
+    "home7": "Nosotros le ayudaremos a reunir todos los documentos necesarios que necesita para obtener un visado.",
+    "home8": "Disponemos de nuestro propio grupo de asesoramiento jurídico."
 
 }

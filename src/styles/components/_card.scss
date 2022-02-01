@@ -1,0 +1,222 @@
+@use '../base' as *;
+
+/* -------------------------------- 
+
+File#: _1_card-v12
+Title: Card v12
+Descr: Container of information used as teaser for further content exploration
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.card-v12 {
+  --card-v12-transition-duration: .4s;
+
+  position: relative;
+  z-index: 1;
+
+  text-decoration: none;
+  color: inherit;
+  display: block;
+
+  background-color: alpha(var(--color-bg-light), 0.95);
+
+  will-change: transform;
+  transition: box-shadow, transform;
+  transition-duration: var(--card-v12-transition-duration);
+
+  @supports (backdrop-filter: blur(10px)) {
+    background-color: alpha(var(--color-bg-light), 0.8);
+    backdrop-filter: blur(10px);
+  }
+  .text-base {
+      font-weight: bold;
+  }
+
+  &::after { // inner glow
+    content: '';
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: var(--inner-glow);
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.card-v12__figure {
+  position: relative;
+  z-index: 2;
+  height: 230px;
+
+  clip-path: inset(0% var(--space-sm) 0% 0% round 0% var(--radius-md) var(--radius-md) 0%);
+
+  will-change: clip-path;
+  transition: clip-path var(--card-v12-transition-duration);
+
+  img {
+    will-change: transform;
+    transition: transform var(--card-v12-transition-duration);
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .card-v12:hover & {
+    clip-path: inset(0% calc(var(--space-sm) + 80px) 0% 0% round 0% var(--radius-md) var(--radius-md) 0%);
+
+    img {
+      transform: translateX(-40px);
+     
+    }
+  }
+}
+
+.card-v12__separator {
+  display: block;
+  width: 32px;
+}
+
+.card-v12__icon {
+  --size: 60px;
+  position: absolute;
+  z-index: 1;
+  right: var(--space-sm);
+  top: calc(50% - var(--size)/2);
+  height: var(--size);
+  width: var(--size);
+
+  
+  opacity: 0;
+  transform: translateX(-20px);
+  will-change: transform;
+  transition: transform, opacity;
+  transition-duration: var(--card-v12-transition-duration);
+
+  .icon-group {
+    > * {
+      transform-origin: 57px 30px;
+      will-change: transform;
+      transition: transform var(--card-v12-transition-duration);
+    }
+
+    > *:nth-child(2) {
+      transform: rotate(35deg);
+    }
+
+    > *:nth-child(3) {
+      transform: rotate(-35deg);
+    }
+  }
+
+  .card-v12:hover & {
+    opacity: 1;
+    transform: translateX(0);
+
+    .icon-group {
+      > *:nth-child(2),
+      > *:nth-child(3) {
+        transform: rotate(0);
+      }
+    }
+  }
+}
+
+.card-v9 {
+    display: block;
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+    color: inherit;
+    background-color: var(--color-contrast-lower);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: .3s;
+    h2.text-xl {
+        font-weight: bold;
+    }
+    &:hover {
+      box-shadow: var(--shadow-md);
+    }
+  }
+  
+  .card-v9__content {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .card-v9__btn {
+    position: relative;
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    @include fontSmooth;
+  
+    i { // button label
+      position: relative;
+      z-index: 2;
+      color: var(--color-bg);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+  
+    &::after { // button background
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-md);
+      background-color: var(--color-secundary);
+      opacity: 0;
+      transform: translateY(25%);
+      transition: opacity .3s, transform .3s var(--ease-out);
+    }
+  }
+  
+  .card-v9:hover {
+    .card-v9__btn {
+      i {
+        opacity: 1;
+      }
+  
+      &::after {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+  
+  // --overlay-bg
+  .card-v9--overlay-bg {
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: alpha(var(--color-bg), 0.5);
+      transition: background-color .3s;
+    }
+  
+    &:hover::before {
+      background-color: alpha(var(--color-bg), 0.8);
+    }
+  }
