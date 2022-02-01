@@ -1,8 +1,8 @@
 import React from "react";
 import Pagination from "../Pagination/Pagination";
 import moment from "moment";
+import { Link } from "gatsby-plugin-intl";
 const BlogList = ({posts, pageContext}) => {
-   
     return ( 
         <div className="position-relative z-index-1 padding-y-xl">
             <div className="container max-width-adaptive-lg">
@@ -10,11 +10,11 @@ const BlogList = ({posts, pageContext}) => {
                     {posts.length > 0 
                     ? 
                     <article className="story story--featured">
-                        <a className="story__img radius-md" href="#0">
+                        <Link className="story__img radius-md"  to={`/${posts[0].slug}`}>
                         <figure className="aspect-ratio-4:3">
                             <img src={posts[0].featuredImage.node.sourceUrl} alt="Image description" />
                         </figure>
-                        </a>
+                        </Link>
 
                         <div className="story__content">
                         <div className="margin-bottom-xs">
@@ -24,7 +24,7 @@ const BlogList = ({posts, pageContext}) => {
                         </div>
                 
                         <div className="text-component">
-                            <h2 className="story__title"><a href="#0">{posts[0].title}</a></h2>
+                            <h2 className="story__title"><Link to={`/${posts[0].slug}`}>{posts[0].title}</Link></h2>
                             <div dangerouslySetInnerHTML={{__html: posts[0].excerpt.substring(0,130) + " ..." }}></div>
                             
                         </div>
@@ -38,21 +38,21 @@ const BlogList = ({posts, pageContext}) => {
                
                 {posts.slice(1).map((element) => (
                     <article key={element.id} className="story col-4@md">
-                        <a className="story__img radius-md" href="#0">
+                        <Link className="story__img radius-md" to={`/${element.slug}`}>
                         <figure className="aspect-ratio-4:3">
                             <img src={element.featuredImage.node.sourceUrl} alt={element.title} />
                         </figure>
-                        </a>
+                        </Link>
 
                         <div className="story__content">
                         <div className="margin-bottom-xs">
-                            <a className="story__category" href="#0">
+                            <Link className="story__category" to={`/${element.slug}`}>
                             <i><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></i>
-                            </a>
+                            </Link>
                         </div>
                 
                         <div className="text-component">
-                            <h2 className="story__title"><a href="#0">{element.title}</a></h2>
+                            <h2 className="story__title"><Link to={`/${element.slug}`}>{element.title}</Link></h2>
                             
                         </div>
                 

@@ -1,0 +1,35 @@
+@use '../base' as *;
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    th,td {
+        padding: var(--space-sm);
+        text-align: left;
+    }
+    tbody {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        tr:nth-child(odd) {
+            background-color: hsla(var(--color-bg-dark-h),var(--color-bg-dark-s),var(--color-bg-dark-l),0.85);
+        }
+        th,td {
+           
+        }
+    }
+    thead {
+        margin: 0;
+        padding: 0;
+        th,td {
+            position: relative;
+            z-index: 10;
+            background-color: var(--color-bg);
+            border-bottom: 1px solid var(--color-contrast-lower);
+            font-weight: 700;
+            color: var(--color-contrast-higher);
+        }
+    }
+}

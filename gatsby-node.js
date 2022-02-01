@@ -168,6 +168,7 @@ const post = await graphql(`
         id
         title
         content
+        excerpt
         featuredImage{
           node {
             sourceUrl
@@ -317,6 +318,7 @@ const postgeo = await graphql(`
           id
           title
           content
+          excerpt
           featuredImage{
             node {
               sourceUrl
@@ -379,7 +381,7 @@ post.data.allWpPost.nodes.forEach(element => {
   path: `/${element.slug}`,
   component: path.resolve(`src/templates/post.js`),
   context: {
-  data: element
+    data: element
   }
   })
 });

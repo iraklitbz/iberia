@@ -9,7 +9,7 @@ const EventsList = ({posts, pageContext}) => {
             <div className="grid gap-sm">
 
                 {posts.map((element, index) => (
-                    <Link key={element.id} to="/" className={`card-v9 radius-md ${index === 0 || index === 3  ? 'col-8@md' : 'col-4@md'}`} style={{backgroundImage: `url("${element.featuredImage.node.sourceUrl}")`}}>
+                    <Link key={element.id} to={`/${element.slug}`} className={`card-v9 radius-md ${index === 0 || index === 3  ? 'col-8@md' : 'col-4@md'}`} style={{backgroundImage: `url("${element.featuredImage.node.sourceUrl}")`}}>
                         <div className="card-v9__content padding-md">
                         <div className="padding-bottom-xxxl max-width-xxs">
                             <p className="text-sm color-contrast-higher color-opacity-50% margin-bottom-xxs"><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></p>
