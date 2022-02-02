@@ -5,12 +5,21 @@ const AboutUs = () => {
   const intl = useIntl();
   return (
    <MainLayout>
-      <section className="position-relative z-index-1 padding-y-xl">
-          <div className="container max-width-adaptive-md">
-            <div className="margin-bottom-xl">
-              <h1 className="text-center">{intl.formatMessage({ id: "aboutus" })}</h1>
-            </div>
+      <section className="position-relative z-index-1 ">
+        <div className="diagonal-section bg-contrast-lower bg-opacity-50% margin-top-md margin-bottom-xl" style={{backgroundImage: "url('https://cms.iberiainfo.org/wp-content/uploads/2022/02/a.jpg')"}}>
+          <div className="container max-width-adaptive-sm padding-y-xxxl">
+            <div className="text-center">
 
+              <div className="text-component margin-bottom-sm">
+                <h1>{intl.formatMessage({ id: "aboutus" })}</h1>
+              </div>
+          
+              
+            </div>
+          </div>
+        </div>
+          <div className="container max-width-adaptive-md">
+           
             <ol className="hiw-list">
               <li className="hiw-list__item">
                 <div className="hiw-list__item-inner">

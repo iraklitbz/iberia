@@ -7,7 +7,6 @@ import SEO from "../components/seo";
 
 const Activities = ({data, pageContext}) => {
     const intl = useIntl();
-
     return ( 
         <MainLayout>
             <SEO
@@ -15,11 +14,11 @@ const Activities = ({data, pageContext}) => {
             title={intl.formatMessage({ id: "titlenews" })}
             keywords={[`iberia`, `news`, `georgia`]}
         />
-        <BlogList 
-            posts={data.allWpPost.nodes}
-            pageContext={pageContext}
-        />
-    </MainLayout>
+            <BlogList 
+                posts={data.allWpPost.nodes}
+                pageContext={pageContext}
+            />
+         </MainLayout>
      );
 }
  

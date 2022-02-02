@@ -49,6 +49,7 @@ query($skip: Int!, $limit: Int!) {
        
             slug
             excerpt
+            uri
         }
   }
   

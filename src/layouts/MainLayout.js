@@ -11,14 +11,23 @@ import { useEffect } from "react";
 
 
 const MainLayout = ({children, className}) => {
-  const [ lang, setLang ] = useState();
 
   const intl = useIntl();
   useEffect(() => {
+    if(!document.getElementsByTagName("html")[0].classList.contains('js'))
     document.getElementsByTagName("html")[0].className += " js";
-  },);
+  }, []);
+
   useEffect(() => {
-    setLang(intl.locale)
+    if(intl.locale === 'es') {
+      document.getElementsByTagName("body")[0].classList.remove("ge");
+      document.getElementsByTagName("body")[0].className += " es";
+      
+    } else if (intl.locale === 'ge') {
+      document.getElementsByTagName("body")[0].classList.remove("es");
+      document.getElementsByTagName("body")[0].className += " ge";
+      
+    } 
 
   }, [intl.locale]);
   return ( 
@@ -28,7 +37,7 @@ const MainLayout = ({children, className}) => {
         <script src={withPrefix('Util.js')} type="text/javascript" />
        </Helmet>
 
-        { lang === 'es' ? 
+        { intl.locale === 'es' ? 
           <Global styles={css`
               :root {
                 --font-primary: 'Montserrat', sans-serif;

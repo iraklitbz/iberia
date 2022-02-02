@@ -424,10 +424,10 @@ paginate({
 
   postgeo.data.allWpNew.nodes.forEach(element => {
     createPage({
-    path: `/${element.slug}`,
-    component: path.resolve(`src/templates/post.js`),
+    path: `/geo/${element.slug}`,
+    component: path.resolve(`src/templates/ge/post.js`),
     context: {
-    data: element
+      data: element
     }
     })
   });

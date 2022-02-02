@@ -1,8 +1,9 @@
 import React from "react";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../../layouts/MainLayout";
 
 const Post = ({pageContext}) => {
     const {data} = pageContext;
+    console.log(pageContext)
     return ( 
         <MainLayout>
             <article>
@@ -37,6 +38,7 @@ const Post = ({pageContext}) => {
                     </div>
 
                     <figure className="feature-v5__media container max-width-lg position-relative z-index-10">
+                  
                         <img className="block width-100% shadow-lg" src={data.featuredImage.node.sourceUrl} alt={data.title} />
                     </figure>
                 </div>

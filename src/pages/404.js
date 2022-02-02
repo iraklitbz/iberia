@@ -1,15 +1,17 @@
 import React from "react";
 import MainLayout from "../layouts/MainLayout";
-import { Link } from 'gatsby';
+import { useIntl, Link } from "gatsby-plugin-intl";
 
-const NotFoundPage = () => (
-    <MainLayout>
+const NotFoundPage = () => {
+    const intl = useIntl();
+    return (
+        <MainLayout>
             <section className="fof padding-y-xl">
                 <div className="container max-width-sm">
                     <div className="text-component text-center margin-bottom-lg">
-                    <h1>Page not found</h1>
-                    <p>Sorry, but the page you were looking for could not be found.</p>
-                    <p><Link to="/">Go to homepage</Link> or <Link to="/Contact">get in touch</Link>.</p>
+                    <h1>{intl.formatMessage({ id: "nofound" })}</h1>
+                    <p>{intl.formatMessage({ id: "nofound2" })}</p>
+                    <p><Link to="/">{intl.formatMessage({ id: "nofound3" })}</Link> {intl.formatMessage({ id: "nofound4" })} <Link to="/Contact">{intl.formatMessage({ id: "nofound5" })}</Link>.</p>
                     </div>
 
                     <div className="fof__animation">
@@ -18,6 +20,7 @@ const NotFoundPage = () => (
                 </div>
             </section>
     </MainLayout>
-);
+    )
+}
 
 export default NotFoundPage;
