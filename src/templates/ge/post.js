@@ -3,7 +3,6 @@ import MainLayout from "../../layouts/MainLayout";
 
 const Post = ({pageContext}) => {
     const {data} = pageContext;
-    console.log(pageContext)
     return ( 
         <MainLayout>
             <article>

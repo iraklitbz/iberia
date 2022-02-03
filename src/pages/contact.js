@@ -42,7 +42,6 @@ const ContactoForm = () => {
         email.trim() === '' || 
         email.trim() === '' || 
         texto.trim() === '' ) {
-            console.log('Error')
             return;
         }
       
@@ -58,7 +57,6 @@ const ContactoForm = () => {
         }).then(async (res) => {
           if (res.status === 200) {
             await setTimeout(() =>{
-              console.log(res);
               setLoader(false)
               setMensaje({
                 name: '',

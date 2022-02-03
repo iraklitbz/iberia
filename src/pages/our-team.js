@@ -3,7 +3,6 @@ import { useIntl, Link } from "gatsby-plugin-intl";
 import MainLayout from "../layouts/MainLayout";
 import Bradcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 const Ourteam = ({pageContext}) => {
-    console.log(pageContext)
     const intl = useIntl();
     const [ourTeamArray, setOurTeamArray] = useState([
         {

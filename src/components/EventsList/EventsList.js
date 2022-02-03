@@ -15,7 +15,6 @@ const EventsList = ({posts, pageContext}) => {
                             <p className="text-sm color-contrast-higher color-opacity-50% margin-bottom-xxs"><time>{moment(posts[0].date).subtract(10, 'days').calendar()}</time></p>
                             <h2 id="card-title-1" className="text-xl">{element.title}</h2>
                         </div>
-                        {console.log(element.featuredImage)}
 
                         <div className="margin-top-auto">
                             <span className="card-v9__btn"><i>{intl.formatMessage({ id: "more" })}</i></span>
