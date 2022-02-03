@@ -14,7 +14,7 @@ const BlogList = ({posts, pageContext}) => {
                         <Link className="story__img radius-md"  to={intl.locale === 'es' ? `/${posts[0].slug}` :  `/geo/${posts[0].slug}`}>
                        
                         <figure className="aspect-ratio-4:3">
-                            {posts[0].featuredImage.node.sourceUrl 
+                            {posts[0].featuredImage
                             ? 
                                 <img src={posts[0].featuredImage.node.sourceUrl} alt={posts[0].title} />
                             : 
@@ -50,7 +50,7 @@ const BlogList = ({posts, pageContext}) => {
                     <article key={element.id} className="story col-4@md">
                         <Link className="story__img radius-md" to={intl.locale === 'es' ? `/${element.slug}` :  `/geo/${element.slug}`}>
                         <figure className="aspect-ratio-4:3">
-                            {   element.featuredImage.node.sourceUrl 
+                            {   element.featuredImage 
                             ? 
                                 <img src={element.featuredImage.node.sourceUrl} alt={element.title} />
                             : 

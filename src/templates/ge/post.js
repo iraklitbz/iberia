@@ -38,7 +38,7 @@ const Post = ({pageContext}) => {
                     </div>
 
                     <figure className="feature-v5__media container max-width-lg position-relative z-index-10">
-                        {data.featuredImage.node.sourceUrl 
+                        {data.featuredImage 
                         ? 
                         <img className="block width-100% shadow-lg" src={data.featuredImage.node.sourceUrl} alt={data.title} />
                         : 
