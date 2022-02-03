@@ -1,6 +1,7 @@
 import React from "react";
 import MainLayout from "../layouts/MainLayout";
 import { useIntl, Link, FormattedHTMLMessage } from "gatsby-plugin-intl";
+import Team from "../components/Team/Team";
 const AboutUs = () => {
   const intl = useIntl();
   return (
@@ -90,6 +91,7 @@ const AboutUs = () => {
             </ol>
           </div>
         </section>
+        <Team />
    </MainLayout>
   )
 }

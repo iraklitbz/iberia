@@ -83,110 +83,117 @@ const ContactoForm = () => {
     }
   return (
       <MainLayout> 
-            <section className="contact-v3 position-relative z-index-1 margin-top-xxl margin-bottom-xxl">
-                <div className="container max-width-xs margin-bottom-lg">
-                <div className="text-component text-center">
-                        <h1>{intl.formatMessage({ id: "contact1" })}</h1>
-                        <p>{intl.formatMessage({ id: "contact2" })}</p>
-                </div>
-                </div>
-
-                
-            
-                <div className="container max-width-adaptive-md margin-top-xl">
-                <div className="grid gap-lg">
-                    <div className="col-6@md margin-auto">
-                    <form onSubmit={onSubmit}>
-                        <div className="margin-bottom-sm">
-                        <label className="form-label margin-bottom-xxs" htmlFor="contactName">{intl.formatMessage({ id: "contactname" })}</label>
-                        <input 
-                            className="form-control width-100%" 
-                            type="text" 
-                            name="name" 
-                            id="name"  
-                            placeholder={`${intl.formatMessage({ id: "contacttu" })} ${intl.formatMessage({ id: "contactname" })}`}
-                            value={name}
-                            onChange={onChange}
-                            required
-                        />
-                        </div>
-                    
-                        <div className="margin-bottom-sm">
-                        <label className="form-label margin-bottom-xxs" htmlFor="contactEmail">{intl.formatMessage({ id: "contactemail" })}</label>
-                        <input 
-                            className="form-control width-100%" 
-                            type="email" 
-                            name="email"
-                            placeholder={`${intl.formatMessage({ id: "contacttu" })} ${intl.formatMessage({ id: "contactemail" })}`}
-                            id="email"
-                            value={email}
-                            onChange={onChange}
-                            required 
-                        />
-                        </div>
-
-                        <div className="margin-bottom-sm">
-                        <label className="form-label margin-bottom-xxs" htmlFor="contactMessage">{intl.formatMessage({ id: "contacttext" })}</label>
-                        <textarea 
-                        className="form-control width-100%" 
-                        rows="9" 
-                        name="texto" 
-                        id="texto"
-                        placeholder={`${intl.formatMessage({ id: "contacttext" })}`}
-                        value={texto}
-                        onChange={onChange}
-                        required
-                        >
-
-                        </textarea>
-                    </div>
-                    
-                        <div className="flex ">
-                        <div className="custom-checkbox margin-right-xxs">
-                            <input onChange={() => handleCheckClick()}  className="custom-checkbox__input" type="checkbox" aria-label="Checkbox label" />
-                            <div className="custom-checkbox__control" aria-hidden="true"></div>
-                        </div>
-                            <p>{intl.formatMessage({ id: "contact3" })} <Link href="/politica-de-privacidad">{intl.formatMessage({ id: "contactprivacity" })}</Link></p>
-                        </div>
-                        { msgError ? <p className="error text--xs">{intl.formatMessage({ id: "contact4" })}</p> : null}
-                    
+         <section className="feature-v4 margin-y-xl">
+                  <div className="container max-width-adaptive-lg">
+                    <div className="feature-v4__grid grid gap-md items-center">
+                      <div className="col-5@md position-relative z-index-1">
                         
-                        
-                    
-                        <div className="text-center margin-top-lg">
-                        { !loader 
-                            ?
-                            <button className={!checked ? "btn btn--primary btn--disabled" : 'btn btn--primary'}>{intl.formatMessage({ id: "contactsend" })}</button>
-                            :  
-                            <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                        }
-        
-                        </div>
-                    </form>
-                    </div>
-                </div>
-                </div>
 
-                <div className="margin-bottom-lg margin-top-xl container max-width-md">
-                <div className="details-list details-list--rows grid details-list--cols@md">
+                        <div className="text-component">
+                          <h1 className="text-xxxl feature-v4__text-offset@md">{intl.formatMessage({ id: "contact1" })}</h1>
+                          <p>{intl.formatMessage({ id: "contact2" })}</p>
+                        </div>
+
+                        <div className="margin-top-sm">
+                          
+                            <form onSubmit={onSubmit}>
+                                <div className="margin-bottom-sm">
+                                <label className="form-label margin-bottom-xxs" htmlFor="contactName">{intl.formatMessage({ id: "contactname" })}</label>
+                                <input 
+                                    className="form-control width-100%" 
+                                    type="text" 
+                                    name="name" 
+                                    id="name"  
+                                    placeholder={`${intl.formatMessage({ id: "contacttu" })} ${intl.formatMessage({ id: "contactname" })}`}
+                                    value={name}
+                                    onChange={onChange}
+                                    required
+                                />
+                                </div>
+                            
+                                <div className="margin-bottom-sm">
+                                <label className="form-label margin-bottom-xxs" htmlFor="contactEmail">{intl.formatMessage({ id: "contactemail" })}</label>
+                                <input 
+                                    className="form-control width-100%" 
+                                    type="email" 
+                                    name="email"
+                                    placeholder={`${intl.formatMessage({ id: "contacttu" })} ${intl.formatMessage({ id: "contactemail" })}`}
+                                    id="email"
+                                    value={email}
+                                    onChange={onChange}
+                                    required 
+                                />
+                                </div>
+
+                                <div className="margin-bottom-sm">
+                                <label className="form-label margin-bottom-xxs" htmlFor="contactMessage">{intl.formatMessage({ id: "contacttext" })}</label>
+                                <textarea 
+                                className="form-control width-100%" 
+                                rows="9" 
+                                name="texto" 
+                                id="texto"
+                                placeholder={`${intl.formatMessage({ id: "contacttext" })}`}
+                                value={texto}
+                                onChange={onChange}
+                                required
+                                >
+
+                                </textarea>
+                            </div>
+                            
+                                <div className="flex ">
+                                <div className="custom-checkbox margin-right-xxs">
+                                    <input onChange={() => handleCheckClick()}  className="custom-checkbox__input" type="checkbox" aria-label="Checkbox label" />
+                                    <div className="custom-checkbox__control" aria-hidden="true"></div>
+                                </div>
+                                    <p>{intl.formatMessage({ id: "contact3" })} <Link href="/politica-de-privacidad">{intl.formatMessage({ id: "contactprivacity" })}</Link></p>
+                                </div>
+                                { msgError ? <p className="error text--xs">{intl.formatMessage({ id: "contact4" })}</p> : null}
+                            
+                                
+                                
+                            
+                                <div className="text-center margin-top-lg">
+                                { !loader 
+                                    ?
+                                    <button className={!checked ? "btn btn--primary btn--disabled" : 'btn btn--primary'}>{intl.formatMessage({ id: "contactsend" })}</button>
+                                    :  
+                                    <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                                }
                 
-                    <div className="details-list__item padding-y-md padding-x-md@md text-center@md col-6@md">
-                    <h6 className="font-bold margin-bottom-xxs">{intl.formatMessage({ id: "contactemail" })}</h6>
-                    <dd>
-                        <a href="mailto:info@administracionesvesta.com">asociacioniberia@gmail.com</a>
-                    </dd>
-                    </div>
+                                </div>
+                            </form>
+                    
+                        </div>
+                      </div>
+
+                      <div className="col-7@md">
+                        <figure>
+                          <img className="block width-100%" src="//cms.iberiainfo.org/wp-content/uploads/2022/02/contact-scaled.jpg" alt="Image description" />
+                        </figure>
+                       
+                        <div className="details-list details-list--rows grid details-list--cols@md margin-top-sm">
                 
-                    <div className="details-list__item padding-y-md padding-x-md@md text-center@md col-6@md">
-                    <h6 className="font-bold margin-bottom-xxs">{intl.formatMessage({ id: "contactphone" })}</h6>
-                    <p className="line-height-md">
-                        <p><a href="tel:+34747446393">+34 747 44 63 93</a></p>
-                        <p><a href="tel:++34747496404">+34 747 49 64 04</a></p>
-                    </p>
+                            <div className="details-list__item padding-y-md padding-x-md@md text-center@md col-6@md">
+                            <h6 className="font-bold margin-bottom-xxs">{intl.formatMessage({ id: "contactemail" })}</h6>
+                            <dd>
+                                <a href="mailto:info@administracionesvesta.com">asociacioniberia@gmail.com</a>
+                            </dd>
+                            </div>
+                        
+                            <div className="details-list__item padding-y-md padding-x-md@md text-center@md col-6@md">
+                            <h6 className="font-bold margin-bottom-xxs">{intl.formatMessage({ id: "contactphone" })}</h6>
+                            <p className="line-height-md">
+                                <p><a href="tel:+34747446393">+34 747 44 63 93</a></p>
+                                <p><a href="tel:++34747496404">+34 747 49 64 04</a></p>
+                            </p>
+                            </div>
+                        </div>
+                      </div>
                     </div>
-                </div>
-                </div>
-            </section>
+                  </div>
+                </section>
+          
       </MainLayout>
    );
 }

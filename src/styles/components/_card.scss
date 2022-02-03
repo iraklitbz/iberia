@@ -239,3 +239,89 @@ Usage: codyhouse.co/license
       font-weight: bold;
     }
   }
+
+  .card-v13 {
+    --transition-duration: .3s;
+  }
+  
+  .card-v13__figure-wrapper {
+    display: block;
+  }
+  
+  .card-v13__figure {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  
+    transition: clip-path var(--transition-duration) var(--ease-out);
+  
+    img {
+      display: block;
+      width: 100%;
+      transform: scale(1.1);
+      filter: grayscale(100%);
+  
+      transition: transform var(--transition-duration) var(--ease-out), filter var(--transition-duration);
+    }
+  
+    .card-v13__figure-wrapper:hover & {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  
+      img {
+        transform: scale(1);
+        filter: grayscale(0%);
+      }
+    }
+  }
+  
+  .card-v13__separator {
+    display: block;
+    width: 40px;
+    height: 3px;
+    background-color: alpha(var(--color-contrast-higher), 0.1);
+  }
+  
+  .card-v8 {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    transition: .2s;
+  
+    img {
+      display: block;
+      width: 100%;
+    }
+  
+    &:hover {
+      background-color: var(--color-bg-light);
+      box-shadow: var(--shadow-md);
+  
+      .card-v8__title {
+        background-size: 100% 100%;
+      }
+    }
+  }
+  
+  .card-v8__title {
+    background-repeat: no-repeat;
+    will-change: background-size;
+    transition: background-size .3s var(--ease-in-out);
+    text-decoration: none;
+    background-image: linear-gradient(transparent 50%, alpha(var(--color-primary), 0.2) 50%);
+    background-size: 0% 100%;
+  }
+  
+  .td-card-link {
+    color: var(--color-contrast-higher);
+    text-decoration: none;
+  
+    /* filling effect */
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to right, var(--color-contrast-higher) 50%, alpha(var(--color-contrast-higher), 0.2) 50%);
+    background-size: 200% 2px;
+    background-position: 100% calc(100% - 0.05em);
+  
+    transition: background-position .3s var(--ease-in-out);
+  
+    &:hover {
+      background-position: 0% calc(100% - 0.05em);
+    }
+  }

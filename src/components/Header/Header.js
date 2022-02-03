@@ -65,6 +65,7 @@ const Header = () => {
                 </Link>
 
                   <ul className="f-header__dropdown">
+                        <li><Link to="/news" className="f-header__dropdown-link">{intl.formatMessage({ id: "news" })}</Link></li>
                         <li><Link to="/events" className="f-header__dropdown-link">{intl.formatMessage({ id: "events" })}</Link></li>
                         <li><Link to="/activities" className="f-header__dropdown-link">{intl.formatMessage({ id: "activities" })}</Link></li>
                         <li><Link to="/programs" className="f-header__dropdown-link">{intl.formatMessage({ id: "programs" })}</Link></li>
@@ -80,6 +81,7 @@ const Header = () => {
                   </Link>
 
                   <ul className="f-header__dropdown">
+                    <li><Link to="/news-ge" className="f-header__dropdown-link">{intl.formatMessage({ id: "news" })}</Link></li>
                     <li><Link to="/events-ge" className="f-header__dropdown-link">{intl.formatMessage({ id: "events" })}</Link></li>
                     <li><Link to="/activities-ge" className="f-header__dropdown-link">{intl.formatMessage({ id: "activities" })}</Link></li>
                     <li><Link to="/programs-ge" className="f-header__dropdown-link">{intl.formatMessage({ id: "programs" })}</Link></li>

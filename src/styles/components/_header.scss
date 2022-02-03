@@ -307,7 +307,7 @@
     overflow: hidden;
     position: relative;
     img {
-      width: 100%;
+      width: 45px;
       position: absolute;
       left: 0;
       top: 100px;
@@ -628,3 +628,17 @@ html:not(.js) {
   }
 }
 
+.normal-logo {
+  justify-content: flex-end;
+  width: initial;
+  .small-logo-icon {
+    overflow: initial;
+    position: initial;
+    img {
+      width: 45px;
+      position: initial;
+      top: 0px;
+      transition: initial;
+    }
+  }
+}
