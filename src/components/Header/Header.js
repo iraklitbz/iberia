@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { useIntl, Link } from "gatsby-plugin-intl";
 import Language from "./Language";
-const Header = () => {
+const Header = ({isPost}) => {
   const [scrolling, setScrolling] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
   const [isScrollOK, setIsScrollOK] = useState(false);
@@ -94,8 +94,8 @@ const Header = () => {
               <li className="f-header__item"><Link to="/service" className="f-header__link">{intl.formatMessage({ id: "service" })}</Link></li>
               <li className="f-header__item"><Link to="/contact" className="f-header__link">{intl.formatMessage({ id: "contactus" })}</Link></li>
             </ul>
-
-            <Language />
+            {!isPost ? <Language /> : null}
+            
          </div>
         </div>
  

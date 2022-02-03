@@ -12,8 +12,17 @@ const BlogList = ({posts, pageContext}) => {
                     ? 
                     <article className="story story--featured">
                         <Link className="story__img radius-md"  to={intl.locale === 'es' ? `/${posts[0].slug}` :  `/geo/${posts[0].slug}`}>
+                       
                         <figure className="aspect-ratio-4:3">
-                            <img src={posts[0].featuredImage.node.sourceUrl} alt="Image description" />
+                            {posts[0].featuredImage.node.sourceUrl 
+                            ? 
+                                <img src={posts[0].featuredImage.node.sourceUrl} alt={posts[0].title} />
+                            : 
+                                <div className="noImagen radius-md">
+                                    <img width="245px" src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
+                                </div>
+                            }
+                           
                         </figure>
                         </Link>
 
@@ -41,7 +50,15 @@ const BlogList = ({posts, pageContext}) => {
                     <article key={element.id} className="story col-4@md">
                         <Link className="story__img radius-md" to={intl.locale === 'es' ? `/${element.slug}` :  `/geo/${element.slug}`}>
                         <figure className="aspect-ratio-4:3">
-                            <img src={element.featuredImage.node.sourceUrl} alt={element.title} />
+                            {   element.featuredImage.node.sourceUrl 
+                            ? 
+                                <img src={element.featuredImage.node.sourceUrl} alt={element.title} />
+                            : 
+                                <div className="noImagen radius-md">
+                                    <img width="245px" src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
+                                </div>
+                            }
+                           
                         </figure>
                         </Link>
 

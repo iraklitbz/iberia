@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 
 const Post = ({pageContext}) => {
     const {data} = pageContext;
+    const [isPost, setIsPost] = useState(true);
     return ( 
-        <MainLayout>
+        <MainLayout isPost={isPost}>
             <article>
                 <div className="feature-v5 padding-bottom-lg">
                     <div className="feature-v5__content padding-top-xl bg-iberia bg-opacity-20% position-relative">

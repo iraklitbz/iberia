@@ -14,7 +14,15 @@ const HomeList = ({posts}) => {
                         <Link key={element.id} className="card-v12 padding-top-sm radius-lg shadow-sm col-6@sm col-3@md" to={intl.locale === 'es' ? `/${element.slug}` :  `/geo/${element.slug}`} aria-label="Link description">
                             <div className="position-relative">
                             <figure className="card-v12__figure radius-sm">
+                            {   element.featuredImage.node.sourceUrl 
+                            ? 
                                  <img src={element.featuredImage.node.sourceUrl} alt={element.title} />
+                            : 
+                                <div className="noImagen radius-md">
+                                    <img width="245px" src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
+                                </div>
+                            }
+                                 
                             </figure>
 
                             <svg className="icon card-v12__icon" viewBox="0 0 60 60">

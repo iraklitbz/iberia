@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import { css, Global } from '@emotion/react';
@@ -10,7 +10,8 @@ import { useEffect } from "react";
     
 
 
-const MainLayout = ({children, className}) => {
+const MainLayout = ({children, className, isPost}) => {
+
 
   const intl = useIntl();
   useEffect(() => {
@@ -53,7 +54,7 @@ const MainLayout = ({children, className}) => {
         }
           
         
-        <Header />
+        <Header isPost={isPost} />
           { children }
         <Footer />
     </div>
