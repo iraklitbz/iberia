@@ -180,9 +180,19 @@
     width: 45%;
     float: left;
     margin-right: calc(var(--space-unit) * 0.9375 * var(--text-space-y-multiplier,1));
+    > {
+      div {
+        width: 100%;
+      }
+    }
   }
   @include breakpoint(md) {
     width: 50%;
+    > {
+      div {
+        width: 100%;
+      }
+    }
   }
 
 
