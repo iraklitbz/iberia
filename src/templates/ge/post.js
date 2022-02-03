@@ -38,8 +38,15 @@ const Post = ({pageContext}) => {
                     </div>
 
                     <figure className="feature-v5__media container max-width-lg position-relative z-index-10">
-                  
+                        {data.featuredImage.node.sourceUrl 
+                        ? 
                         <img className="block width-100% shadow-lg" src={data.featuredImage.node.sourceUrl} alt={data.title} />
+                        : 
+                            <div className="noImagen radius-md padding-y-xxxl">
+                                <img width="245px" src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
+                            </div>
+                        }
+                       
                     </figure>
                 </div>
     
