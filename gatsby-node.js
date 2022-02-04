@@ -343,21 +343,21 @@ const postgeo = await graphql(`
 paginate({
     createPage,
     items: activities.data.allWpPost.nodes,
-    itemsPerPage: 7, // How many items you want per page
+    itemsPerPage: 10, // How many items you want per page
     pathPrefix: `/activities`, // Creates pages like `/blog`, `/blog/2`, etc
     component: path.resolve(`src/templates/activities.js`), // Just like `createPage()`
 });
 paginate({
   createPage,
   items: events.data.allWpPost.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/events`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/events.js`), // Just like `createPage()`
 });
 paginate({
   createPage,
   items: news.data.allWpPost.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/news`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/news.js`), // Just like `createPage()`
 });
@@ -371,7 +371,7 @@ paginate({
 paginate({
   createPage,
   items: tours.data.allWpPost.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/tours`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/tours.js`), // Just like `createPage()`
 });
@@ -389,21 +389,21 @@ post.data.allWpPost.nodes.forEach(element => {
 paginate({
   createPage,
   items: activitiesgeo.data.allWpNew.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/activities-ge`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/ge/activities.js`), // Just like `createPage()`
 });
 paginate({
   createPage,
   items: eventsgeo.data.allWpNew.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/events-ge`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/ge/events.js`), // Just like `createPage()`
 });
 paginate({
   createPage,
   items: newsgeo.data.allWpNew.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/news-ge`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/ge/news.js`), // Just like `createPage()`
 });
@@ -417,7 +417,7 @@ paginate({
 paginate({
   createPage,
   items: toursgeo.data.allWpNew.nodes,
-  itemsPerPage: 7, // How many items you want per page
+  itemsPerPage: 10, // How many items you want per page
   pathPrefix: `/tours-ge`, // Creates pages like `/blog`, `/blog/2`, etc
   component: path.resolve(`src/templates/ge/tours.js`), // Just like `createPage()`
 });
