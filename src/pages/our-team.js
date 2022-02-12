@@ -8,7 +8,7 @@ const Ourteam = ({pageContext}) => {
         {
             id: '1',
             name: intl.formatMessage({ id: "ourteam_team1_1" }),
-            profileUrl: 'https://cms.iberiainfo.org/wp-content/uploads/2022/02/Captura-de-pantalla-2017-02-25-a-las-1.12.27.png',
+            profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg',
             cargo: intl.formatMessage({ id: "ourteam_team1_2" }),
             hasContact: true,
             contact: 'facebook',
@@ -17,14 +17,14 @@ const Ourteam = ({pageContext}) => {
         {
             id: '2',
             name: intl.formatMessage({ id: "ourteam_team2_1" }),
-            profileUrl: 'https://cms.iberiainfo.org/wp-content/uploads/2022/02/Captura-de-pantalla-2017-02-25-a-las-1.12.27.png',
+            profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg',
             cargo: intl.formatMessage({ id: "ourteam_team2_2" }),
             hasContact: false,
         },
        {
             id: '3',
             name: intl.formatMessage({ id: "ourteam_team3_1" }),
-            profileUrl: 'https://cms.iberiainfo.org/wp-content/uploads/2022/02/Captura-de-pantalla-2017-02-25-a-las-1.12.27.png',
+            profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg',
             cargo: intl.formatMessage({ id: "ourteam_team3_2" }),
             hasContact: true,
             contact: 'twitter',

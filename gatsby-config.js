@@ -27,7 +27,7 @@ module.exports = {
       resolve: `gatsby-source-wordpress`,
       options: {
         minimizeDeprecationNotice: true,
-        url: `https://cms.iberiainfo.org/graphql`,
+        url: `https://iberiainfo.me/graphql`,
         protocol: `https`,
         hostingWPCOM: false,
         production: {

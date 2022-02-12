@@ -13,7 +13,7 @@ const Hero = () => {
                     </div>
                 </div>
                 <div className="logo-box display@sm">
-                    <img src="//cms.iberiainfo.org/wp-content/uploads/2022/01/logo_iberia_icon.svg" />
+                    <img src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_i.svg" />
                 </div>
               
             </div>

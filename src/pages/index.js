@@ -104,7 +104,7 @@ const IndexPage = () => {
               </div>
         
               <figure className="col-6@md">
-                <img className="block width-100% height-100% object-cover" src="//cms.iberiainfo.org/wp-content/uploads/2022/02/drahomir-posteby-mach-n4y3eiQSIoc-unsplash-scaled.jpg" alt="imagen universidad" />
+                <img className="block width-100% height-100% object-cover" src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="imagen universidad" />
               </figure>
             </div>
           </div>
@@ -116,12 +116,12 @@ const IndexPage = () => {
          <h2 className="text-center">{intl.formatMessage({ id: "home9" })}</h2>
          <div className="margin-top-lg">
            <ul className="flex flex-wrap gap-lg flex-center logo-banners">
-              <li><img src="//cms.iberiainfo.org/wp-content/uploads/2022/02/escudo_COLOR_2L_DCHA_0.png" alt="logo universidad burgos" /></li>
-              <li><img src="//cms.iberiainfo.org/wp-content/uploads/2022/02/geu.png" alt="logo universidad" /></li>
-              <li><img src="//cms.iberiainfo.org/wp-content/uploads/2022/02/alcala.png" alt="imagen universidad" /></li>
-              <li><img src="//cms.iberiainfo.org/wp-content/uploads/2022/02/alicante.jpg" alt="imagen universidad" /></li>
-              <li><img src="//cms.iberiainfo.org/wp-content/uploads/2022/02/carlosiii.jpg" alt="imagen universidad" /></li>
-              <li><img src="//cms.iberiainfo.org/wp-content/uploads/2022/02/batumi.png" alt="imagen universidad" /></li>
+              <li><img src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="logo universidad burgos" /></li>
+              <li><img src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="logo universidad" /></li>
+              <li><img src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="imagen universidad" /></li>
+              <li><img src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="imagen universidad" /></li>
+              <li><img src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="imagen universidad" /></li>
+              <li><img src="https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg" alt="imagen universidad" /></li>
 
            </ul>
          </div>

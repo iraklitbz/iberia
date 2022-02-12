@@ -7,7 +7,7 @@ const AboutUs = () => {
   return (
    <MainLayout>
       <section className="position-relative z-index-1 ">
-        <div className="diagonal-section bg-contrast-lower bg-opacity-50% margin-top-md margin-bottom-xl" style={{backgroundImage: "url('https://cms.iberiainfo.org/wp-content/uploads/2022/02/a.jpg')"}}>
+        <div className="diagonal-section bg-contrast-lower bg-opacity-50% margin-top-md margin-bottom-xl" style={{backgroundImage: "url('https://iberiainfo.me/wp-content/uploads/2022/02/abstract5-scaled.jpg')"}}>
           <div className="container max-width-adaptive-sm padding-y-xxxl">
             <div className="text-center">
 

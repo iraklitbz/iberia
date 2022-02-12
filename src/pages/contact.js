@@ -167,7 +167,7 @@ const ContactoForm = () => {
 
                       <div className="col-7@md">
                         <figure>
-                          <img className="block width-100%" src="//cms.iberiainfo.org/wp-content/uploads/2022/02/contact-scaled.jpg" alt="Image description" />
+                          <img className="block width-100%" src="https://iberiainfo.me/wp-content/uploads/2022/02/contact-scaled.jpg" alt="Image description" />
                         </figure>
                        
                         <div className="details-list details-list--rows grid details-list--cols@md margin-top-sm">
