@@ -19,7 +19,7 @@ const BlogList = ({posts, pageContext}) => {
                                 <img src={posts[0].featuredImage.node.sourceUrl} alt={posts[0].title} />
                             : 
                                 <div className="noImagen radius-md">
-                                    <img width="245px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_i.svg" />
+                                    <img width="245px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg" />
                                 </div>
                             }
                            
@@ -55,7 +55,7 @@ const BlogList = ({posts, pageContext}) => {
                                 <img src={element.featuredImage.node.sourceUrl} alt={element.title} />
                             : 
                                 <div className="noImagen radius-md">
-                                    <img width="245px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_i.svg" />
+                                    <img width="245px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg" />
                                 </div>
                             }
                            

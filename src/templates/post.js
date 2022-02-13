@@ -43,7 +43,7 @@ const Post = ({pageContext}) => {
                         <img className="block width-100% shadow-lg" src={data.featuredImage.node.sourceUrl} alt={data.title} />
                         : 
                             <div className="noImagen radius-md padding-y-xxxl">
-                                <img width="245px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_i.svg" />
+                                <img width="245px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg" />
                             </div>
                         }
                        

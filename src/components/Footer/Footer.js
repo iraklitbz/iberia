@@ -9,10 +9,10 @@ const Footer = () => {
         <div className="col-3@lg order-2@lg text-right@lg">
           <Link to="/" className="f-header__logo normal-logo">
                 <div className="small-logo-icon">
-                  <img width="45px" height="45px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_i.svg" />
+                  <img width="45px" height="45px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img width="120px" height="36px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text.svg" />
+                  <img width="120px" height="36px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text-1.svg" />
                 </div>
             </Link>
         </div>

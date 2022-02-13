@@ -28,10 +28,10 @@ const Header = ({isPost}) => {
       <div className="f-header__mobile-content container max-width-lg">
         <Link className={isScrollOK ? 'f-header__logo active' : 'f-header__logo'} to="/">
             <div className="small-logo-icon">
-                  <img width="45px"  src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_i.svg" />
+                  <img width="45px"  src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img width="120px" height="36px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text.svg" />
+                  <img width="120px" height="36px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text-1.svg" />
               </div>
         </Link>
 
@@ -45,10 +45,10 @@ const Header = ({isPost}) => {
           <div className={isScrollOK ? 'f-header__nav-logo-wrapper flex-grow flex-basis-0 active' : 'f-header__nav-logo-wrapper flex-grow flex-basis-0'}>
             <Link to="/" className="f-header__logo">
                 <div className="small-logo-icon">
-                  <img width="45px"  src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_full.svg" />
+                  <img width="45px"  src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg" />
                 </div>
                 <div className="logo-name">
-                  <img width="120px" height="36px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text.svg" />
+                  <img width="120px" height="36px" src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text-1.svg" />
                 </div>
             </Link>
           </div>
