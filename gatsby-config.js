@@ -22,7 +22,12 @@ module.exports = {
         }
       }
     },
-    
+    {
+      resolve: "gatsby-plugin-netlify-cache",
+      options: {
+        cachePublic: true
+      }
+    },
     {
       resolve: `gatsby-source-wordpress`,
       options: {
