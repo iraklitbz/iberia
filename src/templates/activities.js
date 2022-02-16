@@ -26,6 +26,7 @@ export default Activities;
 export const query = graphql`
 query($skip: Int!, $limit: Int!) {
     allWpPost(
+    sort: { order: ASC }
     filter: {categories: {nodes: {elemMatch: {name: {eq: "activities"}}}}}
     skip: $skip
     limit: $limit
