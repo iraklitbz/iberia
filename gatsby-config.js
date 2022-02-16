@@ -28,6 +28,7 @@ module.exports = {
         cachePublic: true
       }
     },
+    
     {
       resolve: `gatsby-source-wordpress`,
       options: {
