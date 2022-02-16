@@ -23,17 +23,11 @@ module.exports = {
       }
     },
     {
-      resolve: "gatsby-plugin-netlify-cache",
-      options: {
-        cachePublic: true
-      }
-    },
-    {
       resolve: `gatsby-source-wordpress`,
       options: {
         minimizeDeprecationNotice: true,
-        url: `https://iberiainfo.me/graphql`,
-        protocol: `https`,
+        url: 'https://cms.iberiainfo.me/graphql',
+        protocol: 'https',
         hostingWPCOM: false,
         production: {
           hardCacheMediaFiles: true,
@@ -48,7 +42,7 @@ module.exports = {
         type: {
           MediaItem: {
             localFile: {
-              maxFileSizeBytes: 52428800,
+              maxFileSizeBytes: 5242880,
               requestConcurrency: 1,
             },
           },
@@ -121,5 +115,6 @@ module.exports = {
     // This (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
+    'gatsby-plugin-netlify'
   ],
 }

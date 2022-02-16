@@ -46,13 +46,6 @@ const activities = await graphql(`
           ) {
           nodes {
             id
-            title
-            content
-            featuredImage{
-              node {
-                sourceUrl
-              }
-            }
             categories {
               nodes {
                   name
@@ -71,13 +64,6 @@ const events = await graphql(`
         ) {
         nodes {
           id
-          title
-          content
-          featuredImage{
-            node {
-              sourceUrl
-            }
-          }
           categories {
             nodes {
                 name
@@ -96,13 +82,6 @@ const news = await graphql(`
       ) {
       nodes {
         id
-        title
-        content
-        featuredImage{
-          node {
-            sourceUrl
-          }
-        }
         categories {
           nodes {
               name
@@ -119,14 +98,7 @@ const programs = await graphql(`
       filter: {categories: {nodes: {elemMatch: {name: {eq: "programs"}}}}}
       ) {
       nodes {
-        id
-        title
-        content
-        featuredImage{
-          node {
-            sourceUrl
-          }
-        }
+        id 
         categories {
           nodes {
               name
@@ -144,13 +116,6 @@ const tours = await graphql(`
       ) {
       nodes {
         id
-        title
-        content
-        featuredImage{
-          node {
-            sourceUrl
-          }
-        }
         categories {
           nodes {
               name
@@ -162,27 +127,27 @@ const tours = await graphql(`
   }
 `);
 const post = await graphql(`
-  query getPost {
-    allWpPost {
-      nodes {
-        id
-        title
-        content
-        excerpt
-        featuredImage{
-          node {
-            sourceUrl
+      query getPost {
+        allWpPost {
+          nodes {
+            id
+            title
+            content
+            excerpt
+            featuredImage{
+              node {
+                sourceUrl
+              }
+            }
+            categories {
+              nodes {
+                  name
+              }
+            }
+          slug
           }
         }
-        categories {
-          nodes {
-              name
-          }
       }
-      slug
-      }
-    }
-  }
 `);
 
 /*ge*/ 
@@ -193,19 +158,11 @@ const activitiesgeo = await graphql(`
         ) {
         nodes {
           id
-          title
-          content
-          featuredImage{
-            node {
-              sourceUrl
-            }
-          }
           geocategories {
             nodes {
                 name
             }
         }
-        
         slug
         }
       }
@@ -218,19 +175,11 @@ const eventsgeo = await graphql(`
         ) {
         nodes {
           id
-          title
-          content
-          featuredImage{
-            node {
-              sourceUrl
-            }
-          }
           geocategories {
             nodes {
                 name
             }
         }
-        
         slug
         }
       }
@@ -243,19 +192,11 @@ const newsgeo = await graphql(`
         ) {
         nodes {
           id
-          title
-          content
-          featuredImage{
-            node {
-              sourceUrl
-            }
-          }
           geocategories {
             nodes {
                 name
             }
         }
-        
         slug
         }
       }
@@ -267,20 +208,12 @@ const programsgeo = await graphql(`
         filter: {geocategories: {nodes: {elemMatch: {name: {eq: "programs"}}}}}
         ) {
         nodes {
-          id
-          title
-          content
-          featuredImage{
-            node {
-              sourceUrl
-            }
-          }
+          id         
           geocategories {
             nodes {
                 name
             }
         }
-        
         slug
         }
       }
@@ -293,19 +226,11 @@ const toursgeo = await graphql(`
         ) {
         nodes {
           id
-          title
-          content
-          featuredImage{
-            node {
-              sourceUrl
-            }
-          }
           geocategories {
             nodes {
                 name
             }
         }
-        
         slug
         }
       }
@@ -329,7 +254,6 @@ const postgeo = await graphql(`
                 name
             }
         }
-        
         slug
         }
       }
