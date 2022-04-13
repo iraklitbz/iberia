@@ -13,7 +13,7 @@
     "codyhouse-framework": "^3.0.3",
     "gatsby": "^3.14.6",
     "gatsby-awesome-pagination": "^0.3.8",
-    "gatsby-plugin-emotion": "^7.5.0",
+    "gatsby-plugin-emotion": "^7.12.1",
     "gatsby-plugin-image": "^1.14.1",
     "gatsby-plugin-intl": "^0.3.3",
     "gatsby-plugin-manifest": "^3.14.0",
