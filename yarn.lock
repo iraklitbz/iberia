@@ -3697,10 +3697,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codyhouse-framework@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/codyhouse-framework/-/codyhouse-framework-3.0.3.tgz#95d32a0421d43799d837d756df4cdd5bb44beb4d"
-  integrity sha512-FrTcz1TmSgaByiuKE3j9WY4mCPTSXdO1NAEw+0iLl90LcV8MibywZwSjUmv32RcFmBiZwvJ+UMKFfUnGOLZdcg==
+codyhouse-framework@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/codyhouse-framework/-/codyhouse-framework-3.0.8.tgz#6be47ec5982ba884b1a3a266620a230a76e77c00"
+  integrity sha512-A+IUX7js4fL4emq5nw7nnsBuN40AACmhrUhHdnXHBwWl/Sptz5G4MeD4YWeeLtq5QqVYWZ4gj1Fxl8G9QWtTTA==
 
 collapse-white-space@^1.0.2:
   version "1.0.6"
