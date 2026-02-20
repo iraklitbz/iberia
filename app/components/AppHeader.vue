@@ -38,28 +38,39 @@
         </NuxtLink>
 
         <!-- Dropdown Noticias -->
-        <div class="group relative">
+        <div ref="newsDropdownRef" class="relative">
           <button
             class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
             :class="scrolled ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
+            @click="newsOpen = !newsOpen"
           >
             {{ $t('news') }}
-            <svg class="size-3.5 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              class="size-3.5 transition-transform duration-200"
+              :class="newsOpen ? 'rotate-180' : ''"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            >
               <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
 
-          <div class="invisible absolute left-1/2 top-full z-50 mt-2 w-48 -translate-x-1/2 rounded-xl border border-zinc-100 bg-white p-1.5 opacity-0 shadow-lg shadow-zinc-200/60 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-            <NuxtLink
-              v-for="cat in newsCategories"
-              :key="cat.slug"
-              :to="localePath({ name: 'category-slug', params: { slug: cat.slug } })"
-              class="block rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
-              active-class="text-iberia bg-zinc-50"
+          <Transition name="dropdown">
+            <div
+              v-if="newsOpen"
+              class="absolute left-1/2 top-full z-50 mt-2 w-48 -translate-x-1/2 rounded-xl border border-zinc-100 bg-white p-1.5 shadow-lg shadow-zinc-200/60"
             >
-              {{ $t(cat.labelKey) }}
-            </NuxtLink>
-          </div>
+              <NuxtLink
+                v-for="cat in newsCategories"
+                :key="cat.slug"
+                :to="localePath({ name: 'category-slug', params: { slug: cat.slug } })"
+                class="block rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+                active-class="text-iberia bg-zinc-50"
+                @click="newsOpen = false"
+              >
+                {{ $t(cat.labelKey) }}
+              </NuxtLink>
+            </div>
+          </Transition>
         </div>
 
         <NuxtLink
@@ -184,6 +195,8 @@ const localePath = useLocalePath()
 
 const scrolled = ref(false)
 const menuOpen = ref(false)
+const newsOpen = ref(false)
+const newsDropdownRef = ref<HTMLElement | null>(null)
 
 const newsCategories = [
   { slug: 'news', labelKey: 'news' },
@@ -195,13 +208,29 @@ const newsCategories = [
 ]
 
 onMounted(() => {
-  const handler = () => { scrolled.value = window.scrollY > 60 }
-  window.addEventListener('scroll', handler, { passive: true })
-  onUnmounted(() => window.removeEventListener('scroll', handler))
+  const scrollHandler = () => { scrolled.value = window.scrollY > 60 }
+  window.addEventListener('scroll', scrollHandler, { passive: true })
+
+  const clickOutsideHandler = (e: MouseEvent | TouchEvent) => {
+    if (newsDropdownRef.value && !newsDropdownRef.value.contains(e.target as Node)) {
+      newsOpen.value = false
+    }
+  }
+  document.addEventListener('click', clickOutsideHandler)
+  document.addEventListener('touchstart', clickOutsideHandler)
+
+  onUnmounted(() => {
+    window.removeEventListener('scroll', scrollHandler)
+    document.removeEventListener('click', clickOutsideHandler)
+    document.removeEventListener('touchstart', clickOutsideHandler)
+  })
 })
 
 const route = useRoute()
-watch(() => route.path, () => { menuOpen.value = false })
+watch(() => route.path, () => {
+  menuOpen.value = false
+  newsOpen.value = false
+})
 </script>
 
 <style scoped>
@@ -213,5 +242,14 @@ watch(() => route.path, () => { menuOpen.value = false })
 .mobile-menu-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.15s ease;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
 }
 </style>
