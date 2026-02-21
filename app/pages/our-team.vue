@@ -139,7 +139,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
 const url = useRequestURL()
-const OG_IMAGE = 'https://iberiainfo.me/wp-content/uploads/2022/02/kety.jpg'
+const OG_IMAGE = 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671535/kety_914387b234.jpg'
 
 useSeoMeta({
   title: `${t('ourteam')} — Iberia`,
@@ -161,19 +161,19 @@ const teamMembers = computed(() => [
     id: '1',
     name: t('ourteam_team1_1'),
     role: t('ourteam_team1_2'),
-    profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/kety.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671535/kety_914387b234.jpg',
   },
   {
     id: '2',
     name: t('ourteam_team2_1'),
     role: t('ourteam_team2_2'),
-    profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/Lana.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671511/Lana_602a5902aa.jpg',
   },
   {
     id: '3',
     name: t('ourteam_team3_1'),
     role: t('ourteam_team3_2'),
-    profileUrl: 'http://cms.iberiainfo.me/wp-content/uploads/2023/06/tako.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675264/tako_7aa23e6a3a.jpg',
   },
   {
     id: '4',
@@ -185,19 +185,19 @@ const teamMembers = computed(() => [
     id: '5',
     name: t('ourteam_team5_1'),
     role: t('ourteam_team5_2'),
-    profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/tamar.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671575/tamar_7e47b39039.jpg',
   },
   {
     id: '6',
     name: t('ourteam_team6_1'),
     role: t('ourteam_team6_2'),
-    profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/nana.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671565/nana_236467aef9.jpg',
   },
   {
     id: '7',
     name: t('ourteam_team7_1'),
     role: t('ourteam_team7_2'),
-    profileUrl: 'https://iberiainfo.me/wp-content/uploads/2022/02/ani.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671524/ani_d5ee585957.jpg',
   },
   {
     id: '8',

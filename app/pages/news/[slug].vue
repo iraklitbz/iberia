@@ -70,7 +70,7 @@
             class="flex aspect-video items-center justify-center bg-zinc-100"
           >
             <img
-              src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg"
+              src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671543/logo_iberia_icon_b2924031c3.svg"
               alt="Iberia"
               class="size-16 opacity-20"
             />
@@ -103,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { getPostBySlug, getGeoPostBySlug } from '~/composables/useWordpress'
+import { getPostBySlug, getGeoPostBySlug } from '~/composables/useStrapi'
 
 const route = useRoute()
 const { locale, t } = useI18n()
@@ -130,7 +130,6 @@ function formatDate(dateStr: string) {
   )
 }
 
-// Fix imágenes lazy del CMS de WordPress (quita srcset de gt3-lazy-image)
 onMounted(() => {
   document.querySelectorAll('.gt3-lazy-image').forEach((img) => {
     img.removeAttribute('srcset')
@@ -147,7 +146,7 @@ const postDescription = computed(() =>
 )
 const postImage = computed(() =>
   post.value?.featuredImage?.node.sourceUrl
-  ?? 'https://iberiainfo.me/wp-content/uploads/2022/02/contact-scaled.jpg',
+  ?? 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671526/contact_scaled_8ca2bf7adb.jpg',
 )
 
 useSeoMeta({
@@ -181,7 +180,7 @@ useHead({
         name: 'Iberia',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://iberiainfo.me/wp-content/uploads/2022/05/logo.png',
+          url: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671618/logo_1404f77b5f.png',
         },
       },
       mainEntityOfPage: { '@type': 'WebPage', '@id': url.href },

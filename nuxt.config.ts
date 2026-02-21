@@ -46,8 +46,9 @@ export default defineNuxtConfig({
     emailPass: process.env.EMAIL_PASS,
     contactTo: process.env.CONTACT_TO,
     public: {
-      gqlHost: process.env.GQL_HOST,
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://iberiainfo.me',
+      strapiUrl: process.env.STRAPI_URL ?? 'http://localhost:1337',
+      strapiToken: process.env.STRAPI_TOKEN ?? '',
     },
   },
 

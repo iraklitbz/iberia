@@ -8,14 +8,14 @@
         <div class="lg:col-span-1">
           <NuxtLink :to="localePath('/')" class="inline-flex items-center gap-3">
             <img
-              src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg"
+              src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671543/logo_iberia_icon_b2924031c3.svg"
               alt="Iberia"
               width="40"
               height="40"
               class="size-10 brightness-0 invert"
             />
             <img
-              src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_text-1.svg"
+              src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671557/logo_iberia_text_1_9fda9ff279.svg"
               alt="Iberia"
               width="110"
               height="32"
