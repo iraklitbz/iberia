@@ -48,6 +48,10 @@ const errorMessage = ref('')
 onMounted(async () => {
   const accessToken = route.query.access_token as string | undefined
 
+  console.log('[OAuth Callback] access_token present:', !!accessToken)
+  console.log('[OAuth Callback] token length:', accessToken?.length)
+  console.log('[OAuth Callback] token prefix:', accessToken?.substring(0, 20))
+
   if (!accessToken) {
     errorMessage.value = t('auth.errorGeneric')
     status.value = 'error'
