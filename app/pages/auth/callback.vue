@@ -48,10 +48,6 @@ const errorMessage = ref('')
 onMounted(async () => {
   const accessToken = route.query.access_token as string | undefined
 
-  console.log('[OAuth Callback] access_token present:', !!accessToken)
-  console.log('[OAuth Callback] token length:', accessToken?.length)
-  console.log('[OAuth Callback] token prefix:', accessToken?.substring(0, 20))
-
   if (!accessToken) {
     errorMessage.value = t('auth.errorGeneric')
     status.value = 'error'
@@ -59,7 +55,19 @@ onMounted(async () => {
   }
 
   try {
-    await loginWithToken(accessToken)
+    // Strapi JWTs start with 'eyJ'. If Strapi forwards the raw Google access token
+    // instead (misconfiguration), exchange it for a Strapi JWT first.
+    if (accessToken.startsWith('eyJ')) {
+      await loginWithToken(accessToken)
+    }
+    else {
+      const config = useRuntimeConfig()
+      const { jwt } = await $fetch<{ jwt: string }>(
+        `${config.public.strapiUrl}/api/auth/google/callback`,
+        { query: { access_token: accessToken } },
+      )
+      await loginWithToken(jwt)
+    }
     await router.push(localePath('/account'))
   }
   catch (err) {
