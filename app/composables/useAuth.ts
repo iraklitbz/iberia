@@ -98,6 +98,10 @@ export function useAuth() {
     })
   }
 
+  function connectWithProvider(provider: 'google' | 'facebook') {
+    window.location.href = `${baseUrl}/api/connect/${provider}`
+  }
+
   return {
     user: readonly(user),
     token: readonly(token),
@@ -110,5 +114,6 @@ export function useAuth() {
     resetPassword,
     confirmEmail,
     resendConfirmation,
+    connectWithProvider,
   }
 }

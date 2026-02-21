@@ -135,5 +135,8 @@
   "auth.myAccount": "Mi cuenta",
   "auth.accountStatus": "Estado de la cuenta",
   "auth.confirmed": "Verificado",
-  "auth.unconfirmed": "Sin verificar"
+  "auth.unconfirmed": "Sin verificar",
+  "auth.orContinueWith": "o continúa con",
+  "auth.continueWithGoogle": "Continuar con Google",
+  "auth.signingIn": "Iniciando sesión..."
 }

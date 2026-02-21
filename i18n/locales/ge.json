@@ -135,5 +135,8 @@
   "auth.myAccount": "ჩემი ანგარიში",
   "auth.accountStatus": "ანგარიშის სტატუსი",
   "auth.confirmed": "დადასტურებული",
-  "auth.unconfirmed": "დაუდასტურებელი"
+  "auth.unconfirmed": "დაუდასტურებელი",
+  "auth.orContinueWith": "ან გააგრძელე",
+  "auth.continueWithGoogle": "Google-ით გაგრძელება",
+  "auth.signingIn": "შესვლა მიმდინარეობს..."
 }
