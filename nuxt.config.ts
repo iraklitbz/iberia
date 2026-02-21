@@ -42,9 +42,6 @@ export default defineNuxtConfig({
 
   // Variables de entorno: privadas (sólo servidor) y públicas (cliente)
   runtimeConfig: {
-    emailUser: process.env.EMAIL_USER,
-    emailPass: process.env.EMAIL_PASS,
-    contactTo: process.env.CONTACT_TO,
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://iberiainfo.me',
       strapiUrl: process.env.STRAPI_URL ?? 'http://localhost:1337',
