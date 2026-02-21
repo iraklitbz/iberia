@@ -6,7 +6,8 @@
       "Bash(bun run postinstall:*)",
       "Bash(bun remove:*)",
       "Bash(bun nuxt prepare:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(tail:*)"
     ]
   }
 }
