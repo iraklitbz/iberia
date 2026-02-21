@@ -39,7 +39,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const router = useRouter()
 const route = useRoute()
-const { token, fetchUser } = useAuth()
+const { loginWithToken } = useAuth()
 
 type Status = 'loading' | 'error'
 const status = useState<Status>('oauth-callback-status', () => 'loading')
@@ -55,12 +55,10 @@ await callOnce(async () => {
   }
 
   try {
-    token.value = accessToken
-    await fetchUser()
+    await loginWithToken(accessToken)
     await router.push(localePath('/account'))
   }
   catch {
-    token.value = null
     errorMessage.value = t('auth.errorGeneric')
     status.value = 'error'
   }

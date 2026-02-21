@@ -98,6 +98,11 @@ export function useAuth() {
     })
   }
 
+  async function loginWithToken(jwt: string): Promise<void> {
+    token.value = jwt
+    await fetchUser()
+  }
+
   function connectWithProvider(provider: 'google' | 'facebook') {
     window.location.href = `${baseUrl}/api/connect/${provider}`
   }
@@ -114,6 +119,7 @@ export function useAuth() {
     resetPassword,
     confirmEmail,
     resendConfirmation,
+    loginWithToken,
     connectWithProvider,
   }
 }
