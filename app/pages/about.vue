@@ -128,7 +128,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
 const url = useRequestURL()
-const OG_IMAGE = 'https://iberiainfo.me/wp-content/uploads/2022/02/contact-scaled.jpg'
+const OG_IMAGE = 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671526/contact_scaled_8ca2bf7adb.jpg'
 
 useSeoMeta({
   title: `${t('aboutus')} — Iberia`,

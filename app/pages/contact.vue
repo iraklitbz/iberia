@@ -48,7 +48,7 @@
 
             <div class="mt-10 overflow-hidden rounded-2xl">
               <img
-                src="https://iberiainfo.me/wp-content/uploads/2022/02/contact-scaled.jpg"
+                src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671526/contact_scaled_8ca2bf7adb.jpg"
                 :alt="$t('contact1')"
                 class="w-full object-cover"
                 loading="lazy"
@@ -165,7 +165,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 
 const url = useRequestURL()
-const OG_IMAGE = 'https://iberiainfo.me/wp-content/uploads/2022/02/contact-scaled.jpg'
+const OG_IMAGE = 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671526/contact_scaled_8ca2bf7adb.jpg'
 
 useSeoMeta({
   title: `${t('contact1')} — Iberia`,

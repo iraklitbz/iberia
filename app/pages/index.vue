@@ -123,16 +123,16 @@
           <!-- Diamond grid photos -->
           <div class="grid grid-cols-2 gap-4">
             <div class="aspect-square overflow-hidden rounded-2xl">
-              <img src="https://iberiainfo.me/wp-content/uploads/2022/02/kety.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
+              <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671535/kety_914387b234.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
             </div>
             <div class="aspect-square overflow-hidden rounded-2xl mt-8">
-              <img src="https://iberiainfo.me/wp-content/uploads/2022/02/ani.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
+              <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671524/ani_d5ee585957.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
             </div>
             <div class="aspect-square overflow-hidden rounded-2xl">
-              <img src="https://iberiainfo.me/wp-content/uploads/2022/02/Lana.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
+              <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671511/Lana_602a5902aa.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
             </div>
             <div class="aspect-square overflow-hidden rounded-2xl mt-8">
-              <img src="http://cms.iberiainfo.me/wp-content/uploads/2023/06/tako.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
+              <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1771675264/tako_7aa23e6a3a.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@
 </template>
 
 <script setup lang="ts">
-import { getHomePosts } from '~/composables/useWordpress'
+import { getHomePosts } from '~/composables/useStrapi'
 
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
@@ -189,7 +189,7 @@ const { data: posts, pending } = await useAsyncData(
 )
 
 const url = useRequestURL()
-const OG_IMAGE = 'https://iberiainfo.me/wp-content/uploads/2022/02/contact-scaled.jpg'
+const OG_IMAGE = 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671526/contact_scaled_8ca2bf7adb.jpg'
 
 useSeoMeta({
   title: t('indexTitle'),
@@ -215,7 +215,7 @@ useHead({
       name: 'Centro Cultural y Educativo Español Iberia',
       alternateName: 'Iberia',
       url: 'https://iberiainfo.me',
-      logo: 'https://iberiainfo.me/wp-content/uploads/2022/05/logo.png',
+      logo: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671618/logo_1404f77b5f.png',
       description: t('indexDescription'),
       contactPoint: [{
         '@type': 'ContactPoint',
@@ -232,18 +232,18 @@ useHead({
 })
 
 const partners = [
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/unnamed-1.jpg', alt: 'Universidad' },
-  { src: 'https://iberiainfo.me/wp-content/uploads/2022/02/gau-en-2.png', alt: 'GAU' },
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/hablamos.png', alt: 'Hablamos Escuela' },
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/logo-ua.jpg', alt: 'Universidad de Alicante' },
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/escudouva.png', alt: 'Universidad de Valladolid' },
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/escola.png', alt: 'Escola de Enoturismo' },
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/logo-um-peq.png', alt: 'Universidad de Murcia' },
-  { src: 'http://cms.iberiainfo.me/wp-content/uploads/2023/08/aia-2.jpg', alt: 'AIA' },
-  { src: 'https://iberiainfo.me/wp-content/uploads/2022/02/UBU.png', alt: 'Universidad de Burgos' },
-  { src: 'https://iberiainfo.me/wp-content/uploads/2022/02/rioja.gif', alt: 'Universidad de La Rioja' },
-  { src: 'https://iberiainfo.me/wp-content/uploads/2022/02/seu.png', alt: 'SEU' },
-  { src: 'https://iberiainfo.me/wp-content/uploads/2022/02/logo_ihdemu.jpg', alt: 'IHDEMU' },
-  { src: 'https://iberiainfo.me/wp-content/uploads/2022/02/cyleon.png', alt: 'Cyleon' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671709/unnamed_1_652d1f197b.jpg', alt: 'Universidad' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671530/gau_en_2_7eea4ab556.png', alt: 'GAU' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675151/hablamos_015c8f3162.png', alt: 'Hablamos Escuela' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675151/logo_ua_5e1063ac71.jpg', alt: 'Universidad de Alicante' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675151/escudouva_a992162a1d.png', alt: 'Universidad de Valladolid' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675151/escola_1265e7daa7.png', alt: 'Escola de Enoturismo' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675151/logo_um_peq_06afad17b2.png', alt: 'Universidad de Murcia' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771675151/aia_2_ae945959a7.jpg', alt: 'AIA' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671512/UBU_f0498d57c9.png', alt: 'Universidad de Burgos' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671570/rioja_76533187a8.gif', alt: 'Universidad de La Rioja' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671571/seu_467ba4d2c9.png', alt: 'SEU' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671560/logo_ihdemu_bdc0bd50cf.jpg', alt: 'IHDEMU' },
+  { src: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671528/cyleon_829a9a9b86.png', alt: 'Cyleon' },
 ]
 </script>

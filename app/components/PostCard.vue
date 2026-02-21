@@ -14,7 +14,7 @@
       />
       <div v-else class="flex size-full items-center justify-center">
         <img
-          src="https://iberiainfo.me/wp-content/uploads/2022/02/logo_iberia_icon.svg"
+          src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671543/logo_iberia_icon_b2924031c3.svg"
           alt="Iberia"
           class="size-12 opacity-20"
         />
@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Post } from '~/types/wordpress'
+import type { Post } from '~/types/content'
 
 defineProps<{ post: Post }>()
 
