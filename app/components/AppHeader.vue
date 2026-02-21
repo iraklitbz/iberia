@@ -105,9 +105,12 @@
       <div class="flex items-center gap-3">
         <!-- Auth: desktop -->
         <div class="hidden items-center lg:flex">
+          <!-- Skeleton mientras se resuelve el estado de auth -->
+          <div v-if="!authReady" class="h-8 w-16 animate-pulse rounded-lg bg-zinc-200" />
+
           <!-- Not authenticated -->
           <NuxtLink
-            v-if="!isAuthenticated"
+            v-else-if="!isAuthenticated"
             :to="localePath('/login')"
             class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-all"
             :class="solid
@@ -291,7 +294,7 @@
 const localePath = useLocalePath()
 const router = useRouter()
 const route = useRoute()
-const { user, isAuthenticated, logout } = useAuth()
+const { user, isAuthenticated, logout, authReady } = useAuth()
 
 const scrolled = ref(false)
 const solid = computed(() => scrolled.value || !!route.meta.headerSolid)

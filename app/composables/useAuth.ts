@@ -23,6 +23,7 @@ export function useAuth() {
   })
 
   const user = useState<User | null>('auth_user', () => null)
+  const authReady = useState<boolean>('auth_ready', () => false)
 
   const isAuthenticated = computed(() => !!token.value && !!user.value)
 
@@ -120,6 +121,7 @@ export function useAuth() {
   return {
     user: readonly(user),
     token: readonly(token),
+    authReady,
     isAuthenticated,
     login,
     register,
