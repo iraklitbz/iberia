@@ -99,8 +99,18 @@ export function useAuth() {
   }
 
   async function loginWithToken(jwt: string): Promise<void> {
-    token.value = jwt
-    await fetchUser()
+    try {
+      const data = await $fetch<User>(`${baseUrl}/api/users/me`, {
+        headers: { Authorization: `Bearer ${jwt}` },
+      })
+      token.value = jwt
+      user.value = data
+    }
+    catch (err) {
+      token.value = null
+      user.value = null
+      throw err
+    }
   }
 
   function connectWithProvider(provider: 'google' | 'facebook') {

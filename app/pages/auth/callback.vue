@@ -58,7 +58,8 @@ onMounted(async () => {
     await loginWithToken(accessToken)
     await router.push(localePath('/account'))
   }
-  catch {
+  catch (err) {
+    console.error('[OAuth Callback] loginWithToken failed:', err)
     errorMessage.value = t('auth.errorGeneric')
     status.value = 'error'
   }
