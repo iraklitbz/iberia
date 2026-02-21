@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'default', headerSolid: true })
+definePageMeta({ layout: 'default', headerSolid: true, ssr: false })
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -42,10 +42,10 @@ const route = useRoute()
 const { loginWithToken } = useAuth()
 
 type Status = 'loading' | 'error'
-const status = useState<Status>('oauth-callback-status', () => 'loading')
-const errorMessage = useState('oauth-callback-error', () => '')
+const status = ref<Status>('loading')
+const errorMessage = ref('')
 
-await callOnce(async () => {
+onMounted(async () => {
   const accessToken = route.query.access_token as string | undefined
 
   if (!accessToken) {
