@@ -6,9 +6,7 @@
         <img
           src="https://res.cloudinary.com/dj6draudd/image/upload/v1771705953/logo_70e5917c59.png"
           alt="Iberia"
-          width="72"
-          height="72"
-          class="size-18"
+          class="h-16 w-auto"
         />
       </NuxtLink>
 
@@ -77,10 +75,11 @@ const { confirmEmail } = useAuth()
 const confirmation = route.query.confirmation as string | undefined
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
-const status = ref<Status>(confirmation ? 'loading' : 'idle')
-const errorMessage = ref('')
+const status = useState<Status>('confirm-status', () => confirmation ? 'loading' : 'idle')
+const errorMessage = useState('confirm-error', () => '')
 
-if (confirmation) {
+await callOnce(async () => {
+  if (!confirmation) return
   try {
     await confirmEmail(confirmation)
     status.value = 'success'
@@ -90,5 +89,5 @@ if (confirmation) {
     errorMessage.value = e?.data?.error?.message ?? t('auth.errorGeneric')
     status.value = 'error'
   }
-}
+})
 </script>
