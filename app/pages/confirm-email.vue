@@ -4,11 +4,11 @@
 
       <NuxtLink :to="localePath('/')" class="mb-6 inline-flex items-center justify-center">
         <img
-          src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671543/logo_iberia_icon_b2924031c3.svg"
+          src="https://res.cloudinary.com/dj6draudd/image/upload/v1771705953/logo_70e5917c59.png"
           alt="Iberia"
-          width="40"
-          height="40"
-          class="size-10"
+          width="72"
+          height="72"
+          class="size-18"
         />
       </NuxtLink>
 
