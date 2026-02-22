@@ -81,44 +81,44 @@ const categoryLabels: Record<string, string> = {
 }
 const categoryLabel = computed(() => categoryLabels[slug.value] ?? 'news')
 
-// SSR: primer lote de posts
-// getCachedData: en hidratación usa el payload SSR; en navegación SPA siempre refetch
-const { data: initialData, pending, error, refresh } = await useAsyncData(
-  () => `category-${slug.value}-${locale.value}`,
-  async () => {
-    if (locale.value === 'es') {
-      return getPostsByCategory(slug.value, 9)
-    }
-    return getGeoPostsByCategory(slug.value, 9)
-  },
-  {
-    getCachedData: (key, nuxtApp) =>
-      nuxtApp.isHydrating ? nuxtApp.payload.data[key] : undefined,
-  },
+// SSR: carga inicial (clave estática, sin reactividad de Nuxt)
+const { data: ssrData } = await useAsyncData(
+  `category-${slug.value}-${locale.value}`,
+  () => locale.value === 'es'
+    ? getPostsByCategory(slug.value, 9)
+    : getGeoPostsByCategory(slug.value, 9),
 )
 
-// Estado reactivo para paginación
-const posts = ref<Post[]>([])
-const hasNextPage = ref(false)
-const endCursor = ref<string | null>(null)
+// Estado reactivo — se inicializa con los datos SSR
+const posts = ref<Post[]>(ssrData.value?.edges.map(e => e.node) ?? [])
+const hasNextPage = ref(ssrData.value?.pageInfo.hasNextPage ?? false)
+const endCursor = ref<string | null>(ssrData.value?.pageInfo.endCursor ?? null)
+const pending = ref(false)
+const error = ref(false)
 const loadingMore = ref(false)
 
-// Al cambiar categoría: limpiar posts y forzar refetch al servidor
-watch([slug, locale], () => {
+// Navegación SPA: fetch directo sin pasar por el caché de useAsyncData
+watch([slug, locale], async ([newSlug]) => {
+  pending.value = true
+  error.value = false
   posts.value = []
   hasNextPage.value = false
   endCursor.value = null
-  refresh()
-})
-
-// Sincronizar con los datos SSR/refetch
-watch(initialData, (data) => {
-  if (data) {
+  try {
+    const data = locale.value === 'es'
+      ? await getPostsByCategory(newSlug, 9)
+      : await getGeoPostsByCategory(newSlug, 9)
     posts.value = data.edges.map(e => e.node)
     hasNextPage.value = data.pageInfo.hasNextPage
     endCursor.value = data.pageInfo.endCursor
   }
-}, { immediate: true })
+  catch {
+    error.value = true
+  }
+  finally {
+    pending.value = false
+  }
+})
 
 async function loadMore() {
   if (!hasNextPage.value || loadingMore.value) return
