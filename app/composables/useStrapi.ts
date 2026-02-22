@@ -36,12 +36,17 @@ interface StrapiResponse<T> {
 async function strapiGet<T>(path: string): Promise<StrapiResponse<T>> {
   const config = useRuntimeConfig()
   const userToken = useCookie<string | null>('auth_token')
-  const authToken = userToken.value ?? config.public.strapiToken
-  return $fetch<StrapiResponse<T>>(`${config.public.strapiUrl}/api/${path}`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  })
+
+  const headers: Record<string, string> = {}
+
+  if (userToken.value) {
+    // Pasa el JWT al proxy para que Strapi filtre por rol
+    headers['Authorization'] = `Bearer ${userToken.value}`
+    // Señal para que el proxy use bucket 'auth' con TTL corto (2 min)
+    headers['X-Authenticated'] = '1'
+  }
+
+  return $fetch<StrapiResponse<T>>(`/api/strapi/${path}`, { headers })
 }
 
 /**

@@ -79,11 +79,20 @@
           >
             <!-- Photo -->
             <img
+              v-if="member.profileUrl"
               :src="member.profileUrl"
               :alt="member.name"
               class="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />
+            <div
+              v-else
+              class="absolute inset-0 flex items-center justify-center bg-zinc-700"
+            >
+              <span class="text-5xl font-bold text-zinc-400">
+                {{ member.name.charAt(0).toUpperCase() }}
+              </span>
+            </div>
 
             <!-- Gradient overlay -->
             <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/30 to-transparent" />
@@ -181,7 +190,7 @@ const teamMembers = computed(() => [
     id: '4',
     name: t('ourteam_team4_1'),
     role: t('ourteam_team4_2'),
-    profileUrl: 'http://cms.iberiainfo.me/wp-content/uploads/2023/06/magda.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771763913/magda_028937bfa5.jpg',
   },
   {
     id: '5',
@@ -205,13 +214,13 @@ const teamMembers = computed(() => [
     id: '8',
     name: t('ourteam_team8_1'),
     role: t('ourteam_team8_2'),
-    profileUrl: 'http://cms.iberiainfo.me/wp-content/uploads/2023/06/hugo.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771763912/hugo_dd03f79caf.jpg',
   },
   {
     id: '9',
     name: t('ourteam_team9_1'),
     role: t('ourteam_team9_2'),
-    profileUrl: 'http://cms.iberiainfo.me/wp-content/uploads/2023/06/manu.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771763913/manu_7002681e18.jpg',
   },
 ])
 </script>

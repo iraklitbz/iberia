@@ -214,7 +214,7 @@ useHead({
       '@type': 'Organization',
       name: 'Centro Cultural y Educativo Español Iberia',
       alternateName: 'Iberia',
-      url: 'https://iberiainfo.me',
+      url: 'https://iberiainfo.org',
       logo: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671618/logo_1404f77b5f.png',
       description: t('indexDescription'),
       contactPoint: [{

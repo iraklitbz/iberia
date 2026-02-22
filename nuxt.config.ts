@@ -43,10 +43,17 @@ export default defineNuxtConfig({
   // Variables de entorno: privadas (sólo servidor) y públicas (cliente)
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY ?? '',
+    revalidateSecret: process.env.REVALIDATE_SECRET ?? '',
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://iberiainfo.me',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://iberiainfo.org',
       strapiUrl: process.env.STRAPI_URL ?? 'http://localhost:1337',
       strapiToken: process.env.STRAPI_TOKEN ?? '',
+    },
+  },
+
+  nitro: {
+    storage: {
+      cache: { driver: 'memory' },
     },
   },
 
