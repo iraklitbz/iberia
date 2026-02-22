@@ -93,7 +93,7 @@ const { data: initialData, pending, error, refresh } = await useAsyncData(
   },
   {
     getCachedData: (key, nuxtApp) =>
-      nuxtApp.isHydrating ? nuxtApp.payload.data[key] : null,
+      nuxtApp.isHydrating ? nuxtApp.payload.data[key] : undefined,
   },
 )
 
