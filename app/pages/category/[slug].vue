@@ -82,7 +82,8 @@ const categoryLabels: Record<string, string> = {
 const categoryLabel = computed(() => categoryLabels[slug.value] ?? 'news')
 
 // SSR: primer lote de posts
-const { data: initialData, pending, error } = await useAsyncData(
+// getCachedData: en hidratación usa el payload SSR; en navegación SPA siempre refetch
+const { data: initialData, pending, error, refresh } = await useAsyncData(
   () => `category-${slug.value}-${locale.value}`,
   async () => {
     if (locale.value === 'es') {
@@ -90,7 +91,10 @@ const { data: initialData, pending, error } = await useAsyncData(
     }
     return getGeoPostsByCategory(slug.value, 9)
   },
-  { watch: [slug, locale] },
+  {
+    getCachedData: (key, nuxtApp) =>
+      nuxtApp.isHydrating ? nuxtApp.payload.data[key] : null,
+  },
 )
 
 // Estado reactivo para paginación
@@ -99,7 +103,15 @@ const hasNextPage = ref(false)
 const endCursor = ref<string | null>(null)
 const loadingMore = ref(false)
 
-// Sincronizar con los datos SSR
+// Al cambiar categoría: limpiar posts y forzar refetch al servidor
+watch([slug, locale], () => {
+  posts.value = []
+  hasNextPage.value = false
+  endCursor.value = null
+  refresh()
+})
+
+// Sincronizar con los datos SSR/refetch
 watch(initialData, (data) => {
   if (data) {
     posts.value = data.edges.map(e => e.node)
