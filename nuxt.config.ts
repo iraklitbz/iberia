@@ -42,6 +42,7 @@ export default defineNuxtConfig({
 
   // Variables de entorno: privadas (sólo servidor) y públicas (cliente)
   runtimeConfig: {
+    resendApiKey: process.env.RESEND_API_KEY ?? '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://iberiainfo.me',
       strapiUrl: process.env.STRAPI_URL ?? 'http://localhost:1337',

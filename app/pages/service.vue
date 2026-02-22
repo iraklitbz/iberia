@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
+definePageMeta({ layout: 'default', headerSolid: true })
 
 const { t } = useI18n()
 const localePath = useLocalePath()

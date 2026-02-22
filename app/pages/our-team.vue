@@ -135,6 +135,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'default', headerSolid: true })
+
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 

@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'default', headerSolid: true })
 const { t } = useI18n()
 useSeoMeta({ title: `${t('cookiespolicy')} — Iberia` })
 </script>

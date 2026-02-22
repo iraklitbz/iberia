@@ -161,6 +161,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'default', headerSolid: true })
+
 const { t } = useI18n()
 const localePath = useLocalePath()
 
@@ -193,21 +195,30 @@ const loading = ref(false)
 const success = ref(false)
 const showError = ref(false)
 
-function handleSubmit() {
+async function handleSubmit() {
   if (!form.accepted) {
     showError.value = true
     return
   }
   showError.value = false
+  loading.value = true
 
-  const subject = encodeURIComponent(`Mensaje de ${form.name} — iberiainfo.me`)
-  const body = encodeURIComponent(`Nombre: ${form.name}\nEmail: ${form.email}\n\n${form.texto}`)
-  window.location.href = `mailto:asociacioniberia@gmail.com?subject=${subject}&body=${body}`
-
-  success.value = true
-  form.name = ''
-  form.email = ''
-  form.texto = ''
-  form.accepted = false
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: { name: form.name, email: form.email, mensaje: form.texto },
+    })
+    success.value = true
+    form.name = ''
+    form.email = ''
+    form.texto = ''
+    form.accepted = false
+  }
+  catch {
+    showError.value = true
+  }
+  finally {
+    loading.value = false
+  }
 }
 </script>
