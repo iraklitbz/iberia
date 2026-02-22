@@ -1,3 +1,18 @@
+const LATIN_TO_GEORGIAN: Record<string, string> = {
+  a: 'ა', b: 'ბ', c: 'ც', d: 'დ', e: 'ე',
+  f: 'ფ', g: 'გ', h: 'ჰ', i: 'ი', j: 'ჯ',
+  k: 'კ', l: 'ლ', m: 'მ', n: 'ნ', o: 'ო',
+  p: 'პ', q: 'ყ', r: 'რ', s: 'ს', t: 'ტ',
+  u: 'უ', v: 'ვ', w: 'ვ', x: 'ხ', y: 'ყ',
+  z: 'ზ',
+}
+
+function toGeorgianInitial(name: string | undefined): string {
+  if (!name) return '?'
+  const char = name.charAt(0).toLowerCase()
+  return LATIN_TO_GEORGIAN[char] ?? name.charAt(0).toUpperCase()
+}
+
 interface UserRole {
   id: number
   name: string
@@ -35,6 +50,7 @@ export function useAuth() {
   const isAuthenticated = computed(() => !!token.value && !!user.value)
   const userRole = computed(() => user.value?.role?.name ?? null)
   const isSubscriber = computed(() => userRole.value === 'Suscriptor')
+  const userInitial = computed(() => toGeorgianInitial(user.value?.username))
 
   async function login(email: string, password: string): Promise<void> {
     const data = await $fetch<AuthResponse>(`${baseUrl}/api/auth/local`, {
@@ -134,6 +150,7 @@ export function useAuth() {
     isAuthenticated,
     userRole,
     isSubscriber,
+    userInitial,
     login,
     register,
     logout,

@@ -301,7 +301,7 @@
 const localePath = useLocalePath()
 const router = useRouter()
 const route = useRoute()
-const { user, isAuthenticated, logout, authReady } = useAuth()
+const { user, isAuthenticated, logout, authReady, userInitial } = useAuth()
 
 const scrolled = ref(false)
 const solid = computed(() => scrolled.value || !!route.meta.headerSolid)
@@ -310,8 +310,6 @@ const newsOpen = ref(false)
 const userMenuOpen = ref(false)
 const newsDropdownRef = ref<HTMLElement | null>(null)
 const userDropdownRef = ref<HTMLElement | null>(null)
-
-const userInitial = computed(() => user.value?.username?.charAt(0).toUpperCase() ?? '?')
 
 const newsCategories = [
   { slug: 'news', labelKey: 'news' },

@@ -27,6 +27,22 @@
                 <dd class="mt-1 text-sm font-medium text-zinc-800">{{ user?.email }}</dd>
               </div>
               <div>
+                <dt class="text-xs font-medium uppercase tracking-wider text-zinc-400">{{ $t('auth.membershipType') }}</dt>
+                <dd class="mt-1">
+                  <span
+                    class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+                    :class="isSubscriber ? 'bg-amber-50 text-amber-700' : 'bg-iberia/8 text-iberia'"
+                  >
+                    <svg v-if="isSubscriber" class="size-3" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span v-else class="size-1.5 rounded-full bg-iberia" />
+                    {{ isSubscriber ? $t('auth.memberTypeSubscriber') : $t('auth.memberTypeMember') }}
+                  </span>
+                </dd>
+              </div>
+
+              <div>
                 <dt class="text-xs font-medium uppercase tracking-wider text-zinc-400">{{ $t('auth.accountStatus') }}</dt>
                 <dd class="mt-1">
                   <span
@@ -67,9 +83,7 @@ definePageMeta({
 
 const localePath = useLocalePath()
 const router = useRouter()
-const { user, logout } = useAuth()
-
-const userInitial = computed(() => user.value?.username?.charAt(0).toUpperCase() ?? '?')
+const { user, logout, isSubscriber, userInitial } = useAuth()
 
 function handleLogout() {
   logout()
