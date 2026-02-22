@@ -8,7 +8,8 @@
       "Bash(bun nuxt prepare:*)",
       "Bash(curl:*)",
       "Bash(tail:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(grep:*)"
     ]
   }
 }
