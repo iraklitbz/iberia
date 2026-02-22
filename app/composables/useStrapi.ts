@@ -35,9 +35,11 @@ interface StrapiResponse<T> {
 
 async function strapiGet<T>(path: string): Promise<StrapiResponse<T>> {
   const config = useRuntimeConfig()
+  const userToken = useCookie<string | null>('auth_token')
+  const authToken = userToken.value ?? config.public.strapiToken
   return $fetch<StrapiResponse<T>>(`${config.public.strapiUrl}/api/${path}`, {
     headers: {
-      Authorization: `Bearer ${config.public.strapiToken}`,
+      Authorization: `Bearer ${authToken}`,
     },
   })
 }
