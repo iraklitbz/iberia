@@ -1,12 +1,8 @@
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const pathParam = getRouterParam(event, 'path') ?? ''
-  const query = getQuery(event)
-
-  const qs = new URLSearchParams(
-    Object.entries(query).map(([k, v]) => [k, String(v)]),
-  ).toString()
-  const strapiPath = qs ? `${pathParam}?${qs}` : pathParam
+  const rawSearch = getRequestURL(event).search  // preserva los brackets tal cual: ?filters[category][slug][$eq]=news&...
+  const strapiPath = pathParam + rawSearch
 
   const auth = getHeader(event, 'authorization') ?? `Bearer ${config.public.strapiToken}`
   const isAuthenticated = getHeader(event, 'x-authenticated') === '1'
