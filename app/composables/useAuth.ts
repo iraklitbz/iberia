@@ -1,3 +1,9 @@
+interface UserRole {
+  id: number
+  name: string
+  type: string
+}
+
 interface User {
   id: number
   documentId: string
@@ -5,6 +11,7 @@ interface User {
   email: string
   confirmed: boolean
   blocked: boolean
+  role?: UserRole
 }
 
 interface AuthResponse {
@@ -26,6 +33,8 @@ export function useAuth() {
   const authReady = useState<boolean>('auth_ready', () => false)
 
   const isAuthenticated = computed(() => !!token.value && !!user.value)
+  const userRole = computed(() => user.value?.role?.name ?? null)
+  const isSubscriber = computed(() => userRole.value === 'Suscriptor')
 
   async function login(email: string, password: string): Promise<void> {
     const data = await $fetch<AuthResponse>(`${baseUrl}/api/auth/local`, {
@@ -52,7 +61,7 @@ export function useAuth() {
   async function fetchUser(): Promise<void> {
     if (!token.value) return
     try {
-      const data = await $fetch<User>(`${baseUrl}/api/users/me`, {
+      const data = await $fetch<User>(`${baseUrl}/api/users/me?populate=role`, {
         headers: { Authorization: `Bearer ${token.value}` },
       })
       user.value = data
@@ -101,7 +110,7 @@ export function useAuth() {
 
   async function loginWithToken(jwt: string): Promise<void> {
     try {
-      const data = await $fetch<User>(`${baseUrl}/api/users/me`, {
+      const data = await $fetch<User>(`${baseUrl}/api/users/me?populate=role`, {
         headers: { Authorization: `Bearer ${jwt}` },
       })
       token.value = jwt
@@ -123,6 +132,8 @@ export function useAuth() {
     token: readonly(token),
     authReady,
     isAuthenticated,
+    userRole,
+    isSubscriber,
     login,
     register,
     logout,

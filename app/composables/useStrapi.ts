@@ -42,6 +42,18 @@ async function strapiGet<T>(path: string): Promise<StrapiResponse<T>> {
   })
 }
 
+/**
+ * Fetch autenticado con el JWT del usuario (para contenido restringido).
+ */
+async function strapiGetAuth<T>(path: string, token: string): Promise<StrapiResponse<T>> {
+  const config = useRuntimeConfig()
+  return $fetch<StrapiResponse<T>>(`${config.public.strapiUrl}/api/${path}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 // ─── Mapear Strapi → interfaz Post (compatible con el resto de la app) ───────
 
 function mapPost(item: StrapiPost): Post {
@@ -154,6 +166,30 @@ export async function getAllCategories(): Promise<Category[]> {
     seen.add(c.slug)
     return true
   })
+}
+
+/**
+ * Posts para miembros autenticados según idioma (usa JWT del usuario).
+ */
+export async function getMemberPosts(locale: string, token: string): Promise<Post[]> {
+  const endpoint = locale === 'es' ? 'entradas' : 'georgians'
+  const res = await strapiGetAuth<StrapiPost[]>(
+    `${endpoint}?populate=cover&sort=publishedAt:desc`,
+    token,
+  )
+  return (res.data ?? []).map(mapPost)
+}
+
+/**
+ * Posts para suscriptores VIP según idioma (usa JWT del usuario).
+ */
+export async function getSubscriberPosts(locale: string, token: string): Promise<Post[]> {
+  const endpoint = locale === 'es' ? 'entradas' : 'georgians'
+  const res = await strapiGetAuth<StrapiPost[]>(
+    `${endpoint}?filters[acceso][$eq]=suscriptores&populate=cover&sort=publishedAt:desc`,
+    token,
+  )
+  return (res.data ?? []).map(mapPost)
 }
 
 /**
