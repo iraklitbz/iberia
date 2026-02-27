@@ -43,10 +43,15 @@ export default defineNuxtConfig({
   // Variables de entorno: privadas (sólo servidor) y públicas (cliente)
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY ?? '',
+    strapiToken: process.env.STRAPI_TOKEN ?? '',
+    revalidateSecret: process.env.REVALIDATE_SECRET ?? '',
+    cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN ?? '',
+    cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID ?? '',
+    cloudflarePurgeEverything: process.env.CLOUDFLARE_PURGE_EVERYTHING === 'true',
+    cloudflarePurgePaths: process.env.CLOUDFLARE_PURGE_PATHS ?? '/*',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://iberiainfo.org',
       strapiUrl: process.env.STRAPI_URL ?? 'http://localhost:1337',
-      strapiToken: process.env.STRAPI_TOKEN ?? '',
     },
   },
 
