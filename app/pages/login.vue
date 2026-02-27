@@ -110,10 +110,10 @@ definePageMeta({ layout: 'default', headerSolid: true })
 const { t } = useI18n()
 const localePath = useLocalePath()
 const router = useRouter()
-const { login, isAuthenticated, connectWithProvider } = useAuth()
+const { login, token, connectWithProvider } = useAuth()
 
 // Redirect if already logged in
-if (isAuthenticated.value) {
+if (token.value) {
   await navigateTo(localePath('/account'))
 }
 

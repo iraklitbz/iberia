@@ -158,9 +158,9 @@ definePageMeta({ layout: 'default', headerSolid: true })
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const { register, isAuthenticated, connectWithProvider } = useAuth()
+const { register, token, connectWithProvider } = useAuth()
 
-if (isAuthenticated.value) {
+if (token.value) {
   await navigateTo(localePath('/account'))
 }
 

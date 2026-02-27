@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(() => {
-  const { isAuthenticated } = useAuth()
-  if (!isAuthenticated.value) {
+  const { token } = useAuth()
+  if (!token.value) {
     return navigateTo('/login')
   }
 })
