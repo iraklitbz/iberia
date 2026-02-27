@@ -61,8 +61,9 @@ export default defineEventHandler(async (event) => {
   const envPaths = parseCsvPaths(config.cloudflarePurgePaths)
   const paths = payloadPaths.length > 0 ? payloadPaths : envPaths
   const urls = payloadUrls.length > 0 ? payloadUrls : paths.map(path => toAbsoluteUrl(siteUrl, path))
+  const hasWildcardPaths = payloadUrls.length === 0 && paths.some(path => path.includes('*'))
 
-  const purgeEverything = config.cloudflarePurgeEverything && payloadPaths.length === 0 && payloadUrls.length === 0
+  const purgeEverything = hasWildcardPaths || (config.cloudflarePurgeEverything && payloadPaths.length === 0 && payloadUrls.length === 0)
   const payload = purgeEverything ? { purge_everything: true } : { files: urls }
 
   const result = await $fetch<{ success: boolean, errors?: unknown[] }>(

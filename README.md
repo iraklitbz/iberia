@@ -95,7 +95,7 @@ To purge Cloudflare cache from Strapi webhook:
    - URL: `https://your-domain.com/api/revalidate`
    - Method: `POST`
    - Header: `x-webhook-secret: <REVALIDATE_SECRET>`
-   - Body option A (recommended, targeted purge):
+   - Body option A (paths):
      ```json
      { "paths": ["/news/*", "/category/*"] }
      ```
@@ -105,3 +105,4 @@ To purge Cloudflare cache from Strapi webhook:
      ```
 
 If body is omitted, the server uses `CLOUDFLARE_PURGE_PATHS` (built against `NUXT_PUBLIC_SITE_URL`).
+If any `paths` entry contains `*`, the endpoint uses `purge_everything` in Cloudflare.

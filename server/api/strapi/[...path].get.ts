@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     // No cachear respuestas con JWT de usuario.
     setHeader(event, 'Cache-Control', 'private, no-store')
   } else {
-    // Cache para CDN (CloudFront), no para el navegador.
+    // Cache para CDN (Cloudflare), no para el navegador.
     setHeader(event, 'Cache-Control', 'public, max-age=0, s-maxage=600, stale-while-revalidate=86400')
   }
 
