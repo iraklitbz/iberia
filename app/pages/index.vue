@@ -2,14 +2,7 @@
   <div>
 
     <!-- Hero -->
-    <section class="relative overflow-hidden bg-white pb-16 pt-28 lg:pb-20 lg:pt-32">
-      <img
-        src="https://res.cloudinary.com/dj6draudd/image/upload/v1777754113/QR_245_8ee0315e5a.png"
-        alt=""
-        aria-hidden="true"
-        class="absolute inset-0 size-full object-cover object-center"
-      />
-      <div class="absolute inset-0 bg-gradient-to-r from-white/70 via-white/45 to-transparent [background-size:48%_100%] bg-no-repeat" />
+    <section class="relative overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 pb-28 pt-44 lg:pb-40 lg:pt-56">
       <!-- Decorative blobs — rojo (España) -->
       <div class="absolute -top-40 -right-40 size-96 rounded-full bg-iberia/20 blur-3xl" />
       <div class="absolute -bottom-20 -left-20 size-64 rounded-full bg-iberia/10 blur-3xl" />
@@ -22,10 +15,10 @@
           <span class="inline-block rounded-full border border-iberia/30 bg-iberia/10 px-4 py-1.5 text-sm font-medium text-iberia">
             {{ $t('home2') }}
           </span>
-          <h1 class="mt-6 text-4xl font-bold leading-tight text-zinc-900 lg:text-5xl xl:text-6xl">
+          <h1 class="mt-6 text-4xl font-bold leading-tight text-white lg:text-5xl xl:text-6xl">
             {{ $t('indexTitle') }}
           </h1>
-          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-700">
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
             {{ $t('home3') }}
           </p>
           <div class="mt-10 flex flex-wrap gap-4">
@@ -40,7 +33,7 @@
             </NuxtLink>
             <NuxtLink
               :to="localePath('/about')"
-              class="inline-flex items-center gap-2 rounded-xl border border-zinc-400 bg-white/35 px-6 py-3 text-sm font-semibold text-zinc-700 transition-all hover:border-zinc-600 hover:bg-white/65 hover:text-zinc-900"
+              class="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-6 py-3 text-sm font-semibold text-zinc-300 transition-all hover:border-zinc-500 hover:text-white"
             >
               {{ $t('aboutus6') }}
             </NuxtLink>
@@ -50,11 +43,12 @@
     </section>
 
     <!-- Latest news -->
-    <section class="pb-20 pt-2 lg:pb-28 lg:pt-3">
+    <section class="py-20 lg:py-28">
       <div class="container mx-auto px-4 lg:px-6">
         <div class="mb-12 flex items-end justify-between">
           <div>
-            <h2 class="text-3xl font-bold text-zinc-800">{{ $t('home4') }}</h2>
+            <p class="text-sm font-semibold tracking-wider text-iberia uppercase">Blog</p>
+            <h2 class="mt-2 text-3xl font-bold text-zinc-800">{{ $t('home4') }}</h2>
           </div>
           <NuxtLink
             :to="localePath({ name: 'category-slug', params: { slug: 'news' } })"
