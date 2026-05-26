@@ -300,11 +300,9 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const router = useRouter()
-const route = useRoute()
 const { user, isAuthenticated, logout, authReady, userInitial } = useAuth()
 
-const scrolled = ref(false)
-const solid = computed(() => scrolled.value || !!route.meta.headerSolid)
+const solid = true
 const menuOpen = ref(false)
 const newsOpen = ref(false)
 const userMenuOpen = ref(false)
@@ -328,9 +326,6 @@ function handleLogout() {
 }
 
 onMounted(() => {
-  const scrollHandler = () => { scrolled.value = window.scrollY > 60 }
-  window.addEventListener('scroll', scrollHandler, { passive: true })
-
   const clickOutsideHandler = (e: MouseEvent | TouchEvent) => {
     if (newsDropdownRef.value && !newsDropdownRef.value.contains(e.target as Node)) {
       newsOpen.value = false
@@ -343,7 +338,6 @@ onMounted(() => {
   document.addEventListener('touchstart', clickOutsideHandler)
 
   onUnmounted(() => {
-    window.removeEventListener('scroll', scrollHandler)
     document.removeEventListener('click', clickOutsideHandler)
     document.removeEventListener('touchstart', clickOutsideHandler)
   })

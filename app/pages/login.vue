@@ -1,46 +1,72 @@
 <template>
-  <div class="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-20">
-    <div class="w-full max-w-md">
+  <div class="login-scene relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden px-4 py-12 sm:px-8">
+    <img
+      class="scene-art"
+      src="/images/login/autumn-watercolor-background.webp"
+      alt=""
+      aria-hidden="true"
+    />
+    <div class="scene-light" aria-hidden="true" />
+    <div class="cyclist-lane" aria-hidden="true">
+      <div class="cyclist-track">
+        <img class="cyclist-art" src="/images/login/cyclist-watercolor.webp" alt="" />
+      </div>
+    </div>
+    <img
+      class="scene-art scene-foreground"
+      src="/images/login/foreground-trees.webp"
+      alt=""
+      aria-hidden="true"
+    />
+    <div class="drifting-leaves" aria-hidden="true">
+      <span class="leaf leaf-one" />
+      <span class="leaf leaf-two" />
+      <span class="leaf leaf-three" />
+      <span class="leaf leaf-four" />
+      <span class="leaf leaf-five" />
+      <span class="leaf leaf-six" />
+      <span class="leaf leaf-seven" />
+      <span class="leaf leaf-eight" />
+    </div>
 
-      <!-- Header -->
-      <div class="mb-8 text-center">
-        <NuxtLink :to="localePath('/')" class="mb-6 inline-flex items-center justify-center">
+    <div class="auth-card relative z-10 w-full max-w-sm p-6 sm:p-7">
+      <div class="mb-7 text-center">
+        <NuxtLink :to="localePath('/')" class="mb-5 inline-flex items-center justify-center">
           <img
             src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671543/logo_iberia_icon_b2924031c3.svg"
             alt="Iberia"
             width="40"
             height="40"
-            class="size-10"
+            class="size-9"
           />
         </NuxtLink>
-        <h1 class="font-display text-2xl font-bold text-zinc-900">{{ $t('auth.loginTitle') }}</h1>
-        <p class="mt-2 text-sm text-zinc-500">{{ $t('auth.loginSubtitle') }}</p>
+        <h1 class="font-display text-2xl font-bold text-[#46261d]">{{ $t('auth.loginTitle') }}</h1>
+        <p class="mt-2 text-sm text-[#7f5846]">{{ $t('auth.loginSubtitle') }}</p>
       </div>
 
-      <!-- Form -->
       <form class="space-y-4" @submit.prevent="handleLogin">
-        <div v-if="error" class="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div v-if="error" class="rounded border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
           {{ error }}
         </div>
 
         <div>
-          <label class="mb-1.5 block text-sm font-medium text-zinc-700">{{ $t('auth.email') }}</label>
+          <label class="mb-1.5 block text-sm font-medium text-[#58382d]">{{ $t('auth.email') }}</label>
           <input
             v-model="form.email"
             type="email"
             required
             autocomplete="email"
-            class="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-iberia focus:ring-2 focus:ring-iberia/10"
+            class="login-input"
             :placeholder="$t('auth.emailPlaceholder')"
           />
         </div>
 
         <div>
-          <div class="mb-1.5 flex items-center justify-between">
-            <label class="text-sm font-medium text-zinc-700">{{ $t('auth.password') }}</label>
+          <div class="mb-1.5 flex items-center justify-between gap-4">
+            <label class="text-sm font-medium text-[#58382d]">{{ $t('auth.password') }}</label>
             <NuxtLink
               :to="localePath('/forgot-password')"
-              class="text-xs text-iberia hover:underline"
+              class="text-xs text-[#9e3528] hover:underline"
             >
               {{ $t('auth.forgotPasswordLink') }}
             </NuxtLink>
@@ -50,7 +76,7 @@
             type="password"
             required
             autocomplete="current-password"
-            class="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-iberia focus:ring-2 focus:ring-iberia/10"
+            class="login-input"
             :placeholder="$t('auth.passwordPlaceholder')"
           />
         </div>
@@ -58,7 +84,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="flex w-full items-center justify-center gap-2 rounded-xl bg-iberia px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          class="flex w-full items-center justify-center gap-2 rounded bg-[#a73526] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#89281e] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <svg v-if="loading" class="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -68,20 +94,18 @@
         </button>
       </form>
 
-      <!-- Divider -->
       <div class="relative my-5">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-zinc-200" />
+          <div class="w-full border-t border-[#ebd2b6]" />
         </div>
         <div class="relative flex justify-center">
-          <span class="bg-white px-3 text-xs text-zinc-400">{{ $t('auth.orContinueWith') }}</span>
+          <span class="rounded bg-white/30 px-3 text-xs text-[#8e6756]">{{ $t('auth.orContinueWith') }}</span>
         </div>
       </div>
 
-      <!-- Google -->
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+        class="flex w-full items-center justify-center gap-3 rounded border border-[#e7cdb1] bg-white px-4 py-2.5 text-sm font-medium text-[#58382d] transition-colors hover:bg-[#fff4e4]"
         @click="connectWithProvider('google')"
       >
         <svg class="size-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -93,10 +117,9 @@
         {{ $t('auth.continueWithGoogle') }}
       </button>
 
-      <!-- Footer link -->
-      <p class="mt-6 text-center text-sm text-zinc-500">
+      <p class="mt-6 text-center text-sm text-[#7f5846]">
         {{ $t('auth.noAccount') }}
-        <NuxtLink :to="localePath('/register')" class="font-medium text-iberia hover:underline">
+        <NuxtLink :to="localePath('/register')" class="font-medium text-[#9e3528] hover:underline">
           {{ $t('auth.createAccount') }}
         </NuxtLink>
       </p>
@@ -112,7 +135,6 @@ const localePath = useLocalePath()
 const router = useRouter()
 const { login, token, connectWithProvider } = useAuth()
 
-// Redirect if already logged in
 if (token.value) {
   await navigateTo(localePath('/account'))
 }
@@ -137,3 +159,220 @@ async function handleLogin() {
   }
 }
 </script>
+
+<style scoped>
+.login-scene {
+  background: #f8d18c;
+}
+
+.scene-art {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.scene-light {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 30%, rgb(255 250 224 / 0.3), transparent 34%),
+    linear-gradient(180deg, rgb(255 248 230 / 0.12), transparent 55%);
+  animation: light-breathe 7s ease-in-out infinite;
+}
+
+.auth-card {
+  box-sizing: border-box;
+  border: 1px solid rgb(255 255 255 / 0.58);
+  border-right-color: rgb(255 255 255 / 0.34);
+  border-bottom-color: rgb(255 255 255 / 0.34);
+  border-radius: 16px;
+  background: rgb(255 255 255 / 0.27);
+  box-shadow: 0 22px 48px rgb(84 40 19 / 0.14);
+  backdrop-filter: blur(15px);
+}
+
+.login-input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #e7cdb1;
+  border-radius: 4px;
+  background: #fff;
+  padding: 0.625rem 0.75rem;
+  color: #34221c;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.login-input::placeholder {
+  color: #aa8e80;
+}
+
+.login-input:focus {
+  border-color: #a73526;
+  box-shadow: 0 0 0 3px rgb(167 53 38 / 0.12);
+}
+
+.drifting-leaves {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cyclist-lane {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgb(0 0 0 / 0.28) clamp(2.75rem, 7vw, 6.5rem),
+    #000 clamp(8rem, 17vw, 14rem),
+    #000 calc(100% - clamp(8rem, 17vw, 14rem)),
+    rgb(0 0 0 / 0.28) calc(100% - clamp(2.75rem, 7vw, 6.5rem)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgb(0 0 0 / 0.28) clamp(2.75rem, 7vw, 6.5rem),
+    #000 clamp(8rem, 17vw, 14rem),
+    #000 calc(100% - clamp(8rem, 17vw, 14rem)),
+    rgb(0 0 0 / 0.28) calc(100% - clamp(2.75rem, 7vw, 6.5rem)),
+    transparent 100%
+  );
+}
+
+.cyclist-track {
+  position: absolute;
+  bottom: clamp(2.25rem, 9vh, 6rem);
+  left: 0;
+  width: clamp(14rem, 26vw, 23rem);
+  animation: cyclist-route 20s linear infinite;
+}
+
+.cyclist-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: cyclist-bob 0.9s ease-in-out infinite;
+}
+
+.scene-foreground {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.leaf {
+  position: absolute;
+  top: -7%;
+  width: clamp(0.55rem, 1vw, 0.85rem);
+  height: clamp(0.85rem, 1.5vw, 1.2rem);
+  border-radius: 90% 0 90% 0;
+  background: #e85921;
+  filter: drop-shadow(0 2px 1px rgb(91 42 21 / 0.18));
+  animation: leaf-fall linear infinite;
+}
+
+.leaf-one { left: 9%; animation-duration: 11s; animation-delay: -3s; }
+.leaf-two { left: 23%; background: #f28d25; animation-duration: 13s; animation-delay: -9s; }
+.leaf-three { left: 39%; background: #c54125; animation-duration: 12s; animation-delay: -6s; }
+.leaf-four { left: 52%; background: #ef7220; animation-duration: 10s; animation-delay: -2s; }
+.leaf-five { left: 65%; background: #c33d24; animation-duration: 14s; animation-delay: -11s; }
+.leaf-six { left: 75%; background: #f19b2a; animation-duration: 12.5s; animation-delay: -5s; }
+.leaf-seven { left: 87%; background: #e05120; animation-duration: 10.5s; animation-delay: -8s; }
+.leaf-eight { left: 95%; background: #c83f26; animation-duration: 13.5s; animation-delay: -4s; }
+
+@keyframes leaf-fall {
+  0% {
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.95;
+  }
+  44% {
+    transform: translate3d(2.4rem, 44vh, 0) rotate(180deg);
+  }
+  100% {
+    transform: translate3d(-1.6rem, 110vh, 0) rotate(410deg);
+    opacity: 0;
+  }
+}
+
+@keyframes cyclist-route {
+  0% {
+    transform: translateX(calc(-100% - 3vw)) scaleX(1);
+  }
+  50% {
+    transform: translateX(calc(100vw + 3vw)) scaleX(1);
+  }
+  50.01%,
+  100% {
+    transform: translateX(calc(-100% - 3vw)) scaleX(1);
+  }
+}
+
+@keyframes cyclist-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.18rem);
+  }
+}
+
+@keyframes light-breathe {
+  50% {
+    opacity: 0.76;
+  }
+}
+
+@media (max-width: 639px) {
+  .login-scene {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .scene-art {
+    object-position: center center;
+  }
+
+  .scene-light {
+    background: linear-gradient(0deg, rgb(255 244 226 / 0.22), transparent 76%);
+  }
+
+  .cyclist-track {
+    bottom: 2.25rem;
+    width: clamp(11rem, 46vw, 14rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-light,
+  .leaf,
+  .cyclist-track,
+  .cyclist-art {
+    animation: none;
+  }
+
+  .leaf {
+    display: none;
+  }
+
+  .cyclist-track {
+    left: 3vw;
+    transform: none;
+  }
+}
+</style>
