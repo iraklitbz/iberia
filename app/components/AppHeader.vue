@@ -300,6 +300,7 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const router = useRouter()
+const route = useRoute()
 const { user, isAuthenticated, logout, authReady, userInitial } = useAuth()
 
 const solid = true
