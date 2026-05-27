@@ -2,17 +2,14 @@
   <div>
 
     <!-- Hero -->
-    <section class="relative overflow-hidden bg-white pb-16 pt-28 lg:pb-20 lg:pt-32">
+    <section class="relative overflow-hidden bg-white pb-16 pt-28 lg:min-h-[600px] lg:pb-20 lg:pt-32">
       <img
-        src="https://res.cloudinary.com/dj6draudd/image/upload/v1777754113/QR_245_8ee0315e5a.png"
+        src="https://res.cloudinary.com/dj6draudd/image/upload/v1779913280/Chat_GPT_Image_May_27_2026_10_20_35_PM_6fd50b7f7e.png"
         alt=""
         aria-hidden="true"
-        class="absolute inset-0 size-full object-cover object-center"
+        class="absolute inset-0 h-full w-full object-cover object-center lg:left-auto lg:w-auto lg:max-w-none lg:object-contain lg:object-right"
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-white/70 via-white/45 to-transparent [background-size:48%_100%] bg-no-repeat" />
-      <!-- Decorative blobs — rojo (España) -->
-      <div class="absolute -top-40 -right-40 size-96 rounded-full bg-iberia/20 blur-3xl" />
-      <div class="absolute -bottom-20 -left-20 size-64 rounded-full bg-iberia/10 blur-3xl" />
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,white_0%,white_58%,rgba(255,255,255,0.9)_70%,rgba(255,255,255,0.52)_83%,transparent_100%)] lg:bg-[linear-gradient(to_right,white_0%,white_31%,rgba(255,255,255,0.9)_41%,rgba(255,255,255,0.56)_54%,rgba(255,255,255,0.2)_67%,transparent_80%)]" />
       <!-- Decorative blobs — amarillo (España), más sutiles -->
       <div class="absolute top-1/2 -right-24 size-72 -translate-y-1/2 rounded-full bg-yellow-400/8 blur-3xl" />
       <div class="absolute -top-10 left-1/3 size-56 rounded-full bg-yellow-300/6 blur-3xl" />
@@ -67,12 +64,12 @@
           </NuxtLink>
         </div>
 
-        <div v-if="pending" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div v-for="i in 3" :key="i" class="h-72 animate-pulse rounded-2xl bg-zinc-100" />
+        <div v-if="pending" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
+          <div v-for="i in 5" :key="i" class="h-72 animate-pulse rounded-2xl bg-zinc-100" />
         </div>
 
-        <div v-else-if="posts?.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <PostCard v-for="post in posts.slice(0, 3)" :key="post.id" :post="post" />
+        <div v-else-if="posts?.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
+          <PostCard v-for="post in posts.slice(0, 5)" :key="post.id" :post="post" />
         </div>
 
         <p v-else class="text-center text-zinc-400">{{ $t('no_more_news') }}</p>

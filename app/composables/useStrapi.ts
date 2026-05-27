@@ -86,7 +86,7 @@ function mapPost(item: StrapiPost): Post {
 export async function getHomePosts(locale: string): Promise<Post[]> {
   const endpoint = locale === 'es' ? 'entradas' : 'georgians'
   const res = await strapiGet<StrapiPost[]>(
-    `${endpoint}?filters[category][slug][$eq]=home&populate=cover&pagination[pageSize]=3&sort=publishedAt:desc`,
+    `${endpoint}?filters[category][slug][$eq]=home&populate=cover&pagination[pageSize]=5&sort=publishedAt:desc`,
   )
   return (res.data ?? []).map(mapPost)
 }
