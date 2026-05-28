@@ -21,13 +21,13 @@
     <article v-else>
 
       <!-- Hero header -->
-      <section class="relative overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 pb-20 pt-36">
+      <section class="relative overflow-hidden bg-gradient-to-br from-zinc-700 via-zinc-600 to-zinc-700 pb-6 pt-24">
         <div class="absolute -right-40 -top-40 size-96 rounded-full bg-iberia/20 blur-3xl" />
         <div class="absolute -bottom-20 -left-20 size-64 rounded-full bg-iberia/10 blur-3xl" />
         <div class="absolute -right-24 top-1/2 size-72 -translate-y-1/2 rounded-full bg-yellow-400/8 blur-3xl" />
         <div class="container relative mx-auto max-w-3xl px-4 lg:px-6">
           <!-- Breadcrumb -->
-          <nav class="mb-6 flex items-center gap-2 text-sm text-zinc-500">
+          <nav class="mb-3 flex items-center gap-2 text-sm text-zinc-500">
             <NuxtLink :to="localePath('/')" class="hover:text-zinc-300 transition-colors">
               {{ $t('home') }}
             </NuxtLink>
@@ -40,17 +40,17 @@
             </NuxtLink>
           </nav>
 
-          <h1 class="text-3xl font-bold leading-snug text-white lg:text-4xl">
+          <h1 class="text-2xl font-bold leading-snug text-white lg:text-3xl">
             {{ post.title }}
           </h1>
 
           <div
             v-if="post.excerpt"
-            class="mt-4 text-lg leading-relaxed text-zinc-400"
+            class="mt-2 text-base leading-relaxed text-zinc-400"
             v-html="cleanExcerpt(post.excerpt)"
           />
 
-          <time v-if="post.date" class="mt-6 block text-sm text-zinc-500">
+          <time v-if="post.date" class="mt-3 block text-sm text-zinc-500">
             {{ formatDate(post.date) }}
           </time>
         </div>
@@ -58,7 +58,7 @@
 
       <!-- Featured image -->
       <div class="container mx-auto max-w-4xl px-4 lg:px-6">
-        <div class="-mt-10 overflow-hidden rounded-2xl shadow-xl">
+        <div class="mt-6 overflow-hidden rounded-2xl shadow-xl">
           <img
             v-if="post.featuredImage"
             :src="post.featuredImage.node.sourceUrl"
