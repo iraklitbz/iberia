@@ -51,6 +51,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY ?? '',
     strapiToken: process.env.STRAPI_TOKEN ?? '',
+    strapiAdminEmail: process.env.STRAPI_ADMIN_EMAIL ?? '',
+    strapiAdminPassword: process.env.STRAPI_ADMIN_PASSWORD ?? '',
     revalidateSecret: process.env.REVALIDATE_SECRET ?? '',
     cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN ?? '',
     cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID ?? '',

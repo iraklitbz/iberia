@@ -1,8 +1,3 @@
-interface StrapiEntry {
-  documentId: string
-  content?: string | null
-}
-
 export default defineEventHandler(async (event) => {
   await requireForumSubscriber(event)
 
@@ -14,14 +9,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<Record<string, unknown>>(event)
   const config = useRuntimeConfig(event)
 
-  const existing = await $fetch<{ data: StrapiEntry }>(
-    `${config.public.strapiUrl}/api/entradas/${id}`,
-    {
-      headers: strapiAuthHeaders(event),
-    },
-  )
-
-  const previous = JSON.parse(existing.data.content ?? '{}')
+  const existing = await getForumEntry(event, id)
+  const previous = JSON.parse(existing.content ?? '{}')
   const post = { ...previous, ...body, id: undefined }
   const title = typeof post.title === 'string' && post.title.trim() ? post.title.trim() : 'Forum post'
 

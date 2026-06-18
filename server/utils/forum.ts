@@ -14,9 +14,18 @@ export interface ForumUser {
   username: string
 }
 
+export interface ForumStrapiEntry {
+  documentId: string
+  content?: string | null
+  createdAt?: string
+  excerpt?: string | null
+}
+
 interface StrapiUser extends ForumUser {
   role?: StrapiRole
 }
+
+let cachedAdminToken: string | null = null
 
 function normalizeUser(data: StrapiUser | StrapiUser[] | { data?: StrapiUser | StrapiUser[] }): StrapiUser | null {
   const value = 'data' in data && data.data ? data.data : data
@@ -62,4 +71,58 @@ export async function requireForumSubscriber(event: H3Event): Promise<ForumUser>
 export function strapiAuthHeaders(event: H3Event): Record<string, string> {
   const config = useRuntimeConfig(event)
   return { Authorization: `Bearer ${config.strapiToken}` }
+}
+
+async function strapiAdminToken(event: H3Event): Promise<string> {
+  if (cachedAdminToken) {
+    return cachedAdminToken
+  }
+
+  const config = useRuntimeConfig(event)
+  if (!config.strapiAdminEmail || !config.strapiAdminPassword) {
+    throw createError({ statusCode: 500, message: 'Missing Strapi admin credentials' })
+  }
+
+  const login = await $fetch<{ data: { token?: string } }>(`${config.public.strapiUrl}/admin/login`, {
+    method: 'POST',
+    body: {
+      email: config.strapiAdminEmail,
+      password: config.strapiAdminPassword,
+    },
+  })
+
+  if (!login.data.token) {
+    throw createError({ statusCode: 502, message: 'Strapi admin login failed' })
+  }
+
+  cachedAdminToken = login.data.token
+  return cachedAdminToken
+}
+
+export async function strapiAdminHeaders(event: H3Event): Promise<Record<string, string>> {
+  return { Authorization: `Bearer ${await strapiAdminToken(event)}` }
+}
+
+export async function getForumEntry(event: H3Event, id: string): Promise<ForumStrapiEntry> {
+  const config = useRuntimeConfig(event)
+  const response = await $fetch<{ data: ForumStrapiEntry }>(
+    `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada/${id}`,
+    {
+      headers: await strapiAdminHeaders(event),
+    },
+  )
+
+  return response.data
+}
+
+export async function listForumEntries(event: H3Event): Promise<ForumStrapiEntry[]> {
+  const config = useRuntimeConfig(event)
+  const response = await $fetch<{ results: ForumStrapiEntry[] }>(
+    `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada?page=1&pageSize=100&sort=createdAt:DESC`,
+    {
+      headers: await strapiAdminHeaders(event),
+    },
+  )
+
+  return (response.results ?? []).filter(entry => entry.excerpt === FORUM_ENTRY_MARKER)
 }

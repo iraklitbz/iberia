@@ -1,8 +1,3 @@
-interface StrapiEntry {
-  documentId: string
-  content?: string | null
-}
-
 export default defineEventHandler(async (event) => {
   const user = await requireForumSubscriber(event)
 
@@ -12,14 +7,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig(event)
-  const existing = await $fetch<{ data: StrapiEntry }>(
-    `${config.public.strapiUrl}/api/entradas/${id}`,
-    {
-      headers: strapiAuthHeaders(event),
-    },
-  )
-
-  const post = JSON.parse(existing.data.content ?? '{}')
+  const existing = await getForumEntry(event, id)
+  const post = JSON.parse(existing.content ?? '{}')
   const canDelete = post.authorKey === forumUserKey(user) || user.email === 'geo.algabe@gmail.com'
 
   if (!canDelete) {
