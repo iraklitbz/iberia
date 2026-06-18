@@ -16,6 +16,13 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  routeRules: {
+    '/foro': { redirect: '/forum' },
+    '/es/forum': { redirect: '/forum' },
+    '/es/foro': { redirect: '/forum' },
+    '/ge/foro': { redirect: '/ge/forum' },
+  },
+
   // Patrón de iconos igual que mrboho
   svgo: {
     global: false,
