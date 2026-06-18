@@ -392,6 +392,8 @@ const currentPage = ref(1)
 const pages = [1, 2, 3]
 const posts = ref<ForumPost[]>([])
 const loadingPosts = ref(true)
+const refreshingPosts = ref(false)
+let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
 
 const form = reactive({
@@ -422,6 +424,18 @@ const visiblePosts = computed(() => filteredPosts.value)
 
 onMounted(async () => {
   await loadPosts()
+  refreshTimer = setInterval(() => {
+    if (!showComposer.value) {
+      refreshPosts()
+    }
+  }, 5000)
+})
+
+onUnmounted(() => {
+  if (refreshTimer) {
+    clearInterval(refreshTimer)
+    refreshTimer = null
+  }
 })
 
 async function loadPosts() {
@@ -436,6 +450,21 @@ async function loadPosts() {
   }
   finally {
     loadingPosts.value = false
+  }
+}
+
+async function refreshPosts() {
+  if (refreshingPosts.value) return
+
+  refreshingPosts.value = true
+  try {
+    const sharedPosts = await $fetch<ForumPost[]>('/api/forum/posts', {
+      headers: authHeaders(),
+    })
+    posts.value = sharedPosts.map(normalizePost)
+  }
+  finally {
+    refreshingPosts.value = false
   }
 }
 
