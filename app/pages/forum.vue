@@ -23,7 +23,13 @@
               class="flex size-11 items-center justify-center rounded-full font-bold"
               :class="isAuthenticated ? 'bg-iberia text-white' : 'bg-zinc-200 text-zinc-500'"
             >
-              <span v-if="isAuthenticated">{{ userInitial }}</span>
+              <img
+                v-if="isAuthenticated && profileAvatar"
+                :src="profileAvatar"
+                :alt="user?.username ?? ''"
+                class="size-11 rounded-full object-cover"
+              />
+              <span v-else-if="isAuthenticated">{{ userInitial }}</span>
               <svg v-else class="size-8" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z" />
               </svg>
@@ -143,7 +149,13 @@
               class="flex size-12 shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white shadow-sm"
               :class="post.avatarClass"
             >
-              {{ post.initial }}
+              <img
+                v-if="post.avatarUrl"
+                :src="post.avatarUrl"
+                :alt="post.name"
+                class="size-12 rounded-full object-cover"
+              />
+              <span v-else>{{ post.initial }}</span>
             </div>
 
             <div class="min-w-0">
@@ -237,7 +249,13 @@
                   class="flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white shadow-sm"
                   :class="comment.avatarClass"
                 >
-                  {{ comment.initial }}
+                  <img
+                    v-if="comment.avatarUrl"
+                    :src="comment.avatarUrl"
+                    :alt="comment.name"
+                    class="size-9 rounded-full object-cover"
+                  />
+                  <span v-else>{{ comment.initial }}</span>
                 </div>
                 <div class="min-w-0">
                   <p class="text-sm font-semibold text-zinc-900">{{ comment.name }}</p>
@@ -317,6 +335,7 @@ type ForumComment = {
   message: string
   createdAt: string
   avatarClass: string
+  avatarUrl?: string
 }
 
 type ForumPost = {
@@ -333,12 +352,13 @@ type ForumPost = {
   likedBy: string[]
   createdAt: string
   avatarClass: string
+  avatarUrl?: string
   image?: string
 }
 
 const STORAGE_KEY = 'iberia-forum-posts'
 const { t } = useI18n()
-const { user, userInitial, isAuthenticated } = useAuth()
+const { user, userInitial, isAuthenticated, profileAvatar } = useAuth()
 
 const categories = [
   { name: 'მოგზაურობა', className: 'bg-violet-100 text-violet-700' },
@@ -422,6 +442,7 @@ function addPost() {
     likedBy: [],
     createdAt: new Date().toISOString(),
     avatarClass: author.avatarClass,
+    avatarUrl: author.avatarUrl,
   })
 
   form.title = ''
@@ -493,6 +514,7 @@ function normalizePost(post: Partial<ForumPost>): ForumPost {
     likedBy: post.likedBy || [],
     createdAt: post.createdAt || new Date().toISOString(),
     avatarClass: post.avatarClass || 'bg-violet-600',
+    avatarUrl: post.avatarUrl,
     image: post.image,
   }
 }
@@ -507,6 +529,7 @@ function normalizeComment(comment: Partial<ForumComment>): ForumComment {
     message: comment.message || '',
     createdAt: comment.createdAt || new Date().toISOString(),
     avatarClass: comment.avatarClass || 'bg-zinc-500',
+    avatarUrl: comment.avatarUrl,
   }
 }
 
@@ -516,6 +539,7 @@ function getCurrentAuthor() {
       name: user.value.username,
       initial: userInitial.value,
       avatarClass: 'bg-iberia',
+      avatarUrl: profileAvatar.value ?? undefined,
     }
   }
 
@@ -525,6 +549,7 @@ function getCurrentAuthor() {
     name,
     initial: name[0].toUpperCase(),
     avatarClass: 'bg-violet-600',
+    avatarUrl: undefined,
   }
 }
 
@@ -569,6 +594,7 @@ function addComment(post: ForumPost) {
     message,
     createdAt: new Date().toISOString(),
     avatarClass: author.avatarClass,
+    avatarUrl: author.avatarUrl,
   })
   post.comments = post.commentItems.length
   commentForms[post.id] = ''

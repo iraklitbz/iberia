@@ -139,7 +139,13 @@
                 :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
                 @click="userMenuOpen = !userMenuOpen"
               >
-                <span class="flex size-7 items-center justify-center rounded-full bg-iberia text-xs font-bold text-white">
+                <img
+                  v-if="profileAvatar"
+                  :src="profileAvatar"
+                  :alt="user?.username ?? ''"
+                  class="size-7 rounded-full object-cover ring-1 ring-zinc-200"
+                />
+                <span v-else class="flex size-7 items-center justify-center rounded-full bg-iberia text-xs font-bold text-white">
                   {{ userInitial }}
                 </span>
                 <span>{{ user?.username }}</span>
@@ -290,7 +296,13 @@
                 class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
                 @click="menuOpen = false"
               >
-                <span class="flex size-6 items-center justify-center rounded-full bg-iberia text-xs font-bold text-white">
+                <img
+                  v-if="profileAvatar"
+                  :src="profileAvatar"
+                  :alt="user?.username ?? ''"
+                  class="size-6 rounded-full object-cover ring-1 ring-zinc-200"
+                />
+                <span v-else class="flex size-6 items-center justify-center rounded-full bg-iberia text-xs font-bold text-white">
                   {{ userInitial }}
                 </span>
                 {{ user?.username }}
@@ -317,7 +329,7 @@
 const localePath = useLocalePath()
 const router = useRouter()
 const route = useRoute()
-const { user, isAuthenticated, logout, authReady, userInitial } = useAuth()
+const { user, isAuthenticated, logout, authReady, userInitial, profileAvatar } = useAuth()
 
 const solid = true
 const menuOpen = ref(false)

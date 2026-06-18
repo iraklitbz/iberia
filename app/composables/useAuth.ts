@@ -39,6 +39,10 @@ interface SubscriberStatus {
   role: UserRole | null
 }
 
+function profileAvatarKey(user: User): string {
+  return `iberia-profile-avatar:${user.id ?? user.email}`
+}
+
 export function useAuth() {
   const config = useRuntimeConfig()
   const baseUrl = config.public.strapiUrl
@@ -51,6 +55,7 @@ export function useAuth() {
 
   const user = useState<User | null>('auth_user', () => null)
   const authReady = useState<boolean>('auth_ready', () => false)
+  const profileAvatar = useState<string | null>('auth_profile_avatar', () => null)
 
   const isAuthenticated = computed(() => !!token.value && !!user.value)
   const userRole = computed(() => user.value?.role?.name ?? null)
@@ -78,6 +83,35 @@ export function useAuth() {
   function logout(): void {
     token.value = null
     user.value = null
+    profileAvatar.value = null
+  }
+
+  function loadProfileAvatar(): void {
+    if (!import.meta.client || !user.value) return
+    profileAvatar.value = localStorage.getItem(profileAvatarKey(user.value))
+  }
+
+  function saveProfileAvatar(value: string | null): void {
+    if (!import.meta.client || !user.value) return
+
+    if (value) {
+      localStorage.setItem(profileAvatarKey(user.value), value)
+    }
+    else {
+      localStorage.removeItem(profileAvatarKey(user.value))
+    }
+
+    profileAvatar.value = value
+  }
+
+  async function updateUsername(username: string): Promise<void> {
+    if (!token.value || !user.value) return
+    const updated = await $fetch<User>('/api/auth/profile', {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: { username },
+    })
+    user.value = { ...user.value, username: updated.username }
   }
 
   async function fetchUser(): Promise<void> {
@@ -95,6 +129,7 @@ export function useAuth() {
       catch {
         user.value = data
       }
+      loadProfileAvatar()
     }
     catch {
       // Token invalid or expired — clear it
@@ -145,6 +180,7 @@ export function useAuth() {
       })
       token.value = jwt
       user.value = data
+      loadProfileAvatar()
     }
     catch (err) {
       token.value = null
@@ -165,10 +201,13 @@ export function useAuth() {
     userRole,
     isSubscriber,
     userInitial,
+    profileAvatar,
     login,
     register,
     logout,
     fetchUser,
+    saveProfileAvatar,
+    updateUsername,
     forgotPassword,
     resetPassword,
     confirmEmail,
