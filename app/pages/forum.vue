@@ -120,7 +120,11 @@
           <button type="button" class="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50" @click="cancelComposer">
             {{ t('forum.cancel') }}
           </button>
-          <button type="submit" class="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700">
+          <button
+            type="submit"
+            class="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-300"
+            :disabled="uploadingMedia"
+          >
             {{ t('forum.publish') }}
           </button>
         </div>
@@ -393,6 +397,7 @@ const pages = [1, 2, 3]
 const posts = ref<ForumPost[]>([])
 const loadingPosts = ref(true)
 const refreshingPosts = ref(false)
+const uploadingMedia = ref(false)
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
 
@@ -480,7 +485,11 @@ async function migrateLocalPosts() {
   try {
     const localPosts = JSON.parse(savedPosts).map(normalizePost) as ForumPost[]
     for (const post of localPosts.reverse()) {
-      const { id, ...payload } = post
+      const preparedPost = {
+        ...post,
+        media: await persistMediaItems(post.media),
+      }
+      const { id, ...payload } = preparedPost
       const created = await $fetch<ForumPost>('/api/forum/posts', {
         method: 'POST',
         headers: authHeaders(),
@@ -545,26 +554,54 @@ async function handleMediaUpload(event: Event) {
     return
   }
 
-  const mediaItems = await Promise.all(files.map(async (file, index) => {
-    return {
-      id: Date.now() + index,
-      type: file.type.startsWith('video/') ? 'video' as const : 'image' as const,
-      src: await readFileAsDataUrl(file),
-      name: file.name,
-    }
-  }))
-
-  form.media.push(...mediaItems)
-  input.value = ''
+  uploadingMedia.value = true
+  try {
+    const mediaItems = await Promise.all(files.map((file, index) => uploadForumFile(file, Date.now() + index)))
+    form.media.push(...mediaItems)
+  }
+  finally {
+    uploadingMedia.value = false
+    input.value = ''
+  }
 }
 
-function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(reader.error)
-    reader.readAsDataURL(file)
+async function persistMediaItems(media: ForumMedia[] = []): Promise<ForumMedia[]> {
+  const persisted: ForumMedia[] = []
+
+  for (const item of media) {
+    if (!item.src.startsWith('data:')) {
+      persisted.push(item)
+      continue
+    }
+
+    const blob = await (await fetch(item.src)).blob()
+    const extension = blob.type.split('/')[1] || (item.type === 'video' ? 'mp4' : 'png')
+    const file = new File([blob], item.name || `forum-upload.${extension}`, {
+      type: blob.type || (item.type === 'video' ? 'video/mp4' : 'image/png'),
+    })
+
+    persisted.push(await uploadForumFile(file, item.id))
+  }
+
+  return persisted
+}
+
+async function uploadForumFile(file: File, fallbackId: number): Promise<ForumMedia> {
+  const data = new FormData()
+  data.append('file', file)
+
+  const uploaded = await $fetch<ForumMedia>('/api/forum/media', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: data,
   })
+
+  return {
+    id: uploaded.id ?? fallbackId,
+    type: uploaded.type,
+    src: uploaded.src,
+    name: uploaded.name || file.name,
+  }
 }
 
 function removeMedia(mediaId: number) {
