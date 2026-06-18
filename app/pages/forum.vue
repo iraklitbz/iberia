@@ -233,6 +233,20 @@
             <time class="text-zinc-500 md:col-span-2 md:mt-4" :datetime="post.createdAt">
               {{ relativeDate(post.createdAt) }}
             </time>
+            <button
+              v-if="canDeletePost(post)"
+              type="button"
+              class="flex items-center gap-2 rounded-md text-red-500 transition hover:text-red-700 md:col-span-2"
+              @click="deletePost(post.id)"
+            >
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 6h18" />
+                <path d="M8 6V4h8v2" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v5M14 11v5" />
+              </svg>
+              {{ t('forum.deletePost') }}
+            </button>
           </div>
 
           <div
@@ -342,6 +356,7 @@ type ForumPost = {
   id: number
   name: string
   initial: string
+  authorKey?: string
   title: string
   message: string
   media?: ForumMedia[]
@@ -433,6 +448,7 @@ function addPost() {
     id: Date.now(),
     name: author.name,
     initial: author.initial,
+    authorKey: author.key,
     title: form.title,
     message: form.message,
     media: [...form.media],
@@ -504,6 +520,7 @@ function normalizePost(post: Partial<ForumPost>): ForumPost {
     id: post.id ?? Date.now(),
     name,
     initial: post.initial || name[0].toUpperCase(),
+    authorKey: post.authorKey,
     title: post.title || '',
     message: post.message || '',
     media,
@@ -538,6 +555,7 @@ function getCurrentAuthor() {
     return {
       name: user.value.username,
       initial: userInitial.value,
+      key: currentLikeKey(),
       avatarClass: 'bg-iberia',
       avatarUrl: profileAvatar.value ?? undefined,
     }
@@ -548,6 +566,7 @@ function getCurrentAuthor() {
   return {
     name,
     initial: name[0].toUpperCase(),
+    key: 'guest',
     avatarClass: 'bg-violet-600',
     avatarUrl: undefined,
   }
@@ -576,6 +595,18 @@ function likePost(post: ForumPost) {
 
 function toggleComments(postId: number) {
   openCommentsPostId.value = openCommentsPostId.value === postId ? null : postId
+}
+
+function canDeletePost(post: ForumPost) {
+  return post.authorKey === currentLikeKey() || user.value?.email === 'geo.algabe@gmail.com'
+}
+
+function deletePost(postId: number) {
+  posts.value = posts.value.filter((post) => post.id !== postId)
+  if (openCommentsPostId.value === postId) {
+    openCommentsPostId.value = null
+  }
+  delete commentForms[postId]
 }
 
 function addComment(post: ForumPost) {
