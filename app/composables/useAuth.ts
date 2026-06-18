@@ -49,7 +49,7 @@ export function useAuth() {
 
   const isAuthenticated = computed(() => !!token.value && !!user.value)
   const userRole = computed(() => user.value?.role?.name ?? null)
-  const isSubscriber = computed(() => userRole.value === 'Suscriptor')
+  const isSubscriber = computed(() => user.value?.role?.name === 'Suscriptor' || user.value?.role?.type === 'suscriptor')
   const userInitial = computed(() => toGeorgianInitial(user.value?.username))
 
   async function login(email: string, password: string): Promise<void> {
@@ -59,6 +59,7 @@ export function useAuth() {
     })
     token.value = data.jwt
     user.value = data.user
+    await fetchUser()
   }
 
   async function register(username: string, email: string, password: string): Promise<void> {
