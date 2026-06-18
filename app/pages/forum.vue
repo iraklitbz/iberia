@@ -343,7 +343,7 @@ type ForumMedia = {
 }
 
 type ForumComment = {
-  id: number
+  id: string
   name: string
   initial: string
   message: string
@@ -353,7 +353,7 @@ type ForumComment = {
 }
 
 type ForumPost = {
-  id: number
+  id: string
   name: string
   initial: string
   authorKey?: string
@@ -372,6 +372,7 @@ type ForumPost = {
 }
 
 const STORAGE_KEY = 'iberia-forum-posts'
+const MIGRATION_KEY = 'iberia-forum-posts-migrated'
 const { t } = useI18n()
 const { user, userInitial, isAuthenticated, profileAvatar } = useAuth()
 
@@ -386,11 +387,12 @@ const categories = [
 const search = ref('')
 const sortBy = ref('newest')
 const showComposer = ref(false)
-const openCommentsPostId = ref<number | null>(null)
+const openCommentsPostId = ref<string | null>(null)
 const currentPage = ref(1)
 const pages = [1, 2, 3]
 const posts = ref<ForumPost[]>([])
-const commentForms = reactive<Record<number, string>>({})
+const loadingPosts = ref(true)
+const commentForms = reactive<Record<string, string>>({})
 
 const form = reactive({
   title: '',
@@ -418,34 +420,65 @@ const filteredPosts = computed(() => {
 
 const visiblePosts = computed(() => filteredPosts.value)
 
-onMounted(() => {
-  const savedPosts = localStorage.getItem(STORAGE_KEY)
+onMounted(async () => {
+  await loadPosts()
+})
 
+async function loadPosts() {
+  loadingPosts.value = true
+
+  try {
+    const sharedPosts = await $fetch<ForumPost[]>('/api/forum/posts', {
+      headers: authHeaders(),
+    })
+    posts.value = sharedPosts.map(normalizePost)
+    await migrateLocalPosts()
+  }
+  finally {
+    loadingPosts.value = false
+  }
+}
+
+async function migrateLocalPosts() {
+  if (!import.meta.client || localStorage.getItem(MIGRATION_KEY)) return
+
+  const savedPosts = localStorage.getItem(STORAGE_KEY)
   if (!savedPosts) {
+    localStorage.setItem(MIGRATION_KEY, '1')
     return
   }
 
   try {
-    posts.value = JSON.parse(savedPosts).map(normalizePost)
+    const localPosts = JSON.parse(savedPosts).map(normalizePost) as ForumPost[]
+    for (const post of localPosts.reverse()) {
+      const { id, ...payload } = post
+      const created = await $fetch<ForumPost>('/api/forum/posts', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: payload,
+      })
+      posts.value.unshift(normalizePost(created))
+    }
+    localStorage.removeItem(STORAGE_KEY)
+    localStorage.setItem(MIGRATION_KEY, '1')
   }
   catch {
-    posts.value = []
+    localStorage.setItem(MIGRATION_KEY, '1')
   }
-})
+}
 
-watch(posts, (value) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
-}, { deep: true })
+function authHeaders() {
+  const token = useCookie<string | null>('auth_token')
+  return token.value ? { Authorization: `Bearer ${token.value}` } : {}
+}
 
-function addPost() {
+async function addPost() {
   if (!form.message && !form.media.length) {
     return
   }
 
   const author = getCurrentAuthor()
-
-  posts.value.unshift({
-    id: Date.now(),
+  const payload = {
     name: author.name,
     initial: author.initial,
     authorKey: author.key,
@@ -459,7 +492,14 @@ function addPost() {
     createdAt: new Date().toISOString(),
     avatarClass: author.avatarClass,
     avatarUrl: author.avatarUrl,
+  }
+
+  const created = await $fetch<ForumPost>('/api/forum/posts', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: payload,
   })
+  posts.value.unshift(normalizePost(created))
 
   form.title = ''
   form.message = ''
@@ -513,11 +553,11 @@ function normalizePost(post: Partial<ForumPost>): ForumPost {
   const name = post.name || 'სტუმარი'
   const commentItems = (post.commentItems || []).map(normalizeComment)
   const media = post.media || (post.image
-    ? [{ id: post.id ?? Date.now(), type: 'image' as const, src: post.image, name: post.title || 'image' }]
+    ? [{ id: Date.now(), type: 'image' as const, src: post.image, name: post.title || 'image' }]
     : [])
 
   return {
-    id: post.id ?? Date.now(),
+    id: String(post.id ?? Date.now()),
     name,
     initial: post.initial || name[0].toUpperCase(),
     authorKey: post.authorKey,
@@ -540,7 +580,7 @@ function normalizeComment(comment: Partial<ForumComment>): ForumComment {
   const name = comment.name || 'სტუმარი'
 
   return {
-    id: comment.id ?? Date.now(),
+    id: String(comment.id ?? Date.now()),
     name,
     initial: comment.initial || name[0].toUpperCase(),
     message: comment.message || '',
@@ -584,16 +624,26 @@ function hasLikedPost(post: ForumPost) {
   return post.likedBy.includes(currentLikeKey())
 }
 
-function likePost(post: ForumPost) {
+async function savePost(post: ForumPost) {
+  const { id, ...payload } = post
+  await $fetch<ForumPost>(`/api/forum/posts/${id}`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: payload,
+  })
+}
+
+async function likePost(post: ForumPost) {
   if (hasLikedPost(post)) {
     return
   }
 
   post.likedBy.push(currentLikeKey())
   post.likes += 1
+  await savePost(post)
 }
 
-function toggleComments(postId: number) {
+function toggleComments(postId: string) {
   openCommentsPostId.value = openCommentsPostId.value === postId ? null : postId
 }
 
@@ -601,7 +651,11 @@ function canDeletePost(post: ForumPost) {
   return post.authorKey === currentLikeKey() || user.value?.email === 'geo.algabe@gmail.com'
 }
 
-function deletePost(postId: number) {
+async function deletePost(postId: string) {
+  await $fetch(`/api/forum/posts/${postId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  })
   posts.value = posts.value.filter((post) => post.id !== postId)
   if (openCommentsPostId.value === postId) {
     openCommentsPostId.value = null
@@ -609,7 +663,7 @@ function deletePost(postId: number) {
   delete commentForms[postId]
 }
 
-function addComment(post: ForumPost) {
+async function addComment(post: ForumPost) {
   const message = commentForms[post.id]?.trim()
 
   if (!message) {
@@ -619,7 +673,7 @@ function addComment(post: ForumPost) {
   const author = getCurrentAuthor()
 
   post.commentItems.push({
-    id: Date.now(),
+    id: String(Date.now()),
     name: author.name,
     initial: author.initial,
     message,
@@ -629,6 +683,7 @@ function addComment(post: ForumPost) {
   })
   post.comments = post.commentItems.length
   commentForms[post.id] = ''
+  await savePost(post)
 }
 
 function categoryClass(category: string) {
