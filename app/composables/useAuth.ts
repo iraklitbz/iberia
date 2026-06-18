@@ -34,6 +34,11 @@ interface AuthResponse {
   user: User
 }
 
+interface SubscriberStatus {
+  isSubscriber: boolean
+  role: UserRole | null
+}
+
 export function useAuth() {
   const config = useRuntimeConfig()
   const baseUrl = config.public.strapiUrl
@@ -81,7 +86,15 @@ export function useAuth() {
       const data = await $fetch<User>(`${baseUrl}/api/users/me?populate=role`, {
         headers: { Authorization: `Bearer ${token.value}` },
       })
-      user.value = data
+      try {
+        const subscriber = await $fetch<SubscriberStatus>('/api/auth/subscriber', {
+          headers: { Authorization: `Bearer ${token.value}` },
+        })
+        user.value = subscriber.role ? { ...data, role: subscriber.role } : data
+      }
+      catch {
+        user.value = data
+      }
     }
     catch {
       // Token invalid or expired — clear it

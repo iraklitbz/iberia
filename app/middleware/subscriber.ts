@@ -6,5 +6,17 @@ export default defineNuxtRouteMiddleware(async () => {
     authReady.value = true
   }
   if (!authReady.value) return
-  if (!isSubscriber.value) return navigateTo(localePath('/account'))
+  if (isSubscriber.value) return
+
+  try {
+    const subscriber = await $fetch<{ isSubscriber: boolean }>('/api/auth/subscriber', {
+      headers: { Authorization: `Bearer ${token.value}` },
+    })
+    if (subscriber.isSubscriber) return
+  }
+  catch {
+    // Keep the forum closed if the role cannot be verified.
+  }
+
+  return navigateTo(localePath('/account'))
 })
