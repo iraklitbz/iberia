@@ -469,7 +469,7 @@ async function refreshPosts() {
 }
 
 async function migrateLocalPosts() {
-  if (!import.meta.client || localStorage.getItem(MIGRATION_KEY)) return
+  if (!import.meta.client) return
 
   const savedPosts = localStorage.getItem(STORAGE_KEY)
   if (!savedPosts) {
@@ -492,7 +492,7 @@ async function migrateLocalPosts() {
     localStorage.setItem(MIGRATION_KEY, '1')
   }
   catch {
-    localStorage.setItem(MIGRATION_KEY, '1')
+    localStorage.removeItem(MIGRATION_KEY)
   }
 }
 
