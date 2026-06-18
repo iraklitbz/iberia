@@ -99,6 +99,15 @@
         >
           {{ $t('contactus') }}
         </NuxtLink>
+
+        <NuxtLink
+          :to="localePath('/forum')"
+          class="rounded-lg px-3 py-2 text-sm font-medium transition-colors"
+          :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
+          active-class="!text-iberia"
+        >
+          {{ $t('forum.title') }}
+        </NuxtLink>
       </nav>
 
       <!-- Right side: auth + language + hamburger -->
@@ -256,6 +265,15 @@
             @click="menuOpen = false"
           >
             {{ $t('contactus') }}
+          </NuxtLink>
+
+          <NuxtLink
+            :to="localePath('/forum')"
+            class="block rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+            active-class="text-iberia bg-iberia/5"
+            @click="menuOpen = false"
+          >
+            {{ $t('forum.title') }}
           </NuxtLink>
 
           <!-- Auth mobile -->
