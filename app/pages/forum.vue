@@ -215,16 +215,16 @@
               class="relative flex items-center gap-2 rounded-md transition hover:text-violet-700"
               @click="toggleComments(post.id)"
             >
-              <svg class="size-5 text-zinc-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
-              </svg>
-              {{ post.commentItems.length }}
-              <span
-                v-if="unreadCommentCount(post)"
-                class="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-600 px-1.5 py-0.5 text-xs font-bold leading-none text-white"
-              >
-                {{ unreadCommentCount(post) }}
+              <span class="relative inline-flex size-5">
+                <svg class="size-5 text-zinc-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
+                </svg>
+                <span
+                  v-if="unreadCommentCount(post)"
+                  class="absolute -right-1 -top-1 size-2.5 rounded-full border border-white bg-red-600"
+                />
               </span>
+              {{ post.commentItems.length }}
             </button>
             <button
               type="button"
