@@ -6,9 +6,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Missing post id' })
   }
 
-  const config = useRuntimeConfig(event)
   const existing = await getForumEntry(event, id)
-  const post = JSON.parse(existing.content ?? '{}')
+  const post = forumPostFromEntry(existing)
   const canDelete = post.authorKey === forumUserKey(user) || user.email === 'geo.algabe@gmail.com'
 
   if (!canDelete) {
@@ -17,10 +16,7 @@ export default defineEventHandler(async (event) => {
 
   setHeader(event, 'Cache-Control', 'private, no-store')
 
-  await $fetch(`${config.public.strapiUrl}/api/entradas/${id}`, {
-    method: 'DELETE',
-    headers: strapiAuthHeaders(event),
-  })
+  await deleteForumEntry(event, id, existing.collection)
 
   return { ok: true }
 })

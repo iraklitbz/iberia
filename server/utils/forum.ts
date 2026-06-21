@@ -1,6 +1,8 @@
 import type { H3Event } from 'h3'
 
 export const FORUM_ENTRY_MARKER = '__FORUM_POST__'
+const FORUM_COLLECTION = 'foromis'
+const FALLBACK_COLLECTION = 'entradas'
 
 interface StrapiRole {
   id: number
@@ -16,9 +18,13 @@ export interface ForumUser {
 
 export interface ForumStrapiEntry {
   documentId: string
-  content?: string | null
+  content?: unknown
   createdAt?: string
   excerpt?: string | null
+}
+
+export interface StoredForumEntry extends ForumStrapiEntry {
+  collection: string
 }
 
 interface StrapiUser extends ForumUser {
@@ -103,26 +109,160 @@ export async function strapiAdminHeaders(event: H3Event): Promise<Record<string,
   return { Authorization: `Bearer ${await strapiAdminToken(event)}` }
 }
 
-export async function getForumEntry(event: H3Event, id: string): Promise<ForumStrapiEntry> {
-  const config = useRuntimeConfig(event)
-  const response = await $fetch<{ data: ForumStrapiEntry }>(
-    `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada/${id}`,
-    {
-      headers: await strapiAdminHeaders(event),
-    },
-  )
+function isMissingCollection(error: unknown): boolean {
+  return typeof error === 'object'
+    && error !== null
+    && 'statusCode' in error
+    && (error as { statusCode?: number }).statusCode === 404
+}
 
-  return response.data
+function parseForumContent(content: unknown): Record<string, unknown> {
+  if (typeof content === 'string') {
+    return JSON.parse(content)
+  }
+
+  if (content && typeof content === 'object' && !Array.isArray(content)) {
+    return content as Record<string, unknown>
+  }
+
+  return {}
+}
+
+function forumEntryData(collection: string, title: string, post: Record<string, unknown>) {
+  if (collection === FORUM_COLLECTION) {
+    return {
+      title,
+      content: post,
+    }
+  }
+
+  return {
+    title: `${FORUM_ENTRY_MARKER} ${title}`.slice(0, 255),
+    content: JSON.stringify(post),
+    excerpt: FORUM_ENTRY_MARKER,
+    acceso: 'suscriptores',
+    publishedAt: new Date().toISOString(),
+  }
+}
+
+async function withForumCollection<T>(
+  event: H3Event,
+  action: (collection: string) => Promise<T>,
+): Promise<T> {
+  try {
+    return await action(FORUM_COLLECTION)
+  }
+  catch (error) {
+    if (!isMissingCollection(error)) {
+      throw error
+    }
+
+    return await action(FALLBACK_COLLECTION)
+  }
+}
+
+export function forumPostFromEntry(entry: ForumStrapiEntry): Record<string, unknown> {
+  return parseForumContent(entry.content)
+}
+
+export async function getForumEntry(event: H3Event, id: string): Promise<StoredForumEntry> {
+  const config = useRuntimeConfig(event)
+
+  return await withForumCollection(event, async (collection) => {
+    if (collection === FALLBACK_COLLECTION) {
+      const response = await $fetch<{ data: ForumStrapiEntry }>(
+        `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada/${id}`,
+        {
+          headers: await strapiAdminHeaders(event),
+        },
+      )
+
+      return { ...response.data, collection }
+    }
+
+    const response = await $fetch<{ data: ForumStrapiEntry }>(
+      `${config.public.strapiUrl}/api/${collection}/${id}`,
+      {
+        headers: strapiAuthHeaders(event),
+      },
+    )
+
+    return { ...response.data, collection }
+  })
 }
 
 export async function listForumEntries(event: H3Event): Promise<ForumStrapiEntry[]> {
   const config = useRuntimeConfig(event)
-  const response = await $fetch<{ results: ForumStrapiEntry[] }>(
-    `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada?page=1&pageSize=100&sort=createdAt:DESC`,
-    {
-      headers: await strapiAdminHeaders(event),
-    },
-  )
 
-  return (response.results ?? []).filter(entry => entry.excerpt === FORUM_ENTRY_MARKER)
+  return await withForumCollection(event, async (collection) => {
+    if (collection === FALLBACK_COLLECTION) {
+      const response = await $fetch<{ results: ForumStrapiEntry[] }>(
+        `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada?page=1&pageSize=100&sort=updatedAt:DESC`,
+        {
+          headers: await strapiAdminHeaders(event),
+        },
+      )
+
+      return (response.results ?? []).filter(entry => entry.excerpt === FORUM_ENTRY_MARKER)
+    }
+
+    const response = await $fetch<{ data: ForumStrapiEntry[] }>(
+      `${config.public.strapiUrl}/api/${collection}?pagination[page]=1&pagination[pageSize]=100&sort=createdAt:DESC`,
+      {
+        headers: strapiAuthHeaders(event),
+      },
+    )
+
+    return response.data ?? []
+  })
+}
+
+export async function createForumEntry(
+  event: H3Event,
+  title: string,
+  post: Record<string, unknown>,
+): Promise<ForumStrapiEntry> {
+  const config = useRuntimeConfig(event)
+
+  return await withForumCollection(event, async (collection) => {
+    const response = await $fetch<{ data: ForumStrapiEntry }>(
+      `${config.public.strapiUrl}/api/${collection}`,
+      {
+        method: 'POST',
+        headers: strapiAuthHeaders(event),
+        body: {
+          data: forumEntryData(collection, title, post),
+        },
+      },
+    )
+
+    return response.data
+  })
+}
+
+export async function updateForumEntry(
+  event: H3Event,
+  id: string,
+  collection: string,
+  title: string,
+  post: Record<string, unknown>,
+): Promise<void> {
+  const config = useRuntimeConfig(event)
+
+  await $fetch(`${config.public.strapiUrl}/api/${collection}/${id}`, {
+    method: 'PUT',
+    headers: strapiAuthHeaders(event),
+    body: {
+      data: forumEntryData(collection, title, post),
+    },
+  })
+}
+
+export async function deleteForumEntry(event: H3Event, id: string, collection: string): Promise<void> {
+  const config = useRuntimeConfig(event)
+
+  await $fetch(`${config.public.strapiUrl}/api/${collection}/${id}`, {
+    method: 'DELETE',
+    headers: strapiAuthHeaders(event),
+  })
 }

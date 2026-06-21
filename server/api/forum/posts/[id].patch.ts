@@ -7,27 +7,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody<Record<string, unknown>>(event)
-  const config = useRuntimeConfig(event)
-
   const existing = await getForumEntry(event, id)
-  const previous = JSON.parse(existing.content ?? '{}')
+  const previous = forumPostFromEntry(existing)
   const post = { ...previous, ...body, id: undefined }
   const title = typeof post.title === 'string' && post.title.trim() ? post.title.trim() : 'Forum post'
 
   setHeader(event, 'Cache-Control', 'private, no-store')
 
-  await $fetch(`${config.public.strapiUrl}/api/entradas/${id}`, {
-    method: 'PUT',
-    headers: strapiAuthHeaders(event),
-    body: {
-      data: {
-        title: `${FORUM_ENTRY_MARKER} ${title}`.slice(0, 255),
-        content: JSON.stringify(post),
-        excerpt: FORUM_ENTRY_MARKER,
-        acceso: 'suscriptores',
-      },
-    },
-  })
+  await updateForumEntry(event, id, existing.collection, title, post)
 
   return { ...post, id }
 })

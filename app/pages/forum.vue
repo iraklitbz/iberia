@@ -375,8 +375,6 @@ type ForumPost = {
   image?: string
 }
 
-const STORAGE_KEY = 'iberia-forum-posts'
-const MIGRATION_KEY = 'iberia-forum-posts-migrated'
 const { t } = useI18n()
 const { user, userInitial, isAuthenticated, profileAvatar } = useAuth()
 
@@ -394,8 +392,6 @@ const showComposer = ref(false)
 const openCommentsPostId = ref<string | null>(null)
 const currentPage = ref(1)
 const pages = [1, 2, 3]
-const posts = ref<ForumPost[]>([])
-const loadingPosts = ref(true)
 const refreshingPosts = ref(false)
 const uploadingMedia = ref(false)
 let refreshTimer: ReturnType<typeof setInterval> | null = null
@@ -406,6 +402,13 @@ const form = reactive({
   message: '',
   media: [] as ForumMedia[],
 })
+
+const { data: initialPosts } = await useAsyncData<ForumPost[]>(
+  'forum-posts',
+  () => $fetch('/api/forum/posts'),
+  { default: () => [] },
+)
+const posts = ref<ForumPost[]>((initialPosts.value ?? []).map(normalizePost))
 
 const filteredPosts = computed(() => {
   const term = search.value.toLowerCase()
@@ -428,7 +431,9 @@ const filteredPosts = computed(() => {
 const visiblePosts = computed(() => filteredPosts.value)
 
 onMounted(async () => {
-  await loadPosts()
+  localStorage.removeItem('iberia-forum-posts')
+  localStorage.removeItem('iberia-forum-posts-migrated')
+  await refreshPosts()
   refreshTimer = setInterval(() => {
     if (!showComposer.value) {
       refreshPosts()
@@ -443,65 +448,18 @@ onUnmounted(() => {
   }
 })
 
-async function loadPosts() {
-  loadingPosts.value = true
-
-  try {
-    const sharedPosts = await $fetch<ForumPost[]>('/api/forum/posts', {
-      headers: authHeaders(),
-    })
-    posts.value = sharedPosts.map(normalizePost)
-    await migrateLocalPosts()
-  }
-  finally {
-    loadingPosts.value = false
-  }
-}
-
 async function refreshPosts() {
   if (refreshingPosts.value) return
 
   refreshingPosts.value = true
   try {
-    const sharedPosts = await $fetch<ForumPost[]>('/api/forum/posts', {
-      headers: authHeaders(),
-    })
-    posts.value = sharedPosts.map(normalizePost)
+    const sharedPosts = await $fetch<ForumPost[]>('/api/forum/posts')
+    if (sharedPosts.length || !posts.value.length) {
+      posts.value = sharedPosts.map(normalizePost)
+    }
   }
   finally {
     refreshingPosts.value = false
-  }
-}
-
-async function migrateLocalPosts() {
-  if (!import.meta.client) return
-
-  const savedPosts = localStorage.getItem(STORAGE_KEY)
-  if (!savedPosts) {
-    localStorage.setItem(MIGRATION_KEY, '1')
-    return
-  }
-
-  try {
-    const localPosts = JSON.parse(savedPosts).map(normalizePost) as ForumPost[]
-    for (const post of localPosts.reverse()) {
-      const preparedPost = {
-        ...post,
-        media: await persistMediaItems(post.media),
-      }
-      const { id, ...payload } = preparedPost
-      const created = await $fetch<ForumPost>('/api/forum/posts', {
-        method: 'POST',
-        headers: authHeaders(),
-        body: payload,
-      })
-      posts.value.unshift(normalizePost(created))
-    }
-    localStorage.removeItem(STORAGE_KEY)
-    localStorage.setItem(MIGRATION_KEY, '1')
-  }
-  catch {
-    localStorage.removeItem(MIGRATION_KEY)
   }
 }
 

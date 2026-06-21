@@ -6,7 +6,6 @@ export default defineEventHandler(async (event) => {
 
   setHeader(event, 'Cache-Control', 'private, no-store')
 
-  const config = useRuntimeConfig(event)
   const post = {
     ...body,
     id: undefined,
@@ -14,22 +13,7 @@ export default defineEventHandler(async (event) => {
     createdAt,
   }
 
-  const response = await $fetch<{ data: { documentId: string, createdAt?: string } }>(
-    `${config.public.strapiUrl}/api/entradas`,
-    {
-      method: 'POST',
-      headers: strapiAuthHeaders(event),
-      body: {
-        data: {
-          title: `${FORUM_ENTRY_MARKER} ${title}`.slice(0, 255),
-          content: JSON.stringify(post),
-          excerpt: FORUM_ENTRY_MARKER,
-          acceso: 'suscriptores',
-          publishedAt: new Date().toISOString(),
-        },
-      },
-    },
-  )
+  const response = await createForumEntry(event, title, post)
 
-  return { ...post, id: response.data.documentId, createdAt: post.createdAt ?? response.data.createdAt }
+  return { ...post, id: response.documentId, createdAt: post.createdAt ?? response.createdAt }
 })
