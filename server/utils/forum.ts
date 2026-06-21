@@ -128,6 +128,16 @@ function parseForumContent(content: unknown): Record<string, unknown> {
   return {}
 }
 
+function forumSlug(title: string): string {
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 80)
+
+  return `forum-${slug || 'post'}-${Date.now()}`
+}
+
 function forumEntryData(collection: string, title: string, post: Record<string, unknown>) {
   if (collection === FORUM_COLLECTION) {
     return {
@@ -138,9 +148,10 @@ function forumEntryData(collection: string, title: string, post: Record<string, 
 
   return {
     title: `${FORUM_ENTRY_MARKER} ${title}`.slice(0, 255),
+    slug: forumSlug(title),
     content: JSON.stringify(post),
     excerpt: FORUM_ENTRY_MARKER,
-    acceso: 'suscriptores',
+    acceso: 'publico',
     publishedAt: new Date().toISOString(),
   }
 }
@@ -171,9 +182,9 @@ export async function getForumEntry(event: H3Event, id: string): Promise<StoredF
   return await withForumCollection(event, async (collection) => {
     if (collection === FALLBACK_COLLECTION) {
       const response = await $fetch<{ data: ForumStrapiEntry }>(
-        `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada/${id}`,
+        `${config.public.strapiUrl}/api/entradas/${id}`,
         {
-          headers: await strapiAdminHeaders(event),
+          headers: strapiAuthHeaders(event),
         },
       )
 
@@ -196,14 +207,14 @@ export async function listForumEntries(event: H3Event): Promise<ForumStrapiEntry
 
   return await withForumCollection(event, async (collection) => {
     if (collection === FALLBACK_COLLECTION) {
-      const response = await $fetch<{ results: ForumStrapiEntry[] }>(
-        `${config.public.strapiUrl}/content-manager/collection-types/api::entrada.entrada?page=1&pageSize=100&sort=updatedAt:DESC`,
+      const response = await $fetch<{ data: ForumStrapiEntry[] }>(
+        `${config.public.strapiUrl}/api/entradas?pagination[page]=1&pagination[pageSize]=100&sort=updatedAt:DESC&filters[excerpt][$eq]=${FORUM_ENTRY_MARKER}`,
         {
-          headers: await strapiAdminHeaders(event),
+          headers: strapiAuthHeaders(event),
         },
       )
 
-      return (response.results ?? []).filter(entry => entry.excerpt === FORUM_ENTRY_MARKER)
+      return response.data ?? []
     }
 
     const response = await $fetch<{ data: ForumStrapiEntry[] }>(
@@ -226,7 +237,7 @@ export async function createForumEntry(
 
   return await withForumCollection(event, async (collection) => {
     const response = await $fetch<{ data: ForumStrapiEntry }>(
-      `${config.public.strapiUrl}/api/${collection}`,
+      `${config.public.strapiUrl}/api/${collection}?status=published`,
       {
         method: 'POST',
         headers: strapiAuthHeaders(event),
@@ -249,7 +260,7 @@ export async function updateForumEntry(
 ): Promise<void> {
   const config = useRuntimeConfig(event)
 
-  await $fetch(`${config.public.strapiUrl}/api/${collection}/${id}`, {
+  await $fetch(`${config.public.strapiUrl}/api/${collection}/${id}?status=published`, {
     method: 'PUT',
     headers: strapiAuthHeaders(event),
     body: {
