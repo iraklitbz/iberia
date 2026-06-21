@@ -8,7 +8,9 @@ export default defineEventHandler(async (event) => {
 
   const existing = await getForumEntry(event, id)
   const post = forumPostFromEntry(existing)
-  const canDelete = post.authorKey === forumUserKey(user) || user.email === 'geo.algabe@gmail.com'
+  const canDelete = user.email === 'geo.algabe@gmail.com'
+    || post.authorKey === forumUserKey(user)
+    || ownsLegacyForumItem(post.name, user)
 
   if (!canDelete) {
     throw createError({ statusCode: 403, message: 'You cannot delete this post' })
@@ -20,3 +22,15 @@ export default defineEventHandler(async (event) => {
 
   return { ok: true }
 })
+
+function ownsLegacyForumItem(name: unknown, user: ForumUser) {
+  if (typeof name !== 'string') {
+    return false
+  }
+
+  const normalizedName = name.trim().toLowerCase()
+  const emailName = user.email.split('@')[0]?.trim().toLowerCase()
+  const username = user.username?.trim().toLowerCase()
+
+  return normalizedName === username || normalizedName === emailName
+}

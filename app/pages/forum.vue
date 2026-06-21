@@ -784,11 +784,23 @@ function toggleComments(postId: string) {
 }
 
 function canDeletePost(post: ForumPost) {
-  return canModerateForum.value || post.authorKey === currentLikeKey()
+  return canModerateForum.value || post.authorKey === currentLikeKey() || ownsLegacyForumItem(post.name)
 }
 
 function canDeleteComment(comment: ForumComment) {
-  return canModerateForum.value || comment.authorKey === currentLikeKey()
+  return canModerateForum.value || comment.authorKey === currentLikeKey() || ownsLegacyForumItem(comment.name)
+}
+
+function ownsLegacyForumItem(name?: string) {
+  if (!isAuthenticated.value || !user.value || !name) {
+    return false
+  }
+
+  const normalizedName = name.trim().toLowerCase()
+  const emailName = user.value.email?.split('@')[0]?.trim().toLowerCase()
+  const username = user.value.username?.trim().toLowerCase()
+
+  return normalizedName === username || normalizedName === emailName
 }
 
 async function deletePost(postId: string) {
