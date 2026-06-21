@@ -113,7 +113,7 @@ function isMissingCollection(error: unknown): boolean {
   return typeof error === 'object'
     && error !== null
     && 'statusCode' in error
-    && (error as { statusCode?: number }).statusCode === 404
+    && [404, 405].includes((error as { statusCode?: number }).statusCode ?? 0)
 }
 
 function parseForumContent(content: unknown): Record<string, unknown> {
