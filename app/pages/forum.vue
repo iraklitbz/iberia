@@ -241,7 +241,7 @@
               {{ relativeDate(post.createdAt) }}
             </time>
             <button
-              v-if="canDeletePost(post)"
+              v-if="canModerateForum"
               type="button"
               class="flex items-center gap-2 rounded-md text-red-500 transition hover:text-red-700 md:col-span-2"
               @click="deletePost(post.id)"
@@ -278,13 +278,27 @@
                   />
                   <span v-else>{{ comment.initial }}</span>
                 </div>
-                <div class="min-w-0">
+                <div class="min-w-0 flex-1">
                   <p class="text-sm font-semibold text-zinc-900">{{ comment.name }}</p>
                   <p class="mt-1 whitespace-pre-line text-sm leading-6 text-zinc-700">{{ comment.message }}</p>
                   <time class="mt-2 block text-xs text-zinc-400" :datetime="comment.createdAt">
                     {{ relativeDate(comment.createdAt) }}
                   </time>
                 </div>
+                <button
+                  v-if="canModerateForum"
+                  type="button"
+                  class="flex size-8 shrink-0 items-center justify-center rounded-md text-red-500 transition hover:bg-red-50 hover:text-red-700"
+                  :aria-label="t('forum.deletePost')"
+                  @click="deleteComment(post, comment.id)"
+                >
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4h8v2" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v5M14 11v5" />
+                  </svg>
+                </button>
               </div>
             </div>
 
@@ -442,6 +456,7 @@ const filteredPosts = computed(() => {
 })
 
 const visiblePosts = computed(() => filteredPosts.value)
+const canModerateForum = computed(() => user.value?.email === 'geo.algabe@gmail.com')
 
 onMounted(async () => {
   localStorage.removeItem('iberia-forum-posts')
@@ -766,11 +781,11 @@ function toggleComments(postId: string) {
   openCommentsPostId.value = openCommentsPostId.value === postId ? null : postId
 }
 
-function canDeletePost(post: ForumPost) {
-  return post.authorKey === currentLikeKey() || user.value?.email === 'geo.algabe@gmail.com'
-}
-
 async function deletePost(postId: string) {
+  if (!canModerateForum.value) {
+    return
+  }
+
   await $fetch(`/api/forum/posts/${postId}`, {
     method: 'DELETE',
     headers: authHeaders(),
@@ -780,6 +795,16 @@ async function deletePost(postId: string) {
     openCommentsPostId.value = null
   }
   delete commentForms[postId]
+}
+
+async function deleteComment(post: ForumPost, commentId: string) {
+  if (!canModerateForum.value) {
+    return
+  }
+
+  post.commentItems = post.commentItems.filter(comment => comment.id !== commentId)
+  post.comments = post.commentItems.length
+  await savePost(post)
 }
 
 async function addComment(post: ForumPost) {
