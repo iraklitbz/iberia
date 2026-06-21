@@ -48,12 +48,13 @@
                   </p>
                   <div class="flex flex-wrap gap-2">
                     <label class="inline-flex cursor-pointer items-center justify-center rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:border-iberia hover:text-iberia">
-                      {{ $t('auth.changePicture') }}
+                      {{ avatarSaving ? $t('auth.saving') : $t('auth.changePicture') }}
                       <input
                         ref="avatarInput"
                         type="file"
                         accept="image/*"
                         class="sr-only"
+                        :disabled="avatarSaving"
                         @change="handleAvatarUpload"
                       />
                     </label>
@@ -162,6 +163,7 @@ const {
 const avatarInput = ref<HTMLInputElement | null>(null)
 const form = reactive({ username: '' })
 const saving = ref(false)
+const avatarSaving = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
 
@@ -183,6 +185,11 @@ function setMessage(type: 'success' | 'error', text: string) {
   message.value = text
 }
 
+function authHeaders() {
+  const token = useCookie<string | null>('auth_token')
+  return token.value ? { Authorization: `Bearer ${token.value}` } : {}
+}
+
 async function handleSaveName() {
   if (!form.username) return
 
@@ -201,7 +208,7 @@ async function handleSaveName() {
   }
 }
 
-function handleAvatarUpload(event: Event) {
+async function handleAvatarUpload(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
@@ -218,14 +225,29 @@ function handleAvatarUpload(event: Event) {
     return
   }
 
-  const reader = new FileReader()
-  reader.onload = () => {
-    saveProfileAvatar(typeof reader.result === 'string' ? reader.result : null)
+  avatarSaving.value = true
+  message.value = ''
+
+  try {
+    const data = new FormData()
+    data.append('file', file)
+
+    const uploaded = await $fetch<{ src: string }>('/api/auth/avatar', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: data,
+    })
+
+    saveProfileAvatar(uploaded.src)
     setMessage('success', t('auth.profileSaved'))
   }
-  reader.onerror = () => setMessage('error', t('auth.profileSaveError'))
-  reader.readAsDataURL(file)
-  input.value = ''
+  catch {
+    setMessage('error', t('auth.profileSaveError'))
+  }
+  finally {
+    avatarSaving.value = false
+    input.value = ''
+  }
 }
 
 function handleRemoveAvatar() {

@@ -349,6 +349,13 @@ type ForumMedia = {
   name: string
 }
 
+type UploadedAvatar = {
+  id: number
+  src: string
+  name: string
+  type: string
+}
+
 type ForumComment = {
   id: string
   name: string
@@ -379,7 +386,7 @@ type ForumPost = {
 }
 
 const { t } = useI18n()
-const { user, userInitial, isAuthenticated, profileAvatar } = useAuth()
+const { user, userInitial, isAuthenticated, profileAvatar, saveProfileAvatar } = useAuth()
 
 const categories = [
   { name: 'მოგზაურობა', className: 'bg-violet-100 text-violet-700' },
@@ -398,6 +405,7 @@ const pages = [1, 2, 3]
 const refreshingPosts = ref(false)
 const uploadingMedia = ref(false)
 const publishingPost = ref(false)
+const syncingAvatar = ref(false)
 const publishError = ref('')
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
@@ -438,6 +446,7 @@ const visiblePosts = computed(() => filteredPosts.value)
 onMounted(async () => {
   localStorage.removeItem('iberia-forum-posts')
   localStorage.removeItem('iberia-forum-posts-migrated')
+  await ensurePersistedProfileAvatar()
   await refreshPosts()
   refreshTimer = setInterval(() => {
     if (!showComposer.value) {
@@ -462,6 +471,7 @@ async function refreshPosts() {
     if (sharedPosts.length || !posts.value.length) {
       posts.value = sharedPosts.map(normalizePost)
     }
+    await syncOwnAvatarToPosts()
   }
   finally {
     refreshingPosts.value = false
@@ -578,6 +588,67 @@ async function uploadForumFile(file: File, fallbackId: number): Promise<ForumMed
     type: uploaded.type,
     src: uploaded.src,
     name: uploaded.name || file.name,
+  }
+}
+
+async function uploadProfileAvatar(file: File): Promise<UploadedAvatar> {
+  const data = new FormData()
+  data.append('file', file)
+
+  return await $fetch<UploadedAvatar>('/api/auth/avatar', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: data,
+  })
+}
+
+async function ensurePersistedProfileAvatar() {
+  if (!profileAvatar.value?.startsWith('data:') || !isAuthenticated.value) {
+    return
+  }
+
+  try {
+    const blob = await (await fetch(profileAvatar.value)).blob()
+    if (!blob.type.startsWith('image/')) {
+      return
+    }
+
+    const extension = blob.type.split('/')[1] || 'png'
+    const file = new File([blob], `profile-avatar.${extension}`, {
+      type: blob.type,
+    })
+    const uploaded = await uploadProfileAvatar(file)
+    saveProfileAvatar(uploaded.src)
+  }
+  catch {
+    // Keep the local avatar visible if upload migration fails.
+  }
+}
+
+async function syncOwnAvatarToPosts() {
+  const avatarUrl = profileAvatar.value
+  if (!avatarUrl || avatarUrl.startsWith('data:') || !isAuthenticated.value || syncingAvatar.value) {
+    return
+  }
+
+  const ownKey = currentLikeKey()
+  const ownPosts = posts.value.filter(post => post.authorKey === ownKey && post.avatarUrl !== avatarUrl)
+  if (!ownPosts.length) {
+    return
+  }
+
+  syncingAvatar.value = true
+  try {
+    for (const post of ownPosts) {
+      post.avatarUrl = avatarUrl
+      await savePost(post)
+    }
+  }
+  catch {
+    // A failed avatar sync should not block reading or publishing forum posts.
+  }
+  finally {
+    syncingAvatar.value = false
   }
 }
 
