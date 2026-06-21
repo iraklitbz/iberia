@@ -241,7 +241,7 @@
               {{ relativeDate(post.createdAt) }}
             </time>
             <button
-              v-if="canModerateForum"
+              v-if="canDeletePost(post)"
               type="button"
               class="flex items-center gap-2 rounded-md text-red-500 transition hover:text-red-700 md:col-span-2"
               @click="deletePost(post.id)"
@@ -286,7 +286,7 @@
                   </time>
                 </div>
                 <button
-                  v-if="canModerateForum"
+                  v-if="canDeleteComment(comment)"
                   type="button"
                   class="flex size-8 shrink-0 items-center justify-center rounded-md text-red-500 transition hover:bg-red-50 hover:text-red-700"
                   :aria-label="t('forum.deletePost')"
@@ -374,6 +374,7 @@ type ForumComment = {
   id: string
   name: string
   initial: string
+  authorKey?: string
   message: string
   createdAt: string
   avatarClass: string
@@ -713,6 +714,7 @@ function normalizeComment(comment: Partial<ForumComment>): ForumComment {
     id: String(comment.id ?? Date.now()),
     name,
     initial: comment.initial || name[0].toUpperCase(),
+    authorKey: comment.authorKey,
     message: comment.message || '',
     createdAt: comment.createdAt || new Date().toISOString(),
     avatarClass: comment.avatarClass || 'bg-zinc-500',
@@ -781,8 +783,17 @@ function toggleComments(postId: string) {
   openCommentsPostId.value = openCommentsPostId.value === postId ? null : postId
 }
 
+function canDeletePost(post: ForumPost) {
+  return canModerateForum.value || post.authorKey === currentLikeKey()
+}
+
+function canDeleteComment(comment: ForumComment) {
+  return canModerateForum.value || comment.authorKey === currentLikeKey()
+}
+
 async function deletePost(postId: string) {
-  if (!canModerateForum.value) {
+  const post = posts.value.find(item => item.id === postId)
+  if (!post || !canDeletePost(post)) {
     return
   }
 
@@ -798,7 +809,8 @@ async function deletePost(postId: string) {
 }
 
 async function deleteComment(post: ForumPost, commentId: string) {
-  if (!canModerateForum.value) {
+  const comment = post.commentItems.find(item => item.id === commentId)
+  if (!comment || !canDeleteComment(comment)) {
     return
   }
 
@@ -820,6 +832,7 @@ async function addComment(post: ForumPost) {
     id: String(Date.now()),
     name: author.name,
     initial: author.initial,
+    authorKey: author.key,
     message,
     createdAt: new Date().toISOString(),
     avatarClass: author.avatarClass,
