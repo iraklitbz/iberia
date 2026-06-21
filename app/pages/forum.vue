@@ -117,13 +117,16 @@
         </div>
 
         <div class="flex justify-end gap-3">
+          <p v-if="publishError" class="mr-auto self-center text-sm font-medium text-red-600">
+            {{ publishError }}
+          </p>
           <button type="button" class="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50" @click="cancelComposer">
             {{ t('forum.cancel') }}
           </button>
           <button
             type="submit"
             class="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-300"
-            :disabled="uploadingMedia"
+            :disabled="uploadingMedia || publishingPost"
           >
             {{ t('forum.publish') }}
           </button>
@@ -394,6 +397,8 @@ const currentPage = ref(1)
 const pages = [1, 2, 3]
 const refreshingPosts = ref(false)
 const uploadingMedia = ref(false)
+const publishingPost = ref(false)
+const publishError = ref('')
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
 
@@ -472,6 +477,9 @@ async function addPost() {
   if (!form.message && !form.media.length) {
     return
   }
+  if (publishingPost.value) {
+    return
+  }
 
   const author = getCurrentAuthor()
   const payload = {
@@ -490,17 +498,28 @@ async function addPost() {
     avatarUrl: author.avatarUrl,
   }
 
-  const created = await $fetch<ForumPost>('/api/forum/posts', {
-    method: 'POST',
-    headers: authHeaders(),
-    body: payload,
-  })
-  posts.value.unshift(normalizePost(created))
+  publishingPost.value = true
+  publishError.value = ''
+  try {
+    const created = await $fetch<ForumPost>('/api/forum/posts', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: payload,
+    })
+    posts.value.unshift(normalizePost(created))
+    await refreshPosts()
 
-  form.title = ''
-  form.message = ''
-  form.media = []
-  showComposer.value = false
+    form.title = ''
+    form.message = ''
+    form.media = []
+    showComposer.value = false
+  }
+  catch (error) {
+    publishError.value = error instanceof Error ? error.message : 'No se pudo publicar'
+  }
+  finally {
+    publishingPost.value = false
+  }
 }
 
 async function handleMediaUpload(event: Event) {
@@ -570,6 +589,7 @@ function cancelComposer() {
   form.title = ''
   form.message = ''
   form.media = []
+  publishError.value = ''
   showComposer.value = false
 }
 
@@ -615,13 +635,17 @@ function normalizeComment(comment: Partial<ForumComment>): ForumComment {
 }
 
 function getCurrentAuthor() {
+  const avatarUrl = profileAvatar.value && !profileAvatar.value.startsWith('data:')
+    ? profileAvatar.value
+    : undefined
+
   if (isAuthenticated.value && user.value?.username) {
     return {
       name: user.value.username,
       initial: userInitial.value,
       key: currentLikeKey(),
       avatarClass: 'bg-iberia',
-      avatarUrl: profileAvatar.value ?? undefined,
+      avatarUrl,
     }
   }
 

@@ -52,7 +52,7 @@ export async function requireForumSubscriber(event: H3Event): Promise<ForumUser>
   const authorization = getHeader(event, 'authorization')
 
   if (!authorization) {
-    throw createError({ statusCode: 401, message: 'Missing authorization header' })
+    throw createError({ statusCode: 401, statusMessage: 'Missing authorization header' })
   }
 
   const currentUser = await $fetch<StrapiUser>(`${config.public.strapiUrl}/api/users/me`, {
@@ -68,7 +68,7 @@ export async function requireForumSubscriber(event: H3Event): Promise<ForumUser>
 
   const fullUser = normalizeUser(user)
   if (!isSubscriberRole(fullUser?.role)) {
-    throw createError({ statusCode: 403, message: 'Subscriber access required' })
+    throw createError({ statusCode: 403, statusMessage: 'Subscriber access required' })
   }
 
   return currentUser
