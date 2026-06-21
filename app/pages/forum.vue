@@ -212,13 +212,19 @@
           <div class="grid grid-cols-3 items-center gap-3 text-sm text-zinc-700 md:grid-cols-2">
             <button
               type="button"
-              class="flex items-center gap-2 rounded-md transition hover:text-violet-700"
+              class="relative flex items-center gap-2 rounded-md transition hover:text-violet-700"
               @click="toggleComments(post.id)"
             >
               <svg class="size-5 text-zinc-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                 <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
               </svg>
               {{ post.commentItems.length }}
+              <span
+                v-if="unreadCommentCount(post)"
+                class="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-600 px-1.5 py-0.5 text-xs font-bold leading-none text-white"
+              >
+                {{ unreadCommentCount(post) }}
+              </span>
             </button>
             <button
               type="button"
@@ -424,6 +430,7 @@ const syncingAvatar = ref(false)
 const publishError = ref('')
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
+const seenCommentTimes = ref<Record<string, string>>({})
 
 const form = reactive({
   title: '',
@@ -462,8 +469,10 @@ const canModerateForum = computed(() => user.value?.email === 'geo.algabe@gmail.
 onMounted(async () => {
   localStorage.removeItem('iberia-forum-posts')
   localStorage.removeItem('iberia-forum-posts-migrated')
+  loadSeenCommentTimes()
   await ensurePersistedProfileAvatar()
   await refreshPosts()
+  initializeSeenCommentTimes()
   refreshTimer = setInterval(() => {
     if (!showComposer.value) {
       refreshPosts()
@@ -780,7 +789,76 @@ async function likePost(post: ForumPost) {
 }
 
 function toggleComments(postId: string) {
-  openCommentsPostId.value = openCommentsPostId.value === postId ? null : postId
+  const nextPostId = openCommentsPostId.value === postId ? null : postId
+  openCommentsPostId.value = nextPostId
+  if (nextPostId) {
+    markPostCommentsSeen(nextPostId)
+  }
+}
+
+function unreadCommentCount(post: ForumPost) {
+  const seenAt = seenCommentTimes.value[post.id]
+  if (!seenAt) {
+    return 0
+  }
+
+  const seenTime = new Date(seenAt).getTime()
+  return post.commentItems.filter((comment) => {
+    return new Date(comment.createdAt).getTime() > seenTime && !ownsComment(comment)
+  }).length
+}
+
+function latestCommentDate(post: ForumPost) {
+  return post.commentItems.reduce<string | null>((latest, comment) => {
+    if (!latest || new Date(comment.createdAt).getTime() > new Date(latest).getTime()) {
+      return comment.createdAt
+    }
+    return latest
+  }, null)
+}
+
+function seenCommentStorageKey() {
+  return `iberia-forum-seen-comments:${currentLikeKey()}`
+}
+
+function loadSeenCommentTimes() {
+  try {
+    seenCommentTimes.value = JSON.parse(localStorage.getItem(seenCommentStorageKey()) || '{}')
+  }
+  catch {
+    seenCommentTimes.value = {}
+  }
+}
+
+function saveSeenCommentTimes() {
+  localStorage.setItem(seenCommentStorageKey(), JSON.stringify(seenCommentTimes.value))
+}
+
+function initializeSeenCommentTimes() {
+  if (Object.keys(seenCommentTimes.value).length) {
+    return
+  }
+
+  const nextSeen: Record<string, string> = {}
+  for (const post of posts.value) {
+    nextSeen[post.id] = latestCommentDate(post) || new Date().toISOString()
+  }
+
+  seenCommentTimes.value = nextSeen
+  saveSeenCommentTimes()
+}
+
+function markPostCommentsSeen(postId: string) {
+  const post = posts.value.find(item => item.id === postId)
+  if (!post) {
+    return
+  }
+
+  seenCommentTimes.value = {
+    ...seenCommentTimes.value,
+    [post.id]: latestCommentDate(post) || new Date().toISOString(),
+  }
+  saveSeenCommentTimes()
 }
 
 function canDeletePost(post: ForumPost) {
@@ -789,6 +867,10 @@ function canDeletePost(post: ForumPost) {
 
 function canDeleteComment(comment: ForumComment) {
   return canModerateForum.value || comment.authorKey === currentLikeKey() || ownsLegacyForumItem(comment.name)
+}
+
+function ownsComment(comment: ForumComment) {
+  return comment.authorKey === currentLikeKey() || ownsLegacyForumItem(comment.name)
 }
 
 function ownsLegacyForumItem(name?: string) {
@@ -853,6 +935,7 @@ async function addComment(post: ForumPost) {
   post.comments = post.commentItems.length
   commentForms[post.id] = ''
   await savePost(post)
+  markPostCommentsSeen(post.id)
 }
 
 function categoryClass(category: string) {
