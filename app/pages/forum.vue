@@ -643,7 +643,7 @@ async function ensurePersistedProfileAvatar() {
       type: blob.type,
     })
     const uploaded = await uploadProfileAvatar(file)
-    saveProfileAvatar(uploaded.src)
+    await saveProfileAvatar(uploaded.src, uploaded.id)
   }
   catch {
     // Keep the local avatar visible if upload migration fails.

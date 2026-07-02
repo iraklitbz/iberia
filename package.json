@@ -2,11 +2,19 @@
   "name": "iberia_org_website",
   "type": "module",
   "private": true,
+  "version":"1.0.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "forum:migrate:dry": "node scripts/migrate-forum-to-content-types.mjs",
+    "forum:migrate": "node scripts/migrate-forum-to-content-types.mjs --apply",
+    "forum:schema:install": "node scripts/install-forum-strapi-schemas.mjs",
+    "forum:verify": "node scripts/verify-forum-migration.mjs",
+    "forum:cutover:check": "node scripts/check-forum-cutover.mjs",
+    "forum:legacy:export": "node scripts/export-legacy-forum.mjs",
+    "forum:legacy:restore": "node scripts/restore-legacy-forum-export.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

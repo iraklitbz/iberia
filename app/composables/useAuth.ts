@@ -24,6 +24,7 @@ interface User {
   documentId: string
   username: string
   email: string
+  profileAvatar?: string | null
   confirmed: boolean
   blocked: boolean
   role?: UserRole
@@ -37,10 +38,6 @@ interface AuthResponse {
 interface SubscriberStatus {
   isSubscriber: boolean
   role: UserRole | null
-}
-
-function profileAvatarKey(user: User): string {
-  return `iberia-profile-avatar:${user.id ?? user.email}`
 }
 
 export function useAuth() {
@@ -86,22 +83,22 @@ export function useAuth() {
     profileAvatar.value = null
   }
 
-  function loadProfileAvatar(): void {
-    if (!import.meta.client || !user.value) return
-    profileAvatar.value = localStorage.getItem(profileAvatarKey(user.value))
+  function setAuthenticatedUser(nextUser: User): void {
+    user.value = nextUser
+    profileAvatar.value = nextUser.profileAvatar ?? null
   }
 
-  function saveProfileAvatar(value: string | null): void {
-    if (!import.meta.client || !user.value) return
-
-    if (value) {
-      localStorage.setItem(profileAvatarKey(user.value), value)
-    }
-    else {
-      localStorage.removeItem(profileAvatarKey(user.value))
-    }
-
+  async function saveProfileAvatar(value: string | null, fileId?: number): Promise<void> {
+    if (!token.value || !user.value) return
     profileAvatar.value = value
+
+    const updated = await $fetch<User>('/api/auth/profile', {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: { profileAvatar: value, profileAvatarFileId: fileId },
+    })
+    user.value = { ...user.value, profileAvatar: updated.profileAvatar ?? null }
+    profileAvatar.value = user.value.profileAvatar ?? null
   }
 
   async function updateUsername(username: string): Promise<void> {
@@ -114,27 +111,46 @@ export function useAuth() {
     user.value = { ...user.value, username: updated.username }
   }
 
+  async function fetchProfileAvatar(): Promise<string | null> {
+    if (!token.value) return null
+
+    try {
+      const profile = await $fetch<Pick<User, 'profileAvatar'>>('/api/auth/profile', {
+        headers: { Authorization: `Bearer ${token.value}` },
+      })
+      return profile.profileAvatar ?? null
+    }
+    catch {
+      return null
+    }
+  }
+
   async function fetchUser(): Promise<void> {
     if (!token.value) return
     try {
       const data = await $fetch<User>(`${baseUrl}/api/users/me?populate=role`, {
         headers: { Authorization: `Bearer ${token.value}` },
       })
+      const persistedAvatar = await fetchProfileAvatar()
       try {
         const subscriber = await $fetch<SubscriberStatus>('/api/auth/subscriber', {
           headers: { Authorization: `Bearer ${token.value}` },
         })
-        user.value = subscriber.role ? { ...data, role: subscriber.role } : data
+        setAuthenticatedUser({
+          ...data,
+          ...(subscriber.role ? { role: subscriber.role } : {}),
+          profileAvatar: persistedAvatar,
+        })
       }
       catch {
-        user.value = data
+        setAuthenticatedUser({ ...data, profileAvatar: persistedAvatar })
       }
-      loadProfileAvatar()
     }
     catch {
       // Token invalid or expired — clear it
       token.value = null
       user.value = null
+      profileAvatar.value = null
     }
   }
 
@@ -155,7 +171,8 @@ export function useAuth() {
       body: { code, password, passwordConfirmation },
     })
     token.value = data.jwt
-    user.value = data.user
+    setAuthenticatedUser(data.user)
+    await fetchUser()
   }
 
   async function confirmEmail(confirmation: string): Promise<void> {
@@ -163,7 +180,8 @@ export function useAuth() {
       `${baseUrl}/api/auth/email-confirmation?confirmation=${confirmation}`,
     )
     token.value = data.jwt
-    user.value = data.user
+    setAuthenticatedUser(data.user)
+    await fetchUser()
   }
 
   async function resendConfirmation(email: string): Promise<void> {
@@ -175,16 +193,16 @@ export function useAuth() {
 
   async function loginWithToken(jwt: string): Promise<void> {
     try {
-      const data = await $fetch<User>(`${baseUrl}/api/users/me?populate=role`, {
+      await $fetch<User>(`${baseUrl}/api/users/me?populate=role`, {
         headers: { Authorization: `Bearer ${jwt}` },
       })
       token.value = jwt
-      user.value = data
-      loadProfileAvatar()
+      await fetchUser()
     }
     catch (err) {
       token.value = null
       user.value = null
+      profileAvatar.value = null
       throw err
     }
   }

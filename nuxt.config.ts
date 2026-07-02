@@ -53,6 +53,7 @@ export default defineNuxtConfig({
     strapiToken: process.env.STRAPI_TOKEN ?? '',
     strapiAdminEmail: process.env.STRAPI_ADMIN_EMAIL ?? '',
     strapiAdminPassword: process.env.STRAPI_ADMIN_PASSWORD ?? '',
+    forumLegacyFallback: process.env.FORUM_LEGACY_FALLBACK !== 'false',
     revalidateSecret: process.env.REVALIDATE_SECRET ?? '',
     cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN ?? '',
     cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID ?? '',

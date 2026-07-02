@@ -3,10 +3,13 @@ interface StrapiUser {
   documentId?: string
   username: string
   email: string
+  profileAvatar?: string | null
 }
 
 interface ProfileBody {
   username?: string
+  profileAvatar?: string | null
+  profileAvatarFileId?: number | null
 }
 
 export default defineEventHandler(async (event) => {
@@ -19,9 +22,24 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody<ProfileBody>(event)
   const username = body.username?.trim()
+  const hasUsername = typeof body.username === 'string'
+  const hasProfileAvatar = Object.prototype.hasOwnProperty.call(body, 'profileAvatar')
+  const hasProfileAvatarFileId = typeof body.profileAvatarFileId === 'number'
 
-  if (!username || username.length < 2 || username.length > 40) {
+  if (!hasUsername && !hasProfileAvatar) {
+    throw createError({ statusCode: 400, message: 'No profile fields provided' })
+  }
+
+  if (hasUsername && (!username || username.length < 2 || username.length > 40)) {
     throw createError({ statusCode: 400, message: 'Invalid username' })
+  }
+
+  if (
+    hasProfileAvatar
+    && body.profileAvatar !== null
+    && (typeof body.profileAvatar !== 'string' || body.profileAvatar.length > 1000)
+  ) {
+    throw createError({ statusCode: 400, message: 'Invalid profile avatar' })
   }
 
   setHeader(event, 'Cache-Control', 'private, no-store')
@@ -30,11 +48,26 @@ export default defineEventHandler(async (event) => {
     headers: { Authorization: authorization },
   })
 
-  const updatedUser = await $fetch<StrapiUser>(`${config.public.strapiUrl}/api/users/${currentUser.id}`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${config.strapiToken}` },
-    body: { username },
-  })
+  let updatedUser = currentUser
+  if (hasUsername) {
+    updatedUser = await $fetch<StrapiUser>(`${config.public.strapiUrl}/api/users/${currentUser.id}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${config.strapiToken}` },
+      body: { username },
+    })
+  }
 
-  return updatedUser
+  if (hasProfileAvatar) {
+    if (body.profileAvatar && hasProfileAvatarFileId) {
+      await setStoredProfileAvatar(config, currentUser.id, body.profileAvatarFileId!)
+    }
+    else if (!body.profileAvatar) {
+      await clearStoredProfileAvatar(config, currentUser.id)
+    }
+  }
+
+  return {
+    ...updatedUser,
+    profileAvatar: await getStoredProfileAvatar(config, currentUser.id),
+  }
 })

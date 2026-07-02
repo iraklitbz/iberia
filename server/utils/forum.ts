@@ -1,8 +1,10 @@
 import type { H3Event } from 'h3'
 
 export const FORUM_ENTRY_MARKER = '__FORUM_POST__'
-const FORUM_COLLECTION = 'foromis'
-const FALLBACK_COLLECTION = 'entradas'
+const FORUM_POST_COLLECTION = 'forum-posts'
+const FORUM_COMMENT_COLLECTION = 'forum-comments'
+const FORUM_LIKE_COLLECTION = 'forum-likes'
+const LEGACY_COLLECTION = 'entradas'
 
 interface StrapiRole {
   id: number
@@ -16,19 +18,56 @@ export interface ForumUser {
   username: string
 }
 
+interface StrapiUser extends ForumUser {
+  role?: StrapiRole
+}
+
+interface StrapiMedia {
+  id?: number
+  documentId?: string
+  url?: string
+  name?: string
+  mime?: string
+}
+
+interface ForumCommentEntry {
+  documentId: string
+  message?: string
+  authorKey?: string
+  authorName?: string
+  authorInitial?: string
+  avatarClass?: string
+  avatarUrl?: string
+  legacyCommentId?: string
+  legacyCreatedAt?: string
+  createdAt?: string
+}
+
+interface ForumLikeEntry {
+  documentId: string
+  userKey?: string
+}
+
 export interface ForumStrapiEntry {
   documentId: string
-  content?: unknown
+  title?: string
+  message?: string
+  media?: StrapiMedia[]
+  comments?: ForumCommentEntry[]
+  likes?: ForumLikeEntry[]
+  authorKey?: string
+  authorName?: string
+  authorInitial?: string
+  avatarClass?: string
+  avatarUrl?: string
+  legacyCreatedAt?: string
   createdAt?: string
+  content?: unknown
   excerpt?: string | null
 }
 
 export interface StoredForumEntry extends ForumStrapiEntry {
-  collection: string
-}
-
-interface StrapiUser extends ForumUser {
-  role?: StrapiRole
+  collection: typeof FORUM_POST_COLLECTION | typeof LEGACY_COLLECTION
 }
 
 let cachedAdminToken: string | null = null
@@ -138,14 +177,7 @@ function forumSlug(title: string): string {
   return `forum-${slug || 'post'}-${Date.now()}`
 }
 
-function forumEntryData(collection: string, title: string, post: Record<string, unknown>) {
-  if (collection === FORUM_COLLECTION) {
-    return {
-      title,
-      content: post,
-    }
-  }
-
+function legacyForumEntryData(title: string, post: Record<string, unknown>) {
   return {
     title: `${FORUM_ENTRY_MARKER} ${title}`.slice(0, 255),
     slug: forumSlug(title),
@@ -156,23 +188,130 @@ function forumEntryData(collection: string, title: string, post: Record<string, 
   }
 }
 
+function mediaIds(post: Record<string, unknown>) {
+  if (!Array.isArray(post.media)) return []
+  return post.media
+    .map((item) => {
+      if (!item || typeof item !== 'object' || !('id' in item)) return null
+      return Number((item as { id?: unknown }).id)
+    })
+    .filter((id): id is number => Number.isInteger(id) && id > 0)
+}
+
+function forumPostEntryData(title: string, post: Record<string, unknown>) {
+  const data: Record<string, unknown> = {
+    title,
+    message: typeof post.message === 'string' ? post.message : '',
+    authorKey: typeof post.authorKey === 'string' ? post.authorKey : '',
+    authorName: typeof post.name === 'string' ? post.name : '',
+    authorInitial: typeof post.initial === 'string' ? post.initial : '',
+    avatarClass: typeof post.avatarClass === 'string' ? post.avatarClass : '',
+    avatarUrl: typeof post.avatarUrl === 'string' ? post.avatarUrl : '',
+    legacyCreatedAt: typeof post.createdAt === 'string' ? post.createdAt : undefined,
+    isPinned: false,
+    isLocked: false,
+  }
+
+  const ids = mediaIds(post)
+  if (ids.length) {
+    data.media = ids
+  }
+
+  return data
+}
+
+function absoluteStrapiUrl(event: H3Event, url: string) {
+  const config = useRuntimeConfig(event)
+  return url.startsWith('http') ? url : new URL(url, config.public.strapiUrl).toString()
+}
+
+function mapMedia(event: H3Event, media: StrapiMedia[] | undefined) {
+  return (media ?? []).flatMap((item) => {
+    if (!item.url) return []
+    return [{
+      id: item.id ?? Date.now(),
+      type: item.mime?.startsWith('video/') ? 'video' : 'image',
+      src: absoluteStrapiUrl(event, item.url),
+      name: item.name || 'forum-upload',
+    }]
+  })
+}
+
+function mapForumComment(comment: ForumCommentEntry) {
+  const name = comment.authorName || ''
+  return {
+    id: comment.legacyCommentId || comment.documentId,
+    name,
+    initial: comment.authorInitial || name[0]?.toUpperCase() || '',
+    authorKey: comment.authorKey,
+    message: comment.message || '',
+    createdAt: comment.legacyCreatedAt || comment.createdAt || new Date().toISOString(),
+    avatarClass: comment.avatarClass || 'bg-zinc-500',
+    avatarUrl: comment.avatarUrl,
+  }
+}
+
+function mapForumPostEntry(event: H3Event, entry: StoredForumEntry) {
+  const name = entry.authorName || ''
+  const commentItems = (entry.comments ?? []).map(mapForumComment)
+  const likedBy = (entry.likes ?? []).flatMap(like => like.userKey ? [like.userKey] : [])
+
+  return {
+    id: entry.documentId,
+    name,
+    initial: entry.authorInitial || name[0]?.toUpperCase() || '',
+    authorKey: entry.authorKey,
+    title: entry.title || '',
+    message: entry.message || '',
+    media: mapMedia(event, entry.media),
+    commentItems,
+    comments: commentItems.length,
+    likes: likedBy.length,
+    likedBy,
+    createdAt: entry.legacyCreatedAt || entry.createdAt || new Date().toISOString(),
+    avatarClass: entry.avatarClass || 'bg-violet-600',
+    avatarUrl: entry.avatarUrl,
+  }
+}
+
 async function withForumCollection<T>(
   event: H3Event,
-  action: (collection: string) => Promise<T>,
+  action: (collection: typeof FORUM_POST_COLLECTION | typeof LEGACY_COLLECTION) => Promise<T>,
 ): Promise<T> {
   try {
-    return await action(FORUM_COLLECTION)
+    return await action(FORUM_POST_COLLECTION)
   }
   catch (error) {
     if (!isMissingCollection(error)) {
       throw error
     }
 
-    return await action(FALLBACK_COLLECTION)
+    const config = useRuntimeConfig(event)
+    if (!config.forumLegacyFallback) {
+      throw createError({
+        statusCode: 503,
+        message: 'Forum content types are not deployed and legacy fallback is disabled',
+      })
+    }
+
+    return await action(LEGACY_COLLECTION)
   }
 }
 
-export function forumPostFromEntry(entry: ForumStrapiEntry): Record<string, unknown> {
+function forumPopulateQuery() {
+  return [
+    'populate[media]=true',
+    'populate[comments][sort][0]=legacyCreatedAt:asc',
+    'populate[comments][sort][1]=createdAt:asc',
+    'populate[likes]=true',
+  ].join('&')
+}
+
+export function forumPostFromEntry(event: H3Event, entry: StoredForumEntry): Record<string, unknown> {
+  if (entry.collection === FORUM_POST_COLLECTION) {
+    return mapForumPostEntry(event, entry)
+  }
+
   return parseForumContent(entry.content)
 }
 
@@ -180,7 +319,7 @@ export async function getForumEntry(event: H3Event, id: string): Promise<StoredF
   const config = useRuntimeConfig(event)
 
   return await withForumCollection(event, async (collection) => {
-    if (collection === FALLBACK_COLLECTION) {
+    if (collection === LEGACY_COLLECTION) {
       const response = await $fetch<{ data: ForumStrapiEntry }>(
         `${config.public.strapiUrl}/api/entradas/${id}`,
         {
@@ -192,7 +331,7 @@ export async function getForumEntry(event: H3Event, id: string): Promise<StoredF
     }
 
     const response = await $fetch<{ data: ForumStrapiEntry }>(
-      `${config.public.strapiUrl}/api/${collection}/${id}`,
+      `${config.public.strapiUrl}/api/${collection}/${id}?${forumPopulateQuery()}`,
       {
         headers: strapiAuthHeaders(event),
       },
@@ -202,11 +341,11 @@ export async function getForumEntry(event: H3Event, id: string): Promise<StoredF
   })
 }
 
-export async function listForumEntries(event: H3Event): Promise<ForumStrapiEntry[]> {
+export async function listForumEntries(event: H3Event): Promise<StoredForumEntry[]> {
   const config = useRuntimeConfig(event)
 
   return await withForumCollection(event, async (collection) => {
-    if (collection === FALLBACK_COLLECTION) {
+    if (collection === LEGACY_COLLECTION) {
       const response = await $fetch<{ data: ForumStrapiEntry[] }>(
         `${config.public.strapiUrl}/api/entradas?pagination[page]=1&pagination[pageSize]=100&sort=updatedAt:DESC&filters[excerpt][$eq]=${FORUM_ENTRY_MARKER}`,
         {
@@ -214,18 +353,68 @@ export async function listForumEntries(event: H3Event): Promise<ForumStrapiEntry
         },
       )
 
-      return response.data ?? []
+      return (response.data ?? []).map(entry => ({ ...entry, collection }))
     }
 
     const response = await $fetch<{ data: ForumStrapiEntry[] }>(
-      `${config.public.strapiUrl}/api/${collection}?pagination[page]=1&pagination[pageSize]=100&sort=createdAt:DESC`,
+      `${config.public.strapiUrl}/api/${collection}?pagination[page]=1&pagination[pageSize]=100&sort[0]=isPinned:DESC&sort[1]=createdAt:DESC&${forumPopulateQuery()}`,
       {
         headers: strapiAuthHeaders(event),
       },
     )
 
-    return response.data ?? []
+    return (response.data ?? []).map(entry => ({ ...entry, collection }))
   })
+}
+
+async function createForumPostComments(event: H3Event, postId: string, comments: unknown) {
+  if (!Array.isArray(comments)) return
+  const config = useRuntimeConfig(event)
+
+  for (const comment of comments) {
+    if (!comment || typeof comment !== 'object') continue
+    const item = comment as Record<string, unknown>
+    const message = typeof item.message === 'string' ? item.message : ''
+    if (!message) continue
+
+    await $fetch(`${config.public.strapiUrl}/api/${FORUM_COMMENT_COLLECTION}`, {
+      method: 'POST',
+      headers: strapiAuthHeaders(event),
+      body: {
+        data: {
+          message,
+          post: postId,
+          authorKey: typeof item.authorKey === 'string' ? item.authorKey : '',
+          authorName: typeof item.name === 'string' ? item.name : '',
+          authorInitial: typeof item.initial === 'string' ? item.initial : '',
+          avatarClass: typeof item.avatarClass === 'string' ? item.avatarClass : '',
+          avatarUrl: typeof item.avatarUrl === 'string' ? item.avatarUrl : '',
+          legacyCommentId: String(item.id ?? ''),
+          legacyCreatedAt: typeof item.createdAt === 'string' ? item.createdAt : undefined,
+        },
+      },
+    })
+  }
+}
+
+async function createForumPostLikes(event: H3Event, postId: string, likedBy: unknown) {
+  if (!Array.isArray(likedBy)) return
+  const config = useRuntimeConfig(event)
+
+  for (const userKey of likedBy) {
+    if (typeof userKey !== 'string' || !userKey) continue
+
+    await $fetch(`${config.public.strapiUrl}/api/${FORUM_LIKE_COLLECTION}`, {
+      method: 'POST',
+      headers: strapiAuthHeaders(event),
+      body: {
+        data: {
+          post: postId,
+          userKey,
+        },
+      },
+    })
+  }
 }
 
 export async function createForumEntry(
@@ -235,20 +424,73 @@ export async function createForumEntry(
 ): Promise<ForumStrapiEntry> {
   const config = useRuntimeConfig(event)
 
-  return await withForumCollection(event, async (collection) => {
+  try {
     const response = await $fetch<{ data: ForumStrapiEntry }>(
-      `${config.public.strapiUrl}/api/${collection}?status=published`,
+      `${config.public.strapiUrl}/api/${FORUM_POST_COLLECTION}`,
       {
         method: 'POST',
         headers: strapiAuthHeaders(event),
         body: {
-          data: forumEntryData(collection, title, post),
+          data: forumPostEntryData(title, post),
         },
       },
     )
 
+    await createForumPostComments(event, response.data.documentId, post.commentItems)
+    await createForumPostLikes(event, response.data.documentId, post.likedBy)
+
     return response.data
-  })
+  }
+  catch (error) {
+    if (isMissingCollection(error)) {
+      throw createError({
+        statusCode: 503,
+        message: 'Forum content type is not deployed in Strapi. Install forum-posts and restart Strapi before creating forum posts.',
+      })
+    }
+
+    throw error
+  }
+}
+
+async function syncForumComments(event: H3Event, existing: StoredForumEntry, post: Record<string, unknown>) {
+  if (!Array.isArray(post.commentItems)) return
+
+  const config = useRuntimeConfig(event)
+  const existingComments = existing.comments ?? []
+  const nextIds = new Set(post.commentItems.map(comment => forumItemId(comment)))
+
+  for (const comment of existingComments) {
+    const id = comment.legacyCommentId || comment.documentId
+    if (!nextIds.has(id)) {
+      await $fetch(`${config.public.strapiUrl}/api/${FORUM_COMMENT_COLLECTION}/${comment.documentId}`, {
+        method: 'DELETE',
+        headers: strapiAuthHeaders(event),
+      })
+    }
+  }
+
+  const existingIds = new Set(existingComments.map(comment => comment.legacyCommentId || comment.documentId))
+  const newComments = post.commentItems.filter(comment => !existingIds.has(forumItemId(comment)))
+  await createForumPostComments(event, existing.documentId, newComments)
+}
+
+function forumItemId(item: unknown) {
+  if (!item || typeof item !== 'object' || !('id' in item)) {
+    return ''
+  }
+
+  return String((item as { id?: unknown }).id ?? '')
+}
+
+async function syncForumLikes(event: H3Event, existing: StoredForumEntry, post: Record<string, unknown>) {
+  if (!Array.isArray(post.likedBy)) return
+
+  const existingKeys = new Set((existing.likes ?? []).flatMap(like => like.userKey ? [like.userKey] : []))
+  const nextKeys = [...new Set(post.likedBy.filter((key): key is string => typeof key === 'string' && key))]
+  const missingKeys = nextKeys.filter(key => !existingKeys.has(key))
+
+  await createForumPostLikes(event, existing.documentId, missingKeys)
 }
 
 export async function updateForumEntry(
@@ -260,11 +502,26 @@ export async function updateForumEntry(
 ): Promise<void> {
   const config = useRuntimeConfig(event)
 
+  if (collection === FORUM_POST_COLLECTION) {
+    const existing = await getForumEntry(event, id)
+    await $fetch(`${config.public.strapiUrl}/api/${collection}/${id}`, {
+      method: 'PUT',
+      headers: strapiAuthHeaders(event),
+      body: {
+        data: forumPostEntryData(title, post),
+      },
+    })
+
+    await syncForumComments(event, existing, post)
+    await syncForumLikes(event, existing, post)
+    return
+  }
+
   await $fetch(`${config.public.strapiUrl}/api/${collection}/${id}?status=published`, {
     method: 'PUT',
     headers: strapiAuthHeaders(event),
     body: {
-      data: forumEntryData(collection, title, post),
+      data: legacyForumEntryData(title, post),
     },
   })
 }

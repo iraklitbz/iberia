@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody<Record<string, unknown>>(event)
   const existing = await getForumEntry(event, id)
-  const previous = forumPostFromEntry(existing)
+  const previous = forumPostFromEntry(event, existing)
   const post = { ...previous, ...body, id: undefined }
   const title = typeof post.title === 'string' && post.title.trim() ? post.title.trim() : 'Forum post'
   const removedComments = removedForumComments(previous.commentItems, post.commentItems)

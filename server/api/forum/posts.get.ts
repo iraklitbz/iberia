@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   return entries.flatMap((entry) => {
     try {
-      const post = forumPostFromEntry(entry)
+      const post = forumPostFromEntry(event, entry)
       return [{ ...post, id: entry.documentId, createdAt: post.createdAt ?? entry.createdAt }]
     }
     catch {

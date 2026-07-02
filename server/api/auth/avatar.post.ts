@@ -5,6 +5,10 @@ interface UploadedFile {
   mime: string
 }
 
+interface StrapiUser {
+  id: number
+}
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const authorization = getHeader(event, 'authorization')
@@ -13,7 +17,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: 'Missing authorization header' })
   }
 
-  await $fetch(`${config.public.strapiUrl}/api/users/me`, {
+  const currentUser = await $fetch<StrapiUser>(`${config.public.strapiUrl}/api/users/me`, {
     headers: { Authorization: authorization },
   })
 
@@ -37,6 +41,7 @@ export default defineEventHandler(async (event) => {
   const formData = new FormData()
   const blob = new Blob([file.data], { type: file.type })
   formData.append('files', blob, file.filename ?? 'profile-avatar')
+  formData.append('fileInfo', JSON.stringify({ alternativeText: profileAvatarMarker(currentUser.id) }))
 
   const uploaded = await $fetch<UploadedFile[]>(`${config.public.strapiUrl}/api/upload`, {
     method: 'POST',

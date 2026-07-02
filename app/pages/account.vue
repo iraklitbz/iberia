@@ -232,13 +232,13 @@ async function handleAvatarUpload(event: Event) {
     const data = new FormData()
     data.append('file', file)
 
-    const uploaded = await $fetch<{ src: string }>('/api/auth/avatar', {
+    const uploaded = await $fetch<{ id: number, src: string }>('/api/auth/avatar', {
       method: 'POST',
       headers: authHeaders(),
       body: data,
     })
 
-    saveProfileAvatar(uploaded.src)
+    await saveProfileAvatar(uploaded.src, uploaded.id)
     setMessage('success', t('auth.profileSaved'))
   }
   catch {
@@ -250,9 +250,20 @@ async function handleAvatarUpload(event: Event) {
   }
 }
 
-function handleRemoveAvatar() {
-  saveProfileAvatar(null)
-  if (avatarInput.value) avatarInput.value.value = ''
-  setMessage('success', t('auth.profileSaved'))
+async function handleRemoveAvatar() {
+  avatarSaving.value = true
+  message.value = ''
+
+  try {
+    await saveProfileAvatar(null)
+    if (avatarInput.value) avatarInput.value.value = ''
+    setMessage('success', t('auth.profileSaved'))
+  }
+  catch {
+    setMessage('error', t('auth.profileSaveError'))
+  }
+  finally {
+    avatarSaving.value = false
+  }
 }
 </script>

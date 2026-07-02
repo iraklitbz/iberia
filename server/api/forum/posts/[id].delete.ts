@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const existing = await getForumEntry(event, id)
-  const post = forumPostFromEntry(existing)
+  const post = forumPostFromEntry(event, existing)
   const canDelete = user.email === 'geo.algabe@gmail.com'
     || post.authorKey === forumUserKey(user)
     || ownsLegacyForumItem(post.name, user)
