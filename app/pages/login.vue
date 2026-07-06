@@ -256,15 +256,17 @@ async function handleLogin() {
   position: absolute;
   bottom: clamp(2.25rem, 9vh, 6rem);
   left: 0;
-  width: clamp(14rem, 26vw, 23rem);
-  animation: cyclist-route 20s linear infinite;
+  width: clamp(16rem, 30vw, 26rem);
+  animation: cyclist-route 32s linear infinite;
+  will-change: transform;
 }
 
 .cyclist-art {
   display: block;
   width: 100%;
   height: auto;
-  animation: cyclist-bob 0.9s ease-in-out infinite;
+  animation: cyclist-bob 1.35s ease-in-out infinite;
+  will-change: transform;
 }
 
 .scene-foreground {
@@ -313,12 +315,8 @@ async function handleLogin() {
   0% {
     transform: translateX(calc(-100% - 3vw)) scaleX(1);
   }
-  50% {
-    transform: translateX(calc(100vw + 3vw)) scaleX(1);
-  }
-  50.01%,
   100% {
-    transform: translateX(calc(-100% - 3vw)) scaleX(1);
+    transform: translateX(calc(100vw + 3vw)) scaleX(1);
   }
 }
 
@@ -328,7 +326,7 @@ async function handleLogin() {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-0.18rem);
+    transform: translateY(-0.12rem);
   }
 }
 
@@ -354,7 +352,7 @@ async function handleLogin() {
 
   .cyclist-track {
     bottom: 2.25rem;
-    width: clamp(11rem, 46vw, 14rem);
+    width: clamp(12rem, 52vw, 16rem);
   }
 }
 
