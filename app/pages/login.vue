@@ -9,7 +9,7 @@
     <div class="scene-light" aria-hidden="true" />
     <div class="cyclist-lane" aria-hidden="true">
       <div class="cyclist-track">
-        <img class="cyclist-art" src="/images/login/summer-cyclist.png" alt="" />
+        <img class="cyclist-art" src="/images/login/summer-cyclist-v2.png" alt="" />
       </div>
     </div>
     <img
