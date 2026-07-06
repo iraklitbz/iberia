@@ -2,19 +2,19 @@
   <div class="login-scene relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden px-4 py-12 sm:px-8">
     <img
       class="scene-art"
-      src="/images/login/autumn-watercolor-background.webp"
+      src="/images/login/summer-watercolor-background.png"
       alt=""
       aria-hidden="true"
     />
     <div class="scene-light" aria-hidden="true" />
     <div class="cyclist-lane" aria-hidden="true">
       <div class="cyclist-track">
-        <img class="cyclist-art" src="/images/login/cyclist-watercolor.webp" alt="" />
+        <img class="cyclist-art" src="/images/login/summer-cyclist.png" alt="" />
       </div>
     </div>
     <img
       class="scene-art scene-foreground"
-      src="/images/login/foreground-trees.webp"
+      src="/images/login/summer-foreground-trees.png"
       alt=""
       aria-hidden="true"
     />
@@ -40,8 +40,8 @@
             class="size-9"
           />
         </NuxtLink>
-        <h1 class="font-display text-2xl font-bold text-[#46261d]">{{ $t('auth.loginTitle') }}</h1>
-        <p class="mt-2 text-sm text-[#7f5846]">{{ $t('auth.loginSubtitle') }}</p>
+        <h1 class="font-display text-2xl font-bold text-[#173c25]">{{ $t('auth.loginTitle') }}</h1>
+        <p class="mt-2 text-sm text-[#426648]">{{ $t('auth.loginSubtitle') }}</p>
       </div>
 
       <form class="space-y-4" @submit.prevent="handleLogin">
@@ -50,7 +50,7 @@
         </div>
 
         <div>
-          <label class="mb-1.5 block text-sm font-medium text-[#58382d]">{{ $t('auth.email') }}</label>
+          <label class="mb-1.5 block text-sm font-medium text-[#24462d]">{{ $t('auth.email') }}</label>
           <input
             v-model="form.email"
             type="email"
@@ -63,10 +63,10 @@
 
         <div>
           <div class="mb-1.5 flex items-center justify-between gap-4">
-            <label class="text-sm font-medium text-[#58382d]">{{ $t('auth.password') }}</label>
+            <label class="text-sm font-medium text-[#24462d]">{{ $t('auth.password') }}</label>
             <NuxtLink
               :to="localePath('/forgot-password')"
-              class="text-xs text-[#9e3528] hover:underline"
+              class="text-xs text-[#2f6f3f] hover:underline"
             >
               {{ $t('auth.forgotPasswordLink') }}
             </NuxtLink>
@@ -84,7 +84,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="flex w-full items-center justify-center gap-2 rounded bg-[#a73526] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#89281e] disabled:cursor-not-allowed disabled:opacity-60"
+          class="flex w-full items-center justify-center gap-2 rounded bg-[#2f6f3f] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#245a33] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <svg v-if="loading" class="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -96,16 +96,16 @@
 
       <div class="relative my-5">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-[#ebd2b6]" />
+          <div class="w-full border-t border-[#c9dfbd]" />
         </div>
         <div class="relative flex justify-center">
-          <span class="rounded bg-white/30 px-3 text-xs text-[#8e6756]">{{ $t('auth.orContinueWith') }}</span>
+          <span class="rounded bg-white/30 px-3 text-xs text-[#55735b]">{{ $t('auth.orContinueWith') }}</span>
         </div>
       </div>
 
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-3 rounded border border-[#e7cdb1] bg-white px-4 py-2.5 text-sm font-medium text-[#58382d] transition-colors hover:bg-[#fff4e4]"
+        class="flex w-full items-center justify-center gap-3 rounded border border-[#c9dfbd] bg-white px-4 py-2.5 text-sm font-medium text-[#24462d] transition-colors hover:bg-[#f2faed]"
         @click="connectWithProvider('google')"
       >
         <svg class="size-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -117,9 +117,9 @@
         {{ $t('auth.continueWithGoogle') }}
       </button>
 
-      <p class="mt-6 text-center text-sm text-[#7f5846]">
+      <p class="mt-6 text-center text-sm text-[#426648]">
         {{ $t('auth.noAccount') }}
-        <NuxtLink :to="localePath('/register')" class="font-medium text-[#9e3528] hover:underline">
+        <NuxtLink :to="localePath('/register')" class="font-medium text-[#2f6f3f] hover:underline">
           {{ $t('auth.createAccount') }}
         </NuxtLink>
       </p>
@@ -162,7 +162,7 @@ async function handleLogin() {
 
 <style scoped>
 .login-scene {
-  background: #f8d18c;
+  background: #bde28f;
 }
 
 .scene-art {
@@ -180,8 +180,8 @@ async function handleLogin() {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 50% 30%, rgb(255 250 224 / 0.3), transparent 34%),
-    linear-gradient(180deg, rgb(255 248 230 / 0.12), transparent 55%);
+    radial-gradient(circle at 50% 28%, rgb(255 255 230 / 0.28), transparent 34%),
+    linear-gradient(180deg, rgb(236 255 210 / 0.14), transparent 55%);
   animation: light-breathe 7s ease-in-out infinite;
 }
 
@@ -192,30 +192,30 @@ async function handleLogin() {
   border-bottom-color: rgb(255 255 255 / 0.34);
   border-radius: 16px;
   background: rgb(255 255 255 / 0.27);
-  box-shadow: 0 22px 48px rgb(84 40 19 / 0.14);
+  box-shadow: 0 22px 48px rgb(24 65 31 / 0.14);
   backdrop-filter: blur(15px);
 }
 
 .login-input {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid #e7cdb1;
+  border: 1px solid #c9dfbd;
   border-radius: 4px;
   background: #fff;
   padding: 0.625rem 0.75rem;
-  color: #34221c;
+  color: #173c25;
   font-size: 0.875rem;
   outline: none;
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .login-input::placeholder {
-  color: #aa8e80;
+  color: #789374;
 }
 
 .login-input:focus {
-  border-color: #a73526;
-  box-shadow: 0 0 0 3px rgb(167 53 38 / 0.12);
+  border-color: #2f6f3f;
+  box-shadow: 0 0 0 3px rgb(47 111 63 / 0.13);
 }
 
 .drifting-leaves {
@@ -278,19 +278,19 @@ async function handleLogin() {
   width: clamp(0.55rem, 1vw, 0.85rem);
   height: clamp(0.85rem, 1.5vw, 1.2rem);
   border-radius: 90% 0 90% 0;
-  background: #e85921;
-  filter: drop-shadow(0 2px 1px rgb(91 42 21 / 0.18));
+  background: #fff7b2;
+  filter: drop-shadow(0 2px 1px rgb(44 83 34 / 0.18));
   animation: leaf-fall linear infinite;
 }
 
 .leaf-one { left: 9%; animation-duration: 11s; animation-delay: -3s; }
-.leaf-two { left: 23%; background: #f28d25; animation-duration: 13s; animation-delay: -9s; }
-.leaf-three { left: 39%; background: #c54125; animation-duration: 12s; animation-delay: -6s; }
-.leaf-four { left: 52%; background: #ef7220; animation-duration: 10s; animation-delay: -2s; }
-.leaf-five { left: 65%; background: #c33d24; animation-duration: 14s; animation-delay: -11s; }
-.leaf-six { left: 75%; background: #f19b2a; animation-duration: 12.5s; animation-delay: -5s; }
-.leaf-seven { left: 87%; background: #e05120; animation-duration: 10.5s; animation-delay: -8s; }
-.leaf-eight { left: 95%; background: #c83f26; animation-duration: 13.5s; animation-delay: -4s; }
+.leaf-two { left: 23%; background: #ffffff; animation-duration: 13s; animation-delay: -9s; }
+.leaf-three { left: 39%; background: #fff0a1; animation-duration: 12s; animation-delay: -6s; }
+.leaf-four { left: 52%; background: #f6d66a; animation-duration: 10s; animation-delay: -2s; }
+.leaf-five { left: 65%; background: #ffffff; animation-duration: 14s; animation-delay: -11s; }
+.leaf-six { left: 75%; background: #fff7b2; animation-duration: 12.5s; animation-delay: -5s; }
+.leaf-seven { left: 87%; background: #f6d66a; animation-duration: 10.5s; animation-delay: -8s; }
+.leaf-eight { left: 95%; background: #ffffff; animation-duration: 13.5s; animation-delay: -4s; }
 
 @keyframes leaf-fall {
   0% {
@@ -349,7 +349,7 @@ async function handleLogin() {
   }
 
   .scene-light {
-    background: linear-gradient(0deg, rgb(255 244 226 / 0.22), transparent 76%);
+    background: linear-gradient(0deg, rgb(239 255 226 / 0.22), transparent 76%);
   }
 
   .cyclist-track {
