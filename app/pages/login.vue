@@ -2,7 +2,7 @@
   <div class="login-scene relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden px-4 py-12 sm:px-8">
     <img
       class="scene-art"
-      src="/images/login/summer-watercolor-background.png"
+      src="/images/login/madrid-watercolor-background.png"
       alt=""
       aria-hidden="true"
     />
@@ -12,12 +12,6 @@
         <img class="cyclist-art" src="/images/login/summer-cyclist-v2.png" alt="" />
       </div>
     </div>
-    <img
-      class="scene-art scene-foreground"
-      src="/images/login/summer-foreground-trees.png"
-      alt=""
-      aria-hidden="true"
-    />
     <div class="drifting-leaves" aria-hidden="true">
       <span class="leaf leaf-one" />
       <span class="leaf leaf-two" />
@@ -162,7 +156,7 @@ async function handleLogin() {
 
 <style scoped>
 .login-scene {
-  background: #bde28f;
+  background: #f2dfbd;
 }
 
 .scene-art {
@@ -180,8 +174,9 @@ async function handleLogin() {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 50% 28%, rgb(255 255 230 / 0.28), transparent 34%),
-    linear-gradient(180deg, rgb(236 255 210 / 0.14), transparent 55%);
+    radial-gradient(circle at 54% 36%, rgb(255 248 222 / 0.34), transparent 38%),
+    linear-gradient(90deg, rgb(255 255 255 / 0.46), transparent 32%, transparent 68%, rgb(255 255 255 / 0.22)),
+    linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(232 202 154 / 0.16));
   animation: light-breathe 7s ease-in-out infinite;
 }
 
@@ -191,9 +186,9 @@ async function handleLogin() {
   border-right-color: rgb(255 255 255 / 0.34);
   border-bottom-color: rgb(255 255 255 / 0.34);
   border-radius: 16px;
-  background: rgb(255 255 255 / 0.27);
-  box-shadow: 0 22px 48px rgb(24 65 31 / 0.14);
-  backdrop-filter: blur(15px);
+  background: rgb(255 255 255 / 0.62);
+  box-shadow: 0 24px 54px rgb(102 65 27 / 0.18);
+  backdrop-filter: blur(18px);
 }
 
 .login-input {
@@ -232,32 +227,14 @@ async function handleLogin() {
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    rgb(0 0 0 / 0.28) clamp(2.75rem, 7vw, 6.5rem),
-    #000 clamp(8rem, 17vw, 14rem),
-    #000 calc(100% - clamp(8rem, 17vw, 14rem)),
-    rgb(0 0 0 / 0.28) calc(100% - clamp(2.75rem, 7vw, 6.5rem)),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    rgb(0 0 0 / 0.28) clamp(2.75rem, 7vw, 6.5rem),
-    #000 clamp(8rem, 17vw, 14rem),
-    #000 calc(100% - clamp(8rem, 17vw, 14rem)),
-    rgb(0 0 0 / 0.28) calc(100% - clamp(2.75rem, 7vw, 6.5rem)),
-    transparent 100%
-  );
 }
 
 .cyclist-track {
   position: absolute;
-  bottom: clamp(2.25rem, 9vh, 6rem);
+  bottom: clamp(-2.5rem, -3vh, -0.5rem);
   left: 0;
-  width: clamp(16rem, 30vw, 26rem);
-  animation: cyclist-route 32s linear infinite;
+  width: clamp(22rem, 42vw, 36rem);
+  animation: cyclist-route 15s linear infinite;
   will-change: transform;
 }
 
@@ -267,11 +244,6 @@ async function handleLogin() {
   height: auto;
   animation: cyclist-bob 1.35s ease-in-out infinite;
   will-change: transform;
-}
-
-.scene-foreground {
-  z-index: 2;
-  pointer-events: none;
 }
 
 .leaf {
@@ -347,12 +319,14 @@ async function handleLogin() {
   }
 
   .scene-light {
-    background: linear-gradient(0deg, rgb(239 255 226 / 0.22), transparent 76%);
+    background:
+      linear-gradient(90deg, rgb(255 255 255 / 0.5), transparent 82%),
+      linear-gradient(0deg, rgb(232 202 154 / 0.18), transparent 76%);
   }
 
   .cyclist-track {
-    bottom: 2.25rem;
-    width: clamp(12rem, 52vw, 16rem);
+    bottom: -0.75rem;
+    width: clamp(18rem, 78vw, 25rem);
   }
 }
 
