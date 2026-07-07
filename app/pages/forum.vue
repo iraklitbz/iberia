@@ -427,7 +427,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 
 const forumMenuItems = [
-  { key: 'forum', label: 'ფორუმი' },
+  { key: 'forum', label: 'იბერიის კლუბი' },
   { key: 'ask-iberia', label: 'კითხე იბერიას' },
   { key: 'document-check', label: 'დოკუმენტების გადამოწმება' },
 ]
