@@ -408,6 +408,7 @@ type ForumPost = {
   initial: string
   authorKey?: string
   title: string
+  section: string
   message: string
   media?: ForumMedia[]
   category?: string
@@ -482,7 +483,8 @@ const posts = ref<ForumPost[]>((initialPosts.value ?? []).map(normalizePost))
 const filteredPosts = computed(() => {
   const term = search.value.toLowerCase()
   const result = posts.value.filter((post) => {
-    return `${post.title} ${post.message} ${post.category}`.toLowerCase().includes(term)
+    return post.section === activeForumMenu.value
+      && `${post.title} ${post.message} ${post.category}`.toLowerCase().includes(term)
   })
 
   return [...result].sort((a, b) => {
@@ -556,6 +558,7 @@ async function addPost() {
     initial: author.initial,
     authorKey: author.key,
     title: form.title,
+    section: activeForumMenu.value,
     message: form.message,
     media: [...form.media],
     comments: 0,
@@ -736,6 +739,7 @@ function normalizePost(post: Partial<ForumPost>): ForumPost {
     initial: post.initial || name[0].toUpperCase(),
     authorKey: post.authorKey,
     title: post.title || '',
+    section: post.section || 'forum',
     message: post.message || '',
     media,
     category: post.category,

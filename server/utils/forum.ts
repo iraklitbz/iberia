@@ -5,6 +5,8 @@ const FORUM_POST_COLLECTION = 'forum-posts'
 const FORUM_COMMENT_COLLECTION = 'forum-comments'
 const FORUM_LIKE_COLLECTION = 'forum-likes'
 const LEGACY_COLLECTION = 'entradas'
+const DEFAULT_FORUM_SECTION = 'forum'
+const FORUM_SECTION_TITLE_PREFIX = /^\[forum-section:([a-z0-9-]+)\]\s*/i
 
 interface StrapiRole {
   id: number
@@ -199,8 +201,9 @@ function mediaIds(post: Record<string, unknown>) {
 }
 
 function forumPostEntryData(title: string, post: Record<string, unknown>) {
+  const section = typeof post.section === 'string' && post.section ? post.section : DEFAULT_FORUM_SECTION
   const data: Record<string, unknown> = {
-    title,
+    title: `[forum-section:${section}] ${title}`.slice(0, 255),
     message: typeof post.message === 'string' ? post.message : '',
     authorKey: typeof post.authorKey === 'string' ? post.authorKey : '',
     authorName: typeof post.name === 'string' ? post.name : '',
@@ -218,6 +221,16 @@ function forumPostEntryData(title: string, post: Record<string, unknown>) {
   }
 
   return data
+}
+
+function parseForumTitle(rawTitle: string | undefined) {
+  const title = rawTitle || ''
+  const match = title.match(FORUM_SECTION_TITLE_PREFIX)
+
+  return {
+    section: match?.[1] || DEFAULT_FORUM_SECTION,
+    title: title.replace(FORUM_SECTION_TITLE_PREFIX, ''),
+  }
 }
 
 function absoluteStrapiUrl(event: H3Event, url: string) {
@@ -253,6 +266,7 @@ function mapForumComment(comment: ForumCommentEntry) {
 
 function mapForumPostEntry(event: H3Event, entry: StoredForumEntry) {
   const name = entry.authorName || ''
+  const parsedTitle = parseForumTitle(entry.title)
   const commentItems = (entry.comments ?? []).map(mapForumComment)
   const likedBy = (entry.likes ?? []).flatMap(like => like.userKey ? [like.userKey] : [])
 
@@ -261,7 +275,8 @@ function mapForumPostEntry(event: H3Event, entry: StoredForumEntry) {
     name,
     initial: entry.authorInitial || name[0]?.toUpperCase() || '',
     authorKey: entry.authorKey,
-    title: entry.title || '',
+    title: parsedTitle.title,
+    section: parsedTitle.section,
     message: entry.message || '',
     media: mapMedia(event, entry.media),
     commentItems,
