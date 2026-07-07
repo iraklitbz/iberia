@@ -2,7 +2,22 @@
   <div class="min-h-screen bg-zinc-50 pt-16">
     <section class="border-b border-zinc-200 bg-white/95 backdrop-blur">
       <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
-        <h1 class="text-2xl font-extrabold tracking-normal text-zinc-950">{{ t('forum.title') }}</h1>
+        <h1 class="sr-only">{{ t('forum.title') }}</h1>
+
+        <nav
+          class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[34rem]"
+          aria-label="Forum menu"
+        >
+          <NuxtLink
+            v-for="item in forumMenuItems"
+            :key="item.key"
+            :to="forumMenuLink(item)"
+            class="inline-flex h-11 flex-1 items-center justify-center rounded-md px-3 text-center text-sm font-semibold transition-colors sm:flex-none sm:px-4"
+            :class="activeForumMenu === item.key ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-zinc-200' : 'text-zinc-600 hover:bg-white/70 hover:text-zinc-950'"
+          >
+            {{ item.label }}
+          </NuxtLink>
+        </nav>
 
         <div class="flex flex-1 flex-col gap-3 lg:max-w-5xl lg:flex-row lg:items-center lg:justify-end">
           <div class="relative w-full lg:max-w-xl">
@@ -408,6 +423,25 @@ type ForumPost = {
 
 const { t } = useI18n()
 const { user, userInitial, isAuthenticated, profileAvatar, saveProfileAvatar } = useAuth()
+const localePath = useLocalePath()
+const route = useRoute()
+
+const forumMenuItems = [
+  { key: 'forum', label: 'ფორუმი' },
+  { key: 'ask-iberia', label: 'კითხე იბერიას' },
+  { key: 'document-check', label: 'დოკუმენტების გადამოწმება' },
+]
+
+const activeForumMenu = computed(() => {
+  return typeof route.query.section === 'string' ? route.query.section : 'forum'
+})
+
+function forumMenuLink(item: typeof forumMenuItems[number]) {
+  return localePath({
+    path: '/forum',
+    query: item.key === 'forum' ? undefined : { section: item.key },
+  })
+}
 
 const categories = [
   { name: 'მოგზაურობა', className: 'bg-violet-100 text-violet-700' },
