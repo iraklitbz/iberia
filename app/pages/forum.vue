@@ -1,21 +1,24 @@
 <template>
   <div class="min-h-screen bg-zinc-50 pt-16">
     <section class="border-b border-zinc-200 bg-white/95 backdrop-blur">
-      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="mx-auto flex max-w-[96rem] flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <h1 class="sr-only">{{ t('forum.title') }}</h1>
 
         <nav
-          class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[34rem]"
+          class="flex w-full flex-wrap items-stretch gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[38rem] xl:-ml-10 2xl:-ml-20"
           aria-label="Forum menu"
         >
           <NuxtLink
             v-for="item in forumMenuItems"
             :key="item.key"
             :to="forumMenuLink(item)"
-            class="inline-flex h-11 flex-1 items-center justify-center rounded-md px-3 text-center text-sm font-semibold transition-colors sm:flex-none sm:px-4"
+            class="inline-flex min-h-14 flex-1 flex-col items-center justify-center rounded-md px-3 py-2 text-center text-sm font-semibold transition-colors sm:flex-none sm:px-4"
             :class="activeForumMenu === item.key ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-zinc-200' : 'text-zinc-600 hover:bg-white/70 hover:text-zinc-950'"
           >
-            {{ item.label }}
+            <span>{{ item.label }}</span>
+            <span class="mt-0.5 text-[11px] font-medium leading-none text-zinc-400">
+              {{ item.subtitle }}
+            </span>
           </NuxtLink>
         </nav>
 
@@ -428,9 +431,9 @@ const localePath = useLocalePath()
 const route = useRoute()
 
 const forumMenuItems = [
-  { key: 'forum', label: 'ფორუმი' },
-  { key: 'ask-iberia', label: 'კითხე იბერიას' },
-  { key: 'document-check', label: 'დოკუმენტების გადამოწმება' },
+  { key: 'forum', label: 'ფორუმი', subtitle: 'Foro' },
+  { key: 'ask-iberia', label: 'კითხე იბერიას', subtitle: 'Pregunta a Iberia' },
+  { key: 'document-check', label: 'დოკუმენტების გადამოწმება', subtitle: 'Verificación de documentos' },
 ]
 
 const activeForumMenu = computed(() => {
