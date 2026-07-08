@@ -15,7 +15,7 @@
 
         <!-- Counter pill -->
         <div class="mt-10 inline-flex items-baseline gap-2 rounded-2xl border border-zinc-100 bg-zinc-50 px-7 py-4">
-          <span class="text-4xl font-bold tabular-nums text-iberia">9</span>
+          <span class="text-4xl font-bold tabular-nums text-iberia">6</span>
           <span class="text-sm font-medium text-zinc-500">
             {{ locale === 'es' ? 'profesionales' : 'პროფესიონალი' }}
           </span>
@@ -190,7 +190,7 @@ const teamMembers = computed(() => [
     id: '4',
     name: t('ourteam_team4_1'),
     role: t('ourteam_team4_2'),
-    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771763913/magda_028937bfa5.jpg',
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783507532/675a9f2f_ed48_4bde_af8e_72d43703e627_b9c8c7528a.jpg',
   },
   {
     id: '5',
@@ -199,28 +199,10 @@ const teamMembers = computed(() => [
     profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671575/tamar_7e47b39039.jpg',
   },
   {
-    id: '6',
-    name: t('ourteam_team6_1'),
-    role: t('ourteam_team6_2'),
-    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671565/nana_236467aef9.jpg',
-  },
-  {
     id: '7',
     name: t('ourteam_team7_1'),
     role: t('ourteam_team7_2'),
     profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771671524/ani_d5ee585957.jpg',
-  },
-  {
-    id: '8',
-    name: t('ourteam_team8_1'),
-    role: t('ourteam_team8_2'),
-    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771763912/hugo_dd03f79caf.jpg',
-  },
-  {
-    id: '9',
-    name: t('ourteam_team9_1'),
-    role: t('ourteam_team9_2'),
-    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1771763913/manu_7002681e18.jpg',
   },
 ])
 </script>
