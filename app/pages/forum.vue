@@ -352,27 +352,6 @@
         </div>
       </div>
 
-      <nav class="mt-6 flex items-center justify-center gap-2" :aria-label="t('forum.pages')">
-        <button
-          v-for="page in pages"
-          :key="page"
-          type="button"
-          class="flex size-10 items-center justify-center rounded-md border text-sm font-semibold transition"
-          :class="page === currentPage ? 'border-violet-600 bg-violet-50 text-violet-700' : 'border-zinc-200 bg-white text-zinc-800 hover:border-violet-300'"
-          @click="currentPage = page"
-        >
-          {{ page }}
-        </button>
-        <span class="px-2 text-zinc-600">...</span>
-        <button type="button" class="flex size-10 items-center justify-center rounded-md border border-zinc-200 bg-white text-sm font-semibold text-zinc-800 transition hover:border-violet-300">
-          15
-        </button>
-        <button type="button" class="flex size-10 items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-800 transition hover:border-violet-300" :aria-label="t('next')">
-          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m9 18 6-6-6-6" />
-          </svg>
-        </button>
-      </nav>
     </section>
   </div>
 </template>
@@ -459,8 +438,6 @@ const search = ref('')
 const sortBy = ref('newest')
 const showComposer = ref(false)
 const openCommentsPostId = ref<string | null>(null)
-const currentPage = ref(1)
-const pages = [1, 2, 3]
 const refreshingPosts = ref(false)
 const uploadingMedia = ref(false)
 const publishingPost = ref(false)
