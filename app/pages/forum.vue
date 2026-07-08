@@ -5,7 +5,7 @@
         <h1 class="sr-only">{{ t('forum.title') }}</h1>
 
         <nav
-          class="flex w-full flex-wrap items-stretch gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[38rem] xl:-ml-10 2xl:-ml-20"
+          class="flex w-full flex-wrap items-stretch gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[38rem] xl:-ml-4"
           aria-label="Forum menu"
         >
           <NuxtLink
