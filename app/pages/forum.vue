@@ -5,14 +5,14 @@
         <h1 class="sr-only">{{ t('forum.title') }}</h1>
 
         <nav
-          class="flex w-full flex-wrap items-stretch gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[38rem] xl:ml-4"
+          class="flex w-full flex-wrap items-stretch gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-1 shadow-sm lg:w-auto lg:min-w-[38rem] xl:ml-4"
           aria-label="Forum menu"
         >
           <NuxtLink
             v-for="item in forumMenuItems"
             :key="item.key"
             :to="forumMenuLink(item)"
-            class="inline-flex min-h-14 flex-1 flex-col items-center justify-center rounded-md px-3 py-2 text-center text-sm font-semibold transition-colors sm:flex-none sm:px-4"
+            class="inline-flex min-h-14 flex-1 flex-col items-center justify-center rounded-md px-3 py-2 text-center text-sm font-semibold transition-colors"
             :class="activeForumMenu === item.key ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-zinc-200' : 'text-zinc-600 hover:bg-white/70 hover:text-zinc-950'"
           >
             <span>{{ item.label }}</span>
