@@ -135,7 +135,7 @@
               <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671511/Lana_602a5902aa.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
             </div>
             <div class="aspect-square overflow-hidden rounded-2xl mt-8">
-              <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1771675264/tako_7aa23e6a3a.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
+              <img src="https://res.cloudinary.com/dj6draudd/image/upload/v1783507532/675a9f2f_ed48_4bde_af8e_72d43703e627_b9c8c7528a.jpg" alt="Equipo Iberia" class="size-full object-cover" loading="lazy" />
             </div>
           </div>
         </div>
