@@ -193,6 +193,12 @@ const teamMembers = computed(() => [
     profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783507532/675a9f2f_ed48_4bde_af8e_72d43703e627_b9c8c7528a.jpg',
   },
   {
+    id: '8',
+    name: t('ourteam_team8_1'),
+    role: t('ourteam_team8_2'),
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783609172/3264157a_f756_4288_9b67_f5217f338b47_c2c158a4c5.jpg',
+  },
+  {
     id: '5',
     name: t('ourteam_team5_1'),
     role: t('ourteam_team5_2'),
@@ -203,12 +209,6 @@ const teamMembers = computed(() => [
     name: t('ourteam_team3_1'),
     role: locale.value === 'es' ? 'Profesora | Coordinadora | Guía de Iberia' : 'პედაგოგი | კოორდინატორი | იბერიის გიდი',
     profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783506819/a0ac4baf_1c2a_4a04_ae52_9780c63bb641_79620a614b.jpg',
-  },
-  {
-    id: '8',
-    name: t('ourteam_team8_1'),
-    role: t('ourteam_team8_2'),
-    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783606230/a61bd62c_5425_415c_85ea_9a91f540e67a_cea9b23f95.jpg',
   },
 ])
 </script>
