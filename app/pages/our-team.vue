@@ -15,7 +15,7 @@
 
         <!-- Counter pill -->
         <div class="mt-10 inline-flex items-baseline gap-2 rounded-2xl border border-zinc-100 bg-zinc-50 px-7 py-4">
-          <span class="text-4xl font-bold tabular-nums text-iberia">6</span>
+          <span class="text-4xl font-bold tabular-nums text-iberia">7</span>
           <span class="text-sm font-medium text-zinc-500">
             {{ locale === 'es' ? 'profesionales' : 'პროფესიონალი' }}
           </span>
@@ -203,6 +203,12 @@ const teamMembers = computed(() => [
     name: t('ourteam_team3_1'),
     role: locale.value === 'es' ? 'Profesora | Coordinadora | Guía de Iberia' : 'პედაგოგი | კოორდინატორი | იბერიის გიდი',
     profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783506819/a0ac4baf_1c2a_4a04_ae52_9780c63bb641_79620a614b.jpg',
+  },
+  {
+    id: '8',
+    name: t('ourteam_team8_1'),
+    role: t('ourteam_team8_2'),
+    profileUrl: 'https://res.cloudinary.com/dj6draudd/image/upload/v1783606230/a61bd62c_5425_415c_85ea_9a91f540e67a_cea9b23f95.jpg',
   },
 ])
 </script>
