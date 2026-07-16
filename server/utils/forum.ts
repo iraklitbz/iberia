@@ -243,7 +243,11 @@ function mapMedia(event: H3Event, media: StrapiMedia[] | undefined) {
     if (!item.url) return []
     return [{
       id: item.id ?? Date.now(),
-      type: item.mime?.startsWith('video/') ? 'video' : 'image',
+      type: item.mime?.startsWith('image/')
+        ? 'image'
+        : item.mime?.startsWith('video/')
+          ? 'video'
+          : 'document',
       src: absoluteStrapiUrl(event, item.url),
       name: item.name || 'forum-upload',
     }]

@@ -37,6 +37,10 @@ export default defineEventHandler(async (event) => {
     id: first.id,
     src,
     name: first.name,
-    type: first.mime?.startsWith('video/') ? 'video' : 'image',
+    type: first.mime?.startsWith('image/')
+      ? 'image'
+      : first.mime?.startsWith('video/')
+        ? 'video'
+        : 'document',
   }
 })

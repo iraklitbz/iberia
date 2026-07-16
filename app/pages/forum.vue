@@ -87,19 +87,36 @@
           :placeholder="t('forum.writePost')"
         />
         <div class="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4">
-          <label class="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:text-violet-700 hover:ring-violet-300">
-            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            {{ t('forum.photoVideo') }}
-            <input
-              type="file"
-              accept="image/*,video/*"
-              multiple
-              class="sr-only"
-              @change="handleMediaUpload"
-            />
-          </label>
+          <div class="flex flex-col items-start gap-3">
+            <label class="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:text-violet-700 hover:ring-violet-300">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              {{ t('forum.photoVideo') }}
+              <input
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                class="sr-only"
+                @change="handleMediaUpload($event, 'media')"
+              />
+            </label>
+
+            <label class="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:text-violet-700 hover:ring-violet-300">
+              <svg class="size-5" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
+                <path d="M352 0H106C62 0 26 36 26 80v352c0 44 36 80 80 80h68c11 0 20-9 20-20s-9-20-20-20h-68c-22 0-40-18-40-40V80c0-22 18-40 40-40h246c22 0 40 18 40 40v123c0 11 9 20 20 20s20-9 20-20V80c0-44-36-80-80-80Z" />
+                <path d="M126 160h207c11 0 20-9 20-20s-9-20-20-20H126c-11 0-20 9-20 20s9 20 20 20Zm0 80h207c11 0 20-9 20-20s-9-20-20-20H126c-11 0-20 9-20 20s9 20 20 20Zm0 80h126c11 0 20-9 20-20s-9-20-20-20H126c-11 0-20 9-20 20s9 20 20 20Zm333-27c-31-31-82-31-113 0l-72 72c-3 3-5 6-6 10l-24 84c-2 7 0 15 5 20 4 4 9 6 14 6 2 0 4 0 6-1l84-24c4-1 7-3 10-6l72-72c31-31 31-81 0-112Zm-118 130-48 14 14-48 61-61 34 34-61 61Zm90-69-1 1-34-34 1-1c16-16 42-16 58 0 15 16 15 42-1 58Z" />
+              </svg>
+              {{ t('forum.addDocuments') }}
+              <input
+                type="file"
+                :accept="documentAccept"
+                multiple
+                class="sr-only"
+                @change="handleMediaUpload($event, 'document')"
+              />
+            </label>
+          </div>
 
           <div v-if="form.media.length" class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <div
@@ -114,12 +131,26 @@
                 class="h-36 w-full object-cover"
               />
               <video
-                v-else
+                v-else-if="media.type === 'video'"
                 :src="media.src"
                 class="h-36 w-full object-cover"
                 muted
                 controls
               />
+              <a
+                v-else
+                :href="media.src"
+                target="_blank"
+                rel="noopener"
+                class="flex h-36 flex-col items-center justify-center gap-2 p-4 text-center text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
+              >
+                <svg class="size-10 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                  <path d="M14 2v6h6" />
+                  <path d="M8 13h8M8 17h5" />
+                </svg>
+                <span class="line-clamp-2 break-all">{{ media.name }}</span>
+              </a>
               <button
                 type="button"
                 class="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-white/90 text-zinc-700 shadow-sm transition hover:text-red-600"
@@ -207,11 +238,30 @@
                     loading="lazy"
                   />
                   <video
-                    v-else
+                    v-else-if="media.type === 'video'"
                     :src="media.src"
                     class="max-h-80 w-full bg-black"
                     controls
                   />
+                  <a
+                    v-else
+                    :href="media.src"
+                    target="_blank"
+                    rel="noopener"
+                    class="flex items-center gap-3 p-4 text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
+                  >
+                    <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-zinc-600 ring-1 ring-zinc-200">
+                      <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                        <path d="M14 2v6h6" />
+                        <path d="M8 13h8M8 17h5" />
+                      </svg>
+                    </span>
+                    <span class="min-w-0">
+                      <span class="block break-all">{{ media.name }}</span>
+                      <span class="mt-1 block text-xs font-medium uppercase tracking-wide text-zinc-400">{{ documentExtension(media.name) }}</span>
+                    </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -361,7 +411,7 @@ definePageMeta({ layout: 'default', headerSolid: true, middleware: ['auth', 'sub
 
 type ForumMedia = {
   id: number
-  type: 'image' | 'video'
+  type: 'image' | 'video' | 'document'
   src: string
   name: string
 }
@@ -446,6 +496,31 @@ const publishError = ref('')
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
 const seenCommentTimes = ref<Record<string, string>>({})
+const documentAccept = [
+  '.pdf',
+  '.doc',
+  '.docx',
+  '.xls',
+  '.xlsx',
+  '.ppt',
+  '.pptx',
+  '.txt',
+  '.rtf',
+  '.csv',
+  '.odt',
+  '.ods',
+  '.odp',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'text/plain',
+  'text/rtf',
+  'text/csv',
+].join(',')
 
 const form = reactive({
   title: '',
@@ -574,10 +649,10 @@ async function addPost() {
   }
 }
 
-async function handleMediaUpload(event: Event) {
+async function handleMediaUpload(event: Event, uploadType: 'media' | 'document') {
   const input = event.target as HTMLInputElement
   const files = Array.from(input.files || [])
-    .filter((file) => file.type.startsWith('image/') || file.type.startsWith('video/'))
+    .filter((file) => uploadType === 'document' ? isDocumentFile(file) : isVisualMediaFile(file))
 
   if (!files.length) {
     return
@@ -604,9 +679,9 @@ async function persistMediaItems(media: ForumMedia[] = []): Promise<ForumMedia[]
     }
 
     const blob = await (await fetch(item.src)).blob()
-    const extension = blob.type.split('/')[1] || (item.type === 'video' ? 'mp4' : 'png')
+    const extension = blob.type.split('/')[1] || (item.type === 'video' ? 'mp4' : item.type === 'document' ? 'pdf' : 'png')
     const file = new File([blob], item.name || `forum-upload.${extension}`, {
-      type: blob.type || (item.type === 'video' ? 'video/mp4' : 'image/png'),
+      type: blob.type || (item.type === 'video' ? 'video/mp4' : item.type === 'document' ? 'application/pdf' : 'image/png'),
     })
 
     persisted.push(await uploadForumFile(file, item.id))
@@ -631,6 +706,38 @@ async function uploadForumFile(file: File, fallbackId: number): Promise<ForumMed
     src: uploaded.src,
     name: uploaded.name || file.name,
   }
+}
+
+function isVisualMediaFile(file: File) {
+  return file.type.startsWith('image/') || file.type.startsWith('video/')
+}
+
+function isDocumentFile(file: File) {
+  if (isVisualMediaFile(file)) {
+    return false
+  }
+
+  if (
+    file.type.startsWith('text/')
+    || file.type === 'application/pdf'
+    || file.type.includes('word')
+    || file.type.includes('excel')
+    || file.type.includes('spreadsheet')
+    || file.type.includes('powerpoint')
+    || file.type.includes('presentation')
+    || file.type.includes('opendocument')
+    || file.type === 'application/msword'
+    || file.type === 'application/rtf'
+  ) {
+    return true
+  }
+
+  return /\.(pdf|docx?|xlsx?|pptx?|txt|rtf|csv|odt|ods|odp)$/i.test(file.name)
+}
+
+function documentExtension(name: string) {
+  const extension = name.split('.').pop()
+  return extension && extension !== name ? extension : 'document'
 }
 
 async function uploadProfileAvatar(file: File): Promise<UploadedAvatar> {
