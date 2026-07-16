@@ -246,10 +246,9 @@
                   />
                   <a
                     v-else
-                    :href="media.src"
+                    :href="forumDocumentUrl(post.id, media)"
                     target="_blank"
                     rel="noopener"
-                    @click.prevent="openDocument(media)"
                     class="flex items-center gap-3 p-4 text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
                   >
                     <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-zinc-600 ring-1 ring-zinc-200">
@@ -770,6 +769,10 @@ function isDocumentFile(file: File) {
 function documentExtension(name: string) {
   const extension = name.split('.').pop()
   return extension && extension !== name ? extension : 'document'
+}
+
+function forumDocumentUrl(postId: string, media: ForumMedia) {
+  return `/api/forum/documents/${encodeURIComponent(postId)}/${encodeURIComponent(String(media.id))}/${encodeURIComponent(media.name)}`
 }
 
 function dataUrlToBlob(dataUrl: string) {
