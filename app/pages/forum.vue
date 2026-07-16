@@ -142,6 +142,7 @@
                 :href="media.src"
                 target="_blank"
                 rel="noopener"
+                @click.prevent="openDocument(media)"
                 class="flex h-36 flex-col items-center justify-center gap-2 p-4 text-center text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
               >
                 <svg class="size-10 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -248,6 +249,7 @@
                     :href="media.src"
                     target="_blank"
                     rel="noopener"
+                    @click.prevent="openDocument(media)"
                     class="flex items-center gap-3 p-4 text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
                   >
                     <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-zinc-600 ring-1 ring-zinc-200">
@@ -768,6 +770,39 @@ function isDocumentFile(file: File) {
 function documentExtension(name: string) {
   const extension = name.split('.').pop()
   return extension && extension !== name ? extension : 'document'
+}
+
+function dataUrlToBlob(dataUrl: string) {
+  const match = dataUrl.match(/^data:([^;,]+)?(;base64)?,(.*)$/)
+  if (!match) {
+    throw new Error('Invalid document data URL')
+  }
+
+  const mimeType = match[1] || 'application/octet-stream'
+  const isBase64 = Boolean(match[2])
+  const data = isBase64 ? atob(match[3]) : decodeURIComponent(match[3])
+  const bytes = new Uint8Array(data.length)
+
+  for (let index = 0; index < data.length; index += 1) {
+    bytes[index] = data.charCodeAt(index)
+  }
+
+  return new Blob([bytes], { type: mimeType })
+}
+
+function openDocument(media: ForumMedia) {
+  if (!media.src) {
+    return
+  }
+
+  if (!media.src.startsWith('data:')) {
+    window.open(media.src, '_blank', 'noopener')
+    return
+  }
+
+  const blobUrl = URL.createObjectURL(dataUrlToBlob(media.src))
+  window.open(blobUrl, '_blank', 'noopener')
+  window.setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000)
 }
 
 async function uploadProfileAvatar(file: File): Promise<UploadedAvatar> {
