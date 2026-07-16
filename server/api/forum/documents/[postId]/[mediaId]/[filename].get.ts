@@ -13,7 +13,11 @@ function parseDataUrl(dataUrl: string) {
 }
 
 function contentDispositionFilename(name: string) {
-  const fallback = name.replace(/["\\\r\n]/g, '_') || 'document'
+  const fallback = name
+    .normalize('NFKD')
+    .replace(/[^\x20-\x7E]/g, '')
+    .replace(/["\\\r\n]/g, '_')
+    || 'document'
   const encoded = encodeURIComponent(name)
 
   return `inline; filename="${fallback}"; filename*=UTF-8''${encoded}`
