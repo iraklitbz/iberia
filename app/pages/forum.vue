@@ -658,7 +658,12 @@ async function handleMediaUpload(event: Event, uploadType: 'media' | 'document')
 
   uploadingMedia.value = true
   try {
-    const mediaItems = await Promise.all(files.map((file, index) => uploadForumFile(file, Date.now() + index)))
+    const mediaItems = await Promise.all(files.map((file, index) => {
+      const fallbackId = Date.now() + index
+      return uploadType === 'document'
+        ? createDocumentMedia(file, fallbackId)
+        : uploadForumFile(file, fallbackId)
+    }))
     form.media.push(...mediaItems)
   }
   finally {
@@ -704,6 +709,31 @@ async function uploadForumFile(file: File, fallbackId: number): Promise<ForumMed
     src: uploaded.src,
     name: uploaded.name || file.name,
   }
+}
+
+async function createDocumentMedia(file: File, fallbackId: number): Promise<ForumMedia> {
+  return {
+    id: fallbackId,
+    type: 'document',
+    src: await fileToDataUrl(file),
+    name: file.name,
+  }
+}
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+        return
+      }
+
+      reject(new Error('No se pudo leer el documento'))
+    })
+    reader.addEventListener('error', () => reject(reader.error ?? new Error('No se pudo leer el documento')))
+    reader.readAsDataURL(file)
+  })
 }
 
 function isVisualMediaFile(file: File) {
