@@ -7,6 +7,8 @@ const FORUM_LIKE_COLLECTION = 'forum-likes'
 const LEGACY_COLLECTION = 'entradas'
 const DEFAULT_FORUM_SECTION = 'forum'
 const FORUM_SECTION_TITLE_PREFIX = /^\[forum-section:([a-z0-9-]+)\]\s*/i
+const FORUM_DOCUMENTS_MARKER = '\n\n<!-- forum-documents:'
+const FORUM_DOCUMENTS_END_MARKER = ' -->'
 
 interface StrapiRole {
   id: number
@@ -30,6 +32,13 @@ interface StrapiMedia {
   url?: string
   name?: string
   mime?: string
+}
+
+interface ForumMediaItem {
+  id?: number
+  type?: string
+  src?: string
+  name?: string
 }
 
 interface ForumCommentEntry {
@@ -190,21 +199,90 @@ function legacyForumEntryData(title: string, post: Record<string, unknown>) {
   }
 }
 
-function mediaIds(post: Record<string, unknown>) {
+function forumMediaItems(post: Record<string, unknown>) {
   if (!Array.isArray(post.media)) return []
+
   return post.media
+    .filter((item): item is ForumMediaItem => Boolean(item) && typeof item === 'object')
+}
+
+function mediaIds(items: ForumMediaItem[]) {
+  return items
     .map((item) => {
-      if (!item || typeof item !== 'object' || !('id' in item)) return null
-      return Number((item as { id?: unknown }).id)
+      if (!('id' in item)) return null
+      return Number(item.id)
     })
     .filter((id): id is number => Number.isInteger(id) && id > 0)
 }
 
+function forumDocumentItems(post: Record<string, unknown>) {
+  return forumMediaItems(post).filter(item => item.type === 'document' && item.src && item.name)
+}
+
+function stripForumDocumentMetadata(message: string) {
+  const start = message.indexOf(FORUM_DOCUMENTS_MARKER)
+  if (start === -1) return message
+
+  const end = message.indexOf(FORUM_DOCUMENTS_END_MARKER, start + FORUM_DOCUMENTS_MARKER.length)
+  if (end === -1) return message.slice(0, start).trimEnd()
+
+  return `${message.slice(0, start)}${message.slice(end + FORUM_DOCUMENTS_END_MARKER.length)}`.trimEnd()
+}
+
+function parseForumDocumentMetadata(message: string): ForumMediaItem[] {
+  const start = message.indexOf(FORUM_DOCUMENTS_MARKER)
+  if (start === -1) return []
+
+  const end = message.indexOf(FORUM_DOCUMENTS_END_MARKER, start + FORUM_DOCUMENTS_MARKER.length)
+  if (end === -1) return []
+
+  try {
+    const encoded = message.slice(start + FORUM_DOCUMENTS_MARKER.length, end)
+    const parsed = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'))
+    if (!Array.isArray(parsed)) return []
+
+    return parsed.flatMap((item) => {
+      if (!item || typeof item !== 'object') return []
+      const media = item as ForumMediaItem
+      if (media.type !== 'document' || !media.src || !media.name) return []
+
+      return [{
+        id: Number.isInteger(Number(media.id)) ? Number(media.id) : Date.now(),
+        type: 'document',
+        src: media.src,
+        name: media.name,
+      }]
+    })
+  }
+  catch {
+    return []
+  }
+}
+
+function appendForumDocumentMetadata(message: string, documents: ForumMediaItem[]) {
+  const cleanMessage = stripForumDocumentMetadata(message)
+  if (!documents.length) return cleanMessage
+
+  const payload = documents.map(item => ({
+    id: item.id,
+    type: 'document',
+    src: item.src,
+    name: item.name,
+  }))
+  const encoded = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url')
+
+  return `${cleanMessage}${FORUM_DOCUMENTS_MARKER}${encoded}${FORUM_DOCUMENTS_END_MARKER}`
+}
+
 function forumPostEntryData(title: string, post: Record<string, unknown>) {
   const section = typeof post.section === 'string' && post.section ? post.section : DEFAULT_FORUM_SECTION
+  const message = typeof post.message === 'string' ? post.message : ''
+  const mediaItems = forumMediaItems(post)
+  const documentItems = forumDocumentItems(post)
+  const relationMediaItems = mediaItems.filter(item => item.type !== 'document')
   const data: Record<string, unknown> = {
     title: `[forum-section:${section}] ${title}`.slice(0, 255),
-    message: typeof post.message === 'string' ? post.message : '',
+    message: appendForumDocumentMetadata(message, documentItems),
     authorKey: typeof post.authorKey === 'string' ? post.authorKey : '',
     authorName: typeof post.name === 'string' ? post.name : '',
     authorInitial: typeof post.initial === 'string' ? post.initial : '',
@@ -215,7 +293,7 @@ function forumPostEntryData(title: string, post: Record<string, unknown>) {
     isLocked: false,
   }
 
-  const ids = mediaIds(post)
+  const ids = mediaIds(relationMediaItems)
   if (ids.length) {
     data.media = ids
   }
@@ -273,6 +351,10 @@ function mapForumPostEntry(event: H3Event, entry: StoredForumEntry) {
   const parsedTitle = parseForumTitle(entry.title)
   const commentItems = (entry.comments ?? []).map(mapForumComment)
   const likedBy = (entry.likes ?? []).flatMap(like => like.userKey ? [like.userKey] : [])
+  const rawMessage = entry.message || ''
+  const relatedMedia = mapMedia(event, entry.media)
+  const documentMedia = parseForumDocumentMetadata(rawMessage)
+  const relatedMediaIds = new Set(relatedMedia.map(item => item.id))
 
   return {
     id: entry.documentId,
@@ -281,8 +363,11 @@ function mapForumPostEntry(event: H3Event, entry: StoredForumEntry) {
     authorKey: entry.authorKey,
     title: parsedTitle.title,
     section: parsedTitle.section,
-    message: entry.message || '',
-    media: mapMedia(event, entry.media),
+    message: stripForumDocumentMetadata(rawMessage),
+    media: [
+      ...relatedMedia,
+      ...documentMedia.filter(item => !relatedMediaIds.has(item.id ?? 0)),
+    ],
     commentItems,
     comments: commentItems.length,
     likes: likedBy.length,
