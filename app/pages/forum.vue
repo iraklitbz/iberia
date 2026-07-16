@@ -140,7 +140,8 @@
               <a
                 v-else
                 :href="media.src"
-                :download="media.name"
+                target="_blank"
+                rel="noopener"
                 class="flex h-36 flex-col items-center justify-center gap-2 p-4 text-center text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
               >
                 <svg class="size-10 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -245,7 +246,8 @@
                   <a
                     v-else
                     :href="media.src"
-                    :download="media.name"
+                    target="_blank"
+                    rel="noopener"
                     class="flex items-center gap-3 p-4 text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
                   >
                     <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-zinc-600 ring-1 ring-zinc-200">
