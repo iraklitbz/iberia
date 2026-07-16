@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const user = await requireForumSubscriber(event)
+  const user = await requireForumUser(event)
   const body = await readBody<Record<string, unknown>>(event)
   const createdAt = typeof body.createdAt === 'string' ? body.createdAt : new Date().toISOString()
   const title = typeof body.title === 'string' ? body.title.trim() : ''

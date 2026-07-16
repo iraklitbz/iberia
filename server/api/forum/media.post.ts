@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  await requireForumSubscriber(event)
+  await requireForumUser(event)
 
   const files = await readMultipartFormData(event)
   const file = files?.find(item => item.name === 'file' && item.data)

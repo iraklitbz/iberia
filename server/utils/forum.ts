@@ -97,6 +97,19 @@ export function forumUserKey(user: ForumUser): string {
   return `user:${user.id}`
 }
 
+export async function requireForumUser(event: H3Event): Promise<ForumUser> {
+  const config = useRuntimeConfig(event)
+  const authorization = getHeader(event, 'authorization')
+
+  if (!authorization) {
+    throw createError({ statusCode: 401, statusMessage: 'Missing authorization header' })
+  }
+
+  return await $fetch<StrapiUser>(`${config.public.strapiUrl}/api/users/me`, {
+    headers: { Authorization: authorization },
+  })
+}
+
 export async function requireForumSubscriber(event: H3Event): Promise<ForumUser> {
   const config = useRuntimeConfig(event)
   const authorization = getHeader(event, 'authorization')

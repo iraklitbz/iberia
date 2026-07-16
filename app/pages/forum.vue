@@ -408,7 +408,7 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'default', headerSolid: true, middleware: ['auth', 'subscriber'] })
+definePageMeta({ layout: 'default', headerSolid: true, middleware: ['auth'] })
 
 type ForumMedia = {
   id: number

@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const user = await requireForumSubscriber(event)
+  const user = await requireForumUser(event)
 
   const id = getRouterParam(event, 'id')
   if (!id) {
