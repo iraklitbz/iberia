@@ -259,6 +259,19 @@ function parseForumDocumentMetadata(message: string): ForumMediaItem[] {
   }
 }
 
+function forumDocumentUrl(postId: string, item: ForumMediaItem) {
+  return `/api/forum/documents/${encodeURIComponent(postId)}/${encodeURIComponent(String(item.id))}/${encodeURIComponent(item.name || 'document')}`
+}
+
+export function forumDocumentItemsFromEntry(entry: StoredForumEntry): ForumMediaItem[] {
+  if (entry.collection === FORUM_POST_COLLECTION) {
+    return parseForumDocumentMetadata(entry.message || '')
+  }
+
+  const post = parseForumContent(entry.content)
+  return forumDocumentItems(post)
+}
+
 function appendForumDocumentMetadata(message: string, documents: ForumMediaItem[]) {
   const cleanMessage = stripForumDocumentMetadata(message)
   if (!documents.length) return cleanMessage
@@ -353,7 +366,10 @@ function mapForumPostEntry(event: H3Event, entry: StoredForumEntry) {
   const likedBy = (entry.likes ?? []).flatMap(like => like.userKey ? [like.userKey] : [])
   const rawMessage = entry.message || ''
   const relatedMedia = mapMedia(event, entry.media)
-  const documentMedia = parseForumDocumentMetadata(rawMessage)
+  const documentMedia = parseForumDocumentMetadata(rawMessage).map(item => ({
+    ...item,
+    src: forumDocumentUrl(entry.documentId, item),
+  }))
   const relatedMediaIds = new Set(relatedMedia.map(item => item.id))
 
   return {

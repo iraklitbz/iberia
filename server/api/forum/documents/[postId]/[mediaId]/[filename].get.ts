@@ -28,14 +28,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const entry = await getForumEntry(event, postId)
-  const post = forumPostFromEntry(event, entry)
-  const media = Array.isArray(post.media)
-    ? post.media.find((item) => {
-        if (!item || typeof item !== 'object') return false
-        const document = item as { id?: unknown, type?: unknown }
-        return document.type === 'document' && String(document.id) === mediaId
-      })
-    : null
+  const media = forumDocumentItemsFromEntry(entry).find((item) => String(item.id) === mediaId)
 
   if (!media || typeof media !== 'object') {
     throw createError({ statusCode: 404, message: 'Document not found' })
