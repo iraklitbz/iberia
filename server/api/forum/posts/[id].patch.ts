@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   const existing = await getForumEntry(event, id)
   const previous = forumPostFromEntry(event, existing)
   const post = { ...previous, ...body, id: undefined }
-  const title = typeof post.title === 'string' && post.title.trim() ? post.title.trim() : 'Forum post'
+  const title = typeof post.title === 'string' ? post.title.trim() : ''
   const removedComments = removedForumComments(previous.commentItems, post.commentItems)
 
   if (

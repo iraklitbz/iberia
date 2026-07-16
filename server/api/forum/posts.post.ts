@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const user = await requireForumSubscriber(event)
   const body = await readBody<Record<string, unknown>>(event)
   const createdAt = typeof body.createdAt === 'string' ? body.createdAt : new Date().toISOString()
-  const title = typeof body.title === 'string' && body.title.trim() ? body.title.trim() : 'Forum post'
+  const title = typeof body.title === 'string' ? body.title.trim() : ''
 
   setHeader(event, 'Cache-Control', 'private, no-store')
 
