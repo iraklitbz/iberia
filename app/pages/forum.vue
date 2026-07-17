@@ -231,13 +231,19 @@
                   :key="media.id"
                   class="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50"
                 >
-                  <img
+                  <button
                     v-if="media.type === 'image'"
-                    :src="media.src"
-                    :alt="media.name"
-                    class="max-h-80 w-full object-cover"
-                    loading="lazy"
-                  />
+                    type="button"
+                    class="block w-full cursor-zoom-in overflow-hidden text-left"
+                    @click="openImageLightbox(media.src, media.name)"
+                  >
+                    <img
+                      :src="media.src"
+                      :alt="media.name"
+                      class="max-h-80 w-full object-cover transition duration-200 hover:scale-[1.01]"
+                      loading="lazy"
+                    />
+                  </button>
                   <video
                     v-else-if="media.type === 'video'"
                     :src="media.src"
@@ -269,13 +275,19 @@
           </div>
 
           <div class="hidden md:block">
-            <img
+            <button
               v-if="post.image"
-              :src="post.image"
-              :alt="post.title"
-              class="h-[110px] w-full rounded-md object-cover"
-              loading="lazy"
-            />
+              type="button"
+              class="block w-full cursor-zoom-in overflow-hidden rounded-md"
+              @click="openImageLightbox(post.image, post.title || 'Forum image')"
+            >
+              <img
+                :src="post.image"
+                :alt="post.title"
+                class="h-[110px] w-full object-cover transition duration-200 hover:scale-[1.02]"
+                loading="lazy"
+              />
+            </button>
           </div>
 
           <div class="grid grid-cols-3 items-center gap-3 text-sm text-zinc-700 md:grid-cols-2">
@@ -402,8 +414,21 @@
           <p class="mt-2 text-sm text-zinc-500">{{ t('forum.noPostsText') }}</p>
         </div>
       </div>
-
     </section>
+
+    <div
+      v-if="lightboxImage"
+      class="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/90 p-4 sm:p-8"
+      role="dialog"
+      aria-modal="true"
+      @click.self="closeImageLightbox"
+    >
+      <img
+        :src="lightboxImage.src"
+        :alt="lightboxImage.alt"
+        class="max-h-[92vh] max-w-full cursor-default object-contain shadow-2xl"
+      />
+    </div>
   </div>
 </template>
 
@@ -415,6 +440,11 @@ type ForumMedia = {
   type: 'image' | 'video' | 'document'
   src: string
   name: string
+}
+
+type LightboxImage = {
+  src: string
+  alt: string
 }
 
 type UploadedAvatar = {
@@ -494,6 +524,7 @@ const uploadingMedia = ref(false)
 const publishingPost = ref(false)
 const syncingAvatar = ref(false)
 const publishError = ref('')
+const lightboxImage = ref<LightboxImage | null>(null)
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 const commentForms = reactive<Record<string, string>>({})
 const seenCommentTimes = ref<Record<string, string>>({})
@@ -559,6 +590,7 @@ const visiblePosts = computed(() => filteredPosts.value)
 const canModerateForum = computed(() => user.value?.email === 'geo.algabe@gmail.com')
 
 onMounted(async () => {
+  window.addEventListener('keydown', handleLightboxKeydown)
   localStorage.removeItem('iberia-forum-posts')
   localStorage.removeItem('iberia-forum-posts-migrated')
   loadSeenCommentTimes()
@@ -573,11 +605,33 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  window.removeEventListener('keydown', handleLightboxKeydown)
   if (refreshTimer) {
     clearInterval(refreshTimer)
     refreshTimer = null
   }
 })
+
+function openImageLightbox(src?: string, alt?: string) {
+  if (!src) {
+    return
+  }
+
+  lightboxImage.value = {
+    src,
+    alt: alt || 'Forum image',
+  }
+}
+
+function closeImageLightbox() {
+  lightboxImage.value = null
+}
+
+function handleLightboxKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && lightboxImage.value) {
+    closeImageLightbox()
+  }
+}
 
 async function refreshPosts() {
   if (refreshingPosts.value) return
