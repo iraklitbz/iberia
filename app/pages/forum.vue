@@ -252,7 +252,7 @@
                   />
                   <a
                     v-else
-                    :href="forumDocumentUrl(post.id, media)"
+                    :href="forumDocumentHref(post.id, media)"
                     target="_blank"
                     rel="noopener"
                     class="flex items-center gap-3 p-4 text-sm font-semibold text-zinc-700 transition hover:text-violet-700"
@@ -717,9 +717,7 @@ async function handleMediaUpload(event: Event, uploadType: 'media' | 'document')
   try {
     const mediaItems = await Promise.all(files.map((file, index) => {
       const fallbackId = Date.now() + index
-      return uploadType === 'document'
-        ? createDocumentMedia(file, fallbackId)
-        : uploadForumFile(file, fallbackId)
+      return uploadForumFile(file, fallbackId)
     }))
     form.media.push(...mediaItems)
   }
@@ -727,27 +725,6 @@ async function handleMediaUpload(event: Event, uploadType: 'media' | 'document')
     uploadingMedia.value = false
     input.value = ''
   }
-}
-
-async function persistMediaItems(media: ForumMedia[] = []): Promise<ForumMedia[]> {
-  const persisted: ForumMedia[] = []
-
-  for (const item of media) {
-    if (!item.src.startsWith('data:')) {
-      persisted.push(item)
-      continue
-    }
-
-    const blob = await (await fetch(item.src)).blob()
-    const extension = blob.type.split('/')[1] || (item.type === 'video' ? 'mp4' : item.type === 'document' ? 'pdf' : 'png')
-    const file = new File([blob], item.name || `forum-upload.${extension}`, {
-      type: blob.type || (item.type === 'video' ? 'video/mp4' : item.type === 'document' ? 'application/pdf' : 'image/png'),
-    })
-
-    persisted.push(await uploadForumFile(file, item.id))
-  }
-
-  return persisted
 }
 
 async function uploadForumFile(file: File, fallbackId: number): Promise<ForumMedia> {
@@ -766,31 +743,6 @@ async function uploadForumFile(file: File, fallbackId: number): Promise<ForumMed
     src: uploaded.src,
     name: uploaded.name || file.name,
   }
-}
-
-async function createDocumentMedia(file: File, fallbackId: number): Promise<ForumMedia> {
-  return {
-    id: fallbackId,
-    type: 'document',
-    src: await fileToDataUrl(file),
-    name: file.name,
-  }
-}
-
-function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result)
-        return
-      }
-
-      reject(new Error('No se pudo leer el documento'))
-    })
-    reader.addEventListener('error', () => reject(reader.error ?? new Error('No se pudo leer el documento')))
-    reader.readAsDataURL(file)
-  })
 }
 
 function isVisualMediaFile(file: File) {
@@ -825,7 +777,11 @@ function documentExtension(name: string) {
   return extension && extension !== name ? extension : 'document'
 }
 
-function forumDocumentUrl(postId: string, media: ForumMedia) {
+function forumDocumentHref(postId: string, media: ForumMedia) {
+  if (media.src && !media.src.startsWith('data:')) {
+    return media.src
+  }
+
   return `/api/forum/documents/${encodeURIComponent(postId)}/${encodeURIComponent(String(media.id))}/${encodeURIComponent(media.name)}`
 }
 
