@@ -2,7 +2,7 @@
   <div class="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#f8f8fb] pt-16">
     <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[48vw] min-w-[34rem] lg:block">
       <img
-        src="/images/login/autumn-watercolor-background.webp"
+        src="/images/account/lighthouse-account-background.png"
         alt=""
         class="absolute inset-0 size-full object-cover opacity-70"
       />
