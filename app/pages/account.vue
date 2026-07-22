@@ -1,142 +1,315 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] py-20">
-    <div class="container mx-auto px-4 lg:px-6">
-      <div class="mx-auto max-w-lg">
+  <div class="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#f8f8fb] pt-16">
+    <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[48vw] min-w-[34rem] lg:block">
+      <img
+        src="/images/login/autumn-watercolor-background.webp"
+        alt=""
+        class="absolute inset-0 size-full object-cover opacity-70"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#f8f8fb] via-[#f8f8fb]/72 to-[#f8f8fb]/10" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#f8f8fb] via-transparent to-[#f8f8fb]/85" />
+    </div>
 
-        <!-- Profile card -->
-        <div class="rounded-2xl border border-zinc-100 bg-white p-8 shadow-sm">
-          <div class="mb-6 flex items-center gap-4">
-            <div class="relative size-16 shrink-0">
+    <main class="relative mx-auto w-full max-w-[92rem] px-4 py-10 sm:px-6 lg:px-8">
+      <section class="account-shell">
+        <div class="relative overflow-hidden rounded-[1.65rem] bg-white/74 p-6 shadow-[0_24px_80px_rgb(15_23_42/0.08)] ring-1 ring-zinc-200/70 backdrop-blur md:p-10">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_85%_14%,rgba(232,70,113,0.17),transparent_26%),radial-gradient(circle_at_56%_34%,rgba(248,198,204,0.28),transparent_31%)]" />
+          <div class="absolute -right-24 -top-20 size-[26rem] rounded-full border border-white/60 opacity-70" />
+          <div class="absolute -right-12 top-8 size-[19rem] rounded-full border border-white/55 opacity-70" />
+
+          <div class="relative flex flex-col gap-6 sm:flex-row sm:items-center">
+            <div class="relative size-28 shrink-0 sm:size-36">
               <img
                 v-if="profileAvatar"
                 :src="profileAvatar"
                 :alt="user?.username ?? ''"
-                class="size-16 rounded-full object-cover ring-1 ring-zinc-200"
+                class="size-full rounded-full border-4 border-white object-cover shadow-xl ring-1 ring-zinc-200"
               />
               <div
                 v-else
-                class="flex size-16 items-center justify-center rounded-full bg-iberia/10 text-xl font-bold text-iberia"
+                class="flex size-full items-center justify-center rounded-full border-4 border-white bg-iberia text-4xl font-bold text-white shadow-xl ring-1 ring-zinc-200"
               >
                 {{ userInitial }}
               </div>
+              <label
+                class="absolute bottom-0 right-0 flex size-12 cursor-pointer items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-lg transition hover:border-iberia hover:text-iberia"
+                :title="$t('auth.changePicture')"
+                :aria-label="$t('auth.changePicture')"
+              >
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
+                  <circle cx="12" cy="13" r="3"/>
+                </svg>
+                <input
+                  ref="avatarInput"
+                  type="file"
+                  accept="image/*"
+                  class="sr-only"
+                  :disabled="avatarSaving"
+                  @change="handleAvatarUpload"
+                />
+              </label>
             </div>
-            <div>
-              <h1 class="font-display text-xl font-bold text-zinc-900">{{ user?.username }}</h1>
-              <p class="text-sm text-zinc-500">{{ user?.email }}</p>
-            </div>
-          </div>
 
-          <div class="border-t border-zinc-100 pt-6">
-            <div class="mb-6 rounded-xl bg-zinc-50 p-4">
-              <form class="grid gap-4" @submit.prevent="handleSaveName">
-                <div>
-                  <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-400">
-                    {{ $t('auth.displayName') }}
-                  </label>
-                  <input
-                    v-model.trim="form.username"
-                    type="text"
-                    maxlength="40"
-                    class="h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-800 outline-none transition focus:border-iberia focus:ring-2 focus:ring-iberia/10"
-                    :placeholder="$t('auth.usernamePlaceholder')"
-                  />
-                </div>
-
-                <div>
-                  <p class="mb-2 text-xs font-medium uppercase tracking-wider text-zinc-400">
-                    {{ $t('auth.profilePicture') }}
-                  </p>
-                  <div class="flex flex-wrap gap-2">
-                    <label class="inline-flex cursor-pointer items-center justify-center rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:border-iberia hover:text-iberia">
-                      {{ avatarSaving ? $t('auth.saving') : $t('auth.changePicture') }}
-                      <input
-                        ref="avatarInput"
-                        type="file"
-                        accept="image/*"
-                        class="sr-only"
-                        :disabled="avatarSaving"
-                        @change="handleAvatarUpload"
-                      />
-                    </label>
-                    <button
-                      v-if="profileAvatar"
-                      type="button"
-                      class="rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-red-500 transition-colors hover:border-red-200 hover:bg-red-50"
-                      @click="handleRemoveAvatar"
-                    >
-                      {{ $t('auth.removePicture') }}
-                    </button>
-                  </div>
-                </div>
-
-                <p v-if="message" class="text-sm" :class="messageType === 'success' ? 'text-green-600' : 'text-red-600'">
-                  {{ message }}
-                </p>
-
-                <button
-                  type="submit"
-                  class="inline-flex h-11 items-center justify-center rounded-xl bg-iberia px-5 text-sm font-semibold text-white transition-colors hover:bg-iberia-dark disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="saving || !form.username"
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-3">
+                <h1 class="font-display text-3xl font-bold text-slate-950 sm:text-4xl">{{ user?.username }}</h1>
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700"
+                  :class="user?.confirmed ? 'bg-emerald-100 text-emerald-700' : 'bg-yellow-100 text-yellow-700'"
                 >
-                  {{ saving ? $t('auth.saving') : $t('auth.saveChanges') }}
-                </button>
-              </form>
+                  <span class="size-2 rounded-full" :class="user?.confirmed ? 'bg-emerald-500' : 'bg-yellow-500'" />
+                  {{ user?.confirmed ? $t('auth.confirmed') : $t('auth.unconfirmed') }}
+                </span>
+              </div>
+              <p class="mt-3 text-lg font-medium text-slate-500">{{ user?.email }}</p>
+              <span
+                class="mt-5 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold"
+                :class="isSubscriber ? 'bg-amber-100 text-amber-700' : 'bg-iberia/10 text-iberia'"
+              >
+                <svg v-if="isSubscriber" class="size-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span v-else class="size-2 rounded-full bg-iberia" />
+                {{ isSubscriber ? $t('auth.memberTypeSubscriber') : $t('auth.memberTypeMember') }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <form class="mt-2 rounded-[1.65rem] bg-white/86 p-6 shadow-[0_18px_60px_rgb(15_23_42/0.07)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10" @submit.prevent="handleSaveName">
+          <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-4">
+              <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700">
+                <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21a8 8 0 1 0-16 0"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+              <h2 class="font-display text-2xl font-bold text-slate-950">Información personal</h2>
             </div>
 
-            <dl class="space-y-4">
-              <div>
-                <dt class="text-xs font-medium uppercase tracking-wider text-zinc-400">{{ $t('auth.username') }}</dt>
-                <dd class="mt-1 text-sm font-medium text-zinc-800">{{ user?.username }}</dd>
-              </div>
-              <div>
-                <dt class="text-xs font-medium uppercase tracking-wider text-zinc-400">{{ $t('auth.email') }}</dt>
-                <dd class="mt-1 text-sm font-medium text-zinc-800">{{ user?.email }}</dd>
-              </div>
-              <div>
-                <dt class="text-xs font-medium uppercase tracking-wider text-zinc-400">{{ $t('auth.membershipType') }}</dt>
-                <dd class="mt-1">
-                  <span
-                    class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
-                    :class="isSubscriber ? 'bg-amber-50 text-amber-700' : 'bg-iberia/8 text-iberia'"
-                  >
-                    <svg v-if="isSubscriber" class="size-3" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    <span v-else class="size-1.5 rounded-full bg-iberia" />
-                    {{ isSubscriber ? $t('auth.memberTypeSubscriber') : $t('auth.memberTypeMember') }}
-                  </span>
-                </dd>
-              </div>
-
-              <div>
-                <dt class="text-xs font-medium uppercase tracking-wider text-zinc-400">{{ $t('auth.accountStatus') }}</dt>
-                <dd class="mt-1">
-                  <span
-                    class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
-                    :class="user?.confirmed ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'"
-                  >
-                    <span class="size-1.5 rounded-full" :class="user?.confirmed ? 'bg-green-500' : 'bg-yellow-500'" />
-                    {{ user?.confirmed ? $t('auth.confirmed') : $t('auth.unconfirmed') }}
-                  </span>
-                </dd>
-              </div>
-            </dl>
+            <button
+              type="button"
+              class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-6 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-iberia/30 hover:text-iberia"
+              @click="focusUsername"
+            >
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+              </svg>
+              Editar información
+            </button>
           </div>
 
-          <div class="mt-8 border-t border-zinc-100 pt-6">
+          <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+            <div class="grid gap-8 p-6 lg:grid-cols-2">
+              <div>
+                <label class="mb-3 block text-sm font-semibold text-slate-600">{{ $t('auth.displayName') }}</label>
+                <input
+                  ref="usernameInput"
+                  v-model.trim="form.username"
+                  type="text"
+                  maxlength="40"
+                  class="h-12 w-full rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-slate-800 outline-none transition focus:border-iberia focus:ring-4 focus:ring-iberia/10"
+                  :placeholder="$t('auth.usernamePlaceholder')"
+                />
+                <p class="mt-4 text-sm font-medium text-slate-400">Este es el nombre que se mostrará públicamente.</p>
+              </div>
+
+              <div>
+                <label class="mb-3 block text-sm font-semibold text-slate-600">{{ $t('auth.email') }}</label>
+                <input
+                  :value="user?.email"
+                  type="email"
+                  readonly
+                  class="h-12 w-full rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-slate-800 outline-none"
+                />
+                <p class="mt-4 text-sm font-medium text-slate-400">Tu correo electrónico no será visible públicamente.</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-5 border-t border-zinc-200 p-6 lg:flex-row lg:items-center lg:justify-between">
+              <div class="flex min-w-0 items-center gap-4">
+                <img
+                  v-if="profileAvatar"
+                  :src="profileAvatar"
+                  :alt="user?.username ?? ''"
+                  class="size-14 shrink-0 rounded-full object-cover ring-1 ring-zinc-200"
+                />
+                <span v-else class="flex size-14 shrink-0 items-center justify-center rounded-full bg-iberia text-base font-bold text-white">
+                  {{ userInitial }}
+                </span>
+                <div>
+                  <p class="text-sm font-semibold text-slate-600">{{ $t('auth.profilePicture') }}</p>
+                  <p class="mt-1 text-sm font-medium text-slate-400">JPG, PNG o GIF. Tamaño máximo 2MB.</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-3">
+                <label class="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-6 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-iberia/30 hover:text-iberia">
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <path d="m17 8-5-5-5 5"/>
+                    <path d="M12 3v12"/>
+                  </svg>
+                  {{ avatarSaving ? $t('auth.saving') : $t('auth.changePicture') }}
+                  <input
+                    ref="avatarInput"
+                    type="file"
+                    accept="image/*"
+                    class="sr-only"
+                    :disabled="avatarSaving"
+                    @change="handleAvatarUpload"
+                  />
+                </label>
+                <button
+                  v-if="profileAvatar"
+                  type="button"
+                  class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-red-200 bg-white px-6 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                  @click="handleRemoveAvatar"
+                >
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    <path d="M19 6 18 20a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  </svg>
+                  {{ $t('auth.removePicture') }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p v-if="message" class="mt-5 text-sm font-semibold" :class="messageType === 'success' ? 'text-green-600' : 'text-red-600'">
+            {{ message }}
+          </p>
+
+          <button
+            type="submit"
+            class="mt-6 inline-flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-iberia px-6 text-base font-bold text-white shadow-lg shadow-iberia/20 transition hover:bg-iberia-dark disabled:cursor-not-allowed disabled:opacity-60"
+            :disabled="saving || !form.username"
+          >
+            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/>
+              <path d="M17 21v-8H7v8"/>
+              <path d="M7 3v5h8"/>
+            </svg>
+            {{ saving ? $t('auth.saving') : $t('auth.saveChanges') }}
+          </button>
+        </form>
+
+        <section class="rounded-[1.65rem] bg-white/86 p-6 shadow-[0_18px_60px_rgb(15_23_42/0.07)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10">
+          <div class="mb-8 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700">
+                <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.68-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+              </span>
+              <h2 class="font-display text-2xl font-bold text-slate-950">Información de la cuenta</h2>
+            </div>
+
             <button
-              class="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+              type="button"
+              class="hidden h-11 items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-5 text-sm font-semibold text-red-600 transition hover:bg-red-50 sm:inline-flex"
               @click="handleLogout"
             >
               <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <path d="m16 17 5-5-5-5"/>
+                <path d="M21 12H9"/>
               </svg>
               {{ $t('auth.logout') }}
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+
+          <dl class="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white sm:grid-cols-2 xl:grid-cols-4">
+            <div class="account-stat">
+              <dt>
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.33 1.82V22a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.82-.33H2a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .33-1.82V2a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.22.36.58.6 1 .6H22a2 2 0 0 1 0 4h-.09c-.42 0-.78.24-1 .6Z"/>
+                </svg>
+                {{ $t('auth.username') }}
+              </dt>
+              <dd>
+                {{ user?.username }}
+                <button
+                  type="button"
+                  class="ml-2 inline-flex size-5 items-center justify-center text-slate-400 transition hover:text-iberia"
+                  title="Copiar"
+                  aria-label="Copiar nombre de usuario"
+                  @click="copyUsername"
+                >
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="14" height="14" x="8" y="8" rx="2"/>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                  </svg>
+                </button>
+              </dd>
+            </div>
+
+            <div class="account-stat">
+              <dt>
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+                {{ $t('auth.accountStatus') }}
+              </dt>
+              <dd>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold" :class="user?.confirmed ? 'bg-emerald-100 text-emerald-700' : 'bg-yellow-100 text-yellow-700'">
+                  <span class="size-2 rounded-full" :class="user?.confirmed ? 'bg-emerald-500' : 'bg-yellow-500'" />
+                  {{ user?.confirmed ? $t('auth.confirmed') : $t('auth.unconfirmed') }}
+                </span>
+              </dd>
+            </div>
+
+            <div class="account-stat">
+              <dt>
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 7h-9"/>
+                  <path d="M14 17H5"/>
+                  <circle cx="17" cy="17" r="3"/>
+                  <circle cx="7" cy="7" r="3"/>
+                </svg>
+                {{ $t('auth.membershipType') }}
+              </dt>
+              <dd>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold" :class="isSubscriber ? 'bg-amber-100 text-amber-700' : 'bg-iberia/10 text-iberia'">
+                  <svg v-if="isSubscriber" class="size-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <span v-else class="size-2 rounded-full bg-iberia" />
+                  {{ isSubscriber ? $t('auth.memberTypeSubscriber') : $t('auth.memberTypeMember') }}
+                </span>
+              </dd>
+            </div>
+
+            <div class="account-stat">
+              <dt>
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 2v4"/>
+                  <path d="M16 2v4"/>
+                  <rect width="18" height="18" x="3" y="4" rx="2"/>
+                  <path d="M3 10h18"/>
+                </svg>
+                Miembro desde
+              </dt>
+              <dd>{{ memberSince }}</dd>
+            </div>
+          </dl>
+
+          <button
+            type="button"
+            class="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-5 text-sm font-semibold text-red-600 transition hover:bg-red-50 sm:hidden"
+            @click="handleLogout"
+          >
+            {{ $t('auth.logout') }}
+          </button>
+        </section>
+      </section>
+    </main>
   </div>
 </template>
 
@@ -149,7 +322,7 @@ definePageMeta({
 
 const localePath = useLocalePath()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const {
   user,
   logout,
@@ -161,11 +334,23 @@ const {
 } = useAuth()
 
 const avatarInput = ref<HTMLInputElement | null>(null)
+const usernameInput = ref<HTMLInputElement | null>(null)
 const form = reactive({ username: '' })
 const saving = ref(false)
 const avatarSaving = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
+
+const memberSince = computed(() => {
+  const createdAt = (user.value as { createdAt?: string } | null)?.createdAt
+  if (!createdAt) return '-'
+
+  return new Intl.DateTimeFormat(locale.value === 'ge' ? 'ka-GE' : 'es-ES', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(createdAt))
+})
 
 watch(
   user,
@@ -178,6 +363,15 @@ watch(
 function handleLogout() {
   logout()
   router.push(localePath('/'))
+}
+
+function focusUsername() {
+  usernameInput.value?.focus()
+}
+
+async function copyUsername() {
+  if (!user.value?.username || !navigator?.clipboard) return
+  await navigator.clipboard.writeText(user.value.username)
 }
 
 function setMessage(type: 'success' | 'error', text: string) {
@@ -267,3 +461,63 @@ async function handleRemoveAvatar() {
   }
 }
 </script>
+
+<style scoped>
+.account-shell {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 62rem;
+}
+
+.account-stat {
+  display: grid;
+  min-height: 7.2rem;
+  align-content: center;
+  gap: 0.85rem;
+  border-color: rgb(228 228 231);
+  padding: 1.5rem;
+}
+
+.account-stat + .account-stat {
+  border-top-width: 1px;
+}
+
+.account-stat dt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgb(100 116 139);
+}
+
+.account-stat dd {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgb(51 65 85);
+}
+
+@media (min-width: 640px) {
+  .account-stat:nth-child(2n) {
+    border-left-width: 1px;
+  }
+
+  .account-stat:nth-child(2) {
+    border-top-width: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .account-stat + .account-stat {
+    border-top-width: 0;
+    border-left-width: 1px;
+  }
+}
+</style>
