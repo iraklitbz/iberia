@@ -4,10 +4,10 @@
       <img
         src="/images/login/autumn-watercolor-background.webp"
         alt=""
-        class="absolute inset-0 size-full object-cover opacity-70 grayscale-[35%] contrast-110"
+        class="absolute inset-0 size-full object-cover opacity-75 grayscale-[60%] contrast-125 brightness-95"
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-[#f1f2f5] via-[#f1f2f5]/66 to-[#f1f2f5]/10" />
-      <div class="absolute inset-0 bg-gradient-to-b from-[#f1f2f5] via-[#f1f2f5]/8 to-[#f1f2f5]/78" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#eef0f3] via-[#eef0f3]/58 to-[#eef0f3]/6" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#eef0f3] via-[#eef0f3]/6 to-[#eef0f3]/72" />
     </div>
 
     <main class="relative mx-auto w-full max-w-[92rem] px-4 py-10 sm:px-6 lg:px-8">
