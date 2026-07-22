@@ -1,13 +1,13 @@
 <template>
-  <div class="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#f8f8fb] pt-16">
+  <div class="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#f1f2f5] pt-16">
     <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[48vw] min-w-[34rem] lg:block">
       <img
         src="/images/login/autumn-watercolor-background.webp"
         alt=""
-        class="absolute inset-0 size-full object-cover opacity-70"
+        class="absolute inset-0 size-full object-cover opacity-50 grayscale"
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-[#f8f8fb] via-[#f8f8fb]/72 to-[#f8f8fb]/10" />
-      <div class="absolute inset-0 bg-gradient-to-b from-[#f8f8fb] via-transparent to-[#f8f8fb]/85" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#f1f2f5] via-[#f1f2f5]/78 to-[#f1f2f5]/24" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#f1f2f5] via-[#f1f2f5]/18 to-[#f1f2f5]/90" />
     </div>
 
     <main class="relative mx-auto w-full max-w-[92rem] px-4 py-10 sm:px-6 lg:px-8">
