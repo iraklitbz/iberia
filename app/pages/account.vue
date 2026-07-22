@@ -106,12 +106,22 @@
 
               <div>
                 <label class="mb-3 block text-sm font-semibold text-slate-600">{{ $t('auth.email') }}</label>
-                <input
-                  :value="user?.email"
-                  type="email"
-                  readonly
-                  class="h-12 w-full rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-slate-800 outline-none"
-                />
+                <div class="relative">
+                  <input
+                    :value="user?.email"
+                    type="email"
+                    readonly
+                    class="h-12 w-full rounded-2xl border border-zinc-200 bg-zinc-50/70 px-5 pr-14 text-sm font-semibold text-slate-800 outline-none"
+                  />
+                  <span
+                    class="pointer-events-none absolute right-4 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-200 text-zinc-500"
+                    aria-hidden="true"
+                  >
+                    <svg class="size-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path fill-rule="evenodd" d="M7 10V8a5 5 0 0 1 10 0v2h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2 0h6V8a3 3 0 0 0-6 0v2Zm4 6.73V18a1 1 0 1 1-2 0v-1.27a2 2 0 1 1 2 0Z" clip-rule="evenodd"/>
+                    </svg>
+                  </span>
+                </div>
                 <p class="mt-4 text-sm font-medium text-slate-400">Tu correo electrónico no será visible públicamente.</p>
               </div>
             </div>
