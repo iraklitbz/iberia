@@ -2,7 +2,7 @@
   <div class="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#f1f2f5] pt-16">
     <div class="pointer-events-none absolute inset-0">
       <img
-        src="https://res.cloudinary.com/dj6draudd/image/upload/v1784747265/Chat_GPT_Image_Jul_22_2026_04_43_47_PM_4f88f377ab.png"
+        src="https://res.cloudinary.com/dj6draudd/image/upload/v1784759805/Chat_GPT_Image_Jul_23_2026_12_33_37_AM_5cf8abdd7e.png"
         alt=""
         class="absolute -top-[14%] left-0 h-[114%] w-[126%] object-fill opacity-72 grayscale-[15%] saturate-150 contrast-115 mix-blend-multiply"
       />
