@@ -88,18 +88,6 @@
               </span>
               <h2 class="font-display text-2xl font-bold text-slate-950">Información personal</h2>
             </div>
-
-            <button
-              type="button"
-              class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-6 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-iberia/30 hover:text-iberia"
-              @click="focusUsername"
-            >
-              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"/>
-                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-              </svg>
-              Editar información
-            </button>
           </div>
 
           <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
@@ -107,7 +95,6 @@
               <div>
                 <label class="mb-3 block text-sm font-semibold text-slate-600">{{ $t('auth.displayName') }}</label>
                 <input
-                  ref="usernameInput"
                   v-model.trim="form.username"
                   type="text"
                   maxlength="40"
@@ -334,7 +321,6 @@ const {
 } = useAuth()
 
 const avatarInput = ref<HTMLInputElement | null>(null)
-const usernameInput = ref<HTMLInputElement | null>(null)
 const form = reactive({ username: '' })
 const saving = ref(false)
 const avatarSaving = ref(false)
@@ -363,10 +349,6 @@ watch(
 function handleLogout() {
   logout()
   router.push(localePath('/'))
-}
-
-function focusUsername() {
-  usernameInput.value?.focus()
 }
 
 async function copyUsername() {
