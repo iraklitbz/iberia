@@ -6,8 +6,10 @@
         alt=""
         class="absolute -top-[14%] left-0 h-[114%] w-[126%] object-fill opacity-72 grayscale-[15%] saturate-150 contrast-115 mix-blend-multiply"
       />
-      <div class="absolute inset-0 bg-[#e6e8ed]/24" />
-      <div class="absolute inset-0 bg-gradient-to-b from-[#e6e8ed] via-[#e6e8ed]/10 to-[#e6e8ed]/78" />
+      <div class="absolute inset-0 bg-[#dde1e7]/42" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#dde1e7]/72 via-[#e6e8ed]/22 to-[#e6e8ed]/84" />
+      <div class="absolute right-[-4rem] top-4 h-28 w-72 rounded-full bg-white/42 blur-2xl sm:right-[-2rem] sm:top-8 sm:h-36 sm:w-96" />
+      <div class="absolute right-10 top-14 h-20 w-52 rounded-full bg-white/36 blur-xl sm:right-20 sm:top-20 sm:h-28 sm:w-72" />
     </div>
 
     <main class="relative mx-auto w-full max-w-[92rem] px-4 py-10 sm:px-6 lg:px-8">
