@@ -8,6 +8,7 @@
       />
       <div class="absolute inset-0 bg-[#dde1e7]/42" />
       <div class="absolute inset-0 bg-gradient-to-b from-[#dde1e7]/72 via-[#e6e8ed]/22 to-[#e6e8ed]/84" />
+      <div class="absolute inset-0 bg-black/18" />
       <div class="absolute right-[-4rem] top-4 h-28 w-72 rounded-full bg-white/42 blur-2xl sm:right-[-2rem] sm:top-8 sm:h-36 sm:w-96" />
       <div class="absolute right-10 top-14 h-20 w-52 rounded-full bg-white/36 blur-xl sm:right-20 sm:top-20 sm:h-28 sm:w-72" />
     </div>
