@@ -80,11 +80,12 @@
         <form class="mt-2 rounded-[1.65rem] bg-white/86 p-6 shadow-[0_18px_60px_rgb(15_23_42/0.07)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10" @submit.prevent="handleSaveName">
           <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-4">
-              <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700">
-                <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 21a8 8 0 1 0-16 0"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
+              <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-zinc-200">
+                <img
+                  src="https://res.cloudinary.com/dj6draudd/image/upload/v1771671543/logo_iberia_icon_b2924031c3.svg"
+                  alt=""
+                  class="size-9"
+                />
               </span>
               <h2 class="font-display text-2xl font-bold text-slate-950">Información personal</h2>
             </div>
