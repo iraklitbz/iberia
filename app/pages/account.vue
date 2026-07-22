@@ -2,7 +2,7 @@
   <div class="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#f1f2f5] pt-16">
     <div class="pointer-events-none absolute inset-0">
       <img
-        src="/images/login/autumn-watercolor-background.webp"
+        src="https://res.cloudinary.com/dj6draudd/image/upload/v1784747265/Chat_GPT_Image_Jul_22_2026_04_43_47_PM_4f88f377ab.png"
         alt=""
         class="absolute inset-0 size-full object-fill opacity-72 grayscale-[15%] saturate-150 contrast-115 mix-blend-multiply"
       />
