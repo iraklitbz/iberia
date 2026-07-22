@@ -8,7 +8,7 @@
       />
       <div class="absolute inset-0 bg-[#dde1e7]/42" />
       <div class="absolute inset-0 bg-gradient-to-b from-[#dde1e7]/72 via-[#e6e8ed]/22 to-[#e6e8ed]/84" />
-      <div class="absolute inset-0 bg-black/18" />
+      <div class="absolute inset-0 bg-[#6f7680]/24" />
     </div>
 
     <main class="relative mx-auto w-full max-w-[92rem] px-4 py-10 sm:px-6 lg:px-8">
