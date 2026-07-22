@@ -94,13 +94,23 @@
             <div class="grid gap-8 p-6 lg:grid-cols-2">
               <div>
                 <label class="mb-3 block text-sm font-semibold text-slate-600">{{ $t('auth.displayName') }}</label>
-                <input
-                  v-model.trim="form.username"
-                  type="text"
-                  maxlength="40"
-                  class="h-12 w-full rounded-2xl border border-zinc-200 bg-white px-5 text-sm font-semibold text-slate-800 outline-none transition focus:border-iberia focus:ring-4 focus:ring-iberia/10"
-                  :placeholder="$t('auth.usernamePlaceholder')"
-                />
+                <div class="relative">
+                  <input
+                    v-model.trim="form.username"
+                    type="text"
+                    maxlength="40"
+                    class="h-12 w-full rounded-2xl border border-zinc-200 bg-white px-5 pr-14 text-sm font-semibold text-slate-800 outline-none transition focus:border-iberia focus:ring-4 focus:ring-iberia/10"
+                    :placeholder="$t('auth.usernamePlaceholder')"
+                  />
+                  <span
+                    class="pointer-events-none absolute right-4 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full bg-iberia/10 text-iberia"
+                    aria-hidden="true"
+                  >
+                    <svg class="size-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.1l.54-2H5V5h10v5h5v1.9l2-2V9.17a2 2 0 0 0-.59-1.41l-5.17-5.17A2 2 0 0 0 14.83 2H5v1Zm12 2.41L18.59 7H17V5.41ZM19.71 13.04a1.8 1.8 0 0 0-2.55 0l-6.27 6.27L10 23l3.69-.89 6.27-6.27a1.8 1.8 0 0 0 0-2.55l-.25-.25Zm-8.32-6.01H7a1 1 0 1 0 0 2h4.39a1 1 0 1 0 0-2Zm2 4H7a1 1 0 1 0 0 2h6.39a1 1 0 1 0 0-2Z"/>
+                    </svg>
+                  </span>
+                </div>
                 <p class="mt-4 text-sm font-medium text-slate-400">Este es el nombre que se mostrará públicamente.</p>
               </div>
 
