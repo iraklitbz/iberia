@@ -4,7 +4,7 @@
       <img
         src="https://res.cloudinary.com/dj6draudd/image/upload/v1784747265/Chat_GPT_Image_Jul_22_2026_04_43_47_PM_4f88f377ab.png"
         alt=""
-        class="absolute inset-0 size-full object-fill opacity-72 grayscale-[15%] saturate-150 contrast-115 mix-blend-multiply"
+        class="absolute inset-y-0 left-0 h-full w-[108%] object-fill opacity-72 grayscale-[15%] saturate-150 contrast-115 mix-blend-multiply"
       />
       <div class="absolute inset-0 bg-[#e6e8ed]/24" />
       <div class="absolute inset-0 bg-gradient-to-b from-[#e6e8ed] via-[#e6e8ed]/10 to-[#e6e8ed]/78" />
