@@ -6,7 +6,7 @@
         alt=""
         class="absolute inset-0 size-full object-cover opacity-80 grayscale-[15%] saturate-150 contrast-115"
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-[#e6e8ed] via-[#e6e8ed]/62 to-[#e6e8ed]/12" />
+      <div class="absolute inset-0 bg-[#e6e8ed]/24" />
       <div class="absolute inset-0 bg-gradient-to-b from-[#e6e8ed] via-[#e6e8ed]/10 to-[#e6e8ed]/78" />
     </div>
 
