@@ -4,7 +4,7 @@
       <img
         src="/images/login/autumn-watercolor-background.webp"
         alt=""
-        class="absolute inset-0 size-full object-cover opacity-80 grayscale-[15%] saturate-150 contrast-115"
+        class="absolute inset-0 size-full object-cover opacity-72 grayscale-[15%] saturate-150 contrast-115 mix-blend-multiply"
       />
       <div class="absolute inset-0 bg-[#e6e8ed]/24" />
       <div class="absolute inset-0 bg-gradient-to-b from-[#e6e8ed] via-[#e6e8ed]/10 to-[#e6e8ed]/78" />
