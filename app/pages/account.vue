@@ -13,7 +13,7 @@
 
     <main class="relative mx-auto w-full max-w-[92rem] px-4 py-10 sm:px-6 lg:px-8">
       <section class="account-shell">
-        <div class="relative overflow-hidden rounded-[1.65rem] bg-white/74 p-6 shadow-[0_24px_80px_rgb(15_23_42/0.08)] ring-1 ring-zinc-200/70 backdrop-blur md:p-10">
+        <div class="relative overflow-hidden rounded-[1.65rem] bg-white/74 p-6 shadow-[0_30px_90px_rgb(15_23_42/0.18)] ring-1 ring-zinc-200/70 backdrop-blur md:p-10">
           <div class="absolute inset-0 bg-[radial-gradient(circle_at_85%_14%,rgba(232,70,113,0.17),transparent_26%),radial-gradient(circle_at_56%_34%,rgba(248,198,204,0.28),transparent_31%)]" />
           <div class="absolute -right-24 -top-20 size-[26rem] rounded-full border border-white/60 opacity-70" />
           <div class="absolute -right-12 top-8 size-[19rem] rounded-full border border-white/55 opacity-70" />
@@ -78,7 +78,7 @@
           </div>
         </div>
 
-        <form class="mt-2 rounded-[1.65rem] bg-white/86 p-6 shadow-[0_18px_60px_rgb(15_23_42/0.07)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10" @submit.prevent="handleSaveName">
+        <form class="mt-2 rounded-[1.65rem] bg-white/86 p-6 shadow-[0_26px_80px_rgb(15_23_42/0.14)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10" @submit.prevent="handleSaveName">
           <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-4">
               <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-zinc-100 shadow-sm ring-1 ring-zinc-200">
@@ -92,7 +92,7 @@
             </div>
           </div>
 
-          <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+          <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_16px_38px_rgb(15_23_42/0.08)]">
             <div class="grid gap-8 p-6 lg:grid-cols-2">
               <div>
                 <label class="mb-3 block text-sm font-semibold text-slate-600">{{ $t('auth.displayName') }}</label>
@@ -207,7 +207,7 @@
           </button>
         </form>
 
-        <section class="rounded-[1.65rem] bg-white/86 p-6 shadow-[0_18px_60px_rgb(15_23_42/0.07)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10">
+        <section class="rounded-[1.65rem] bg-white/86 p-6 shadow-[0_26px_80px_rgb(15_23_42/0.14)] ring-1 ring-zinc-200/80 backdrop-blur md:p-10">
           <div class="mb-8 flex items-center justify-between gap-4">
             <div class="flex items-center gap-4">
               <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700">
@@ -233,7 +233,7 @@
             </button>
           </div>
 
-          <dl class="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white sm:grid-cols-2 xl:grid-cols-4">
+          <dl class="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_16px_38px_rgb(15_23_42/0.08)] sm:grid-cols-2 xl:grid-cols-4">
             <div class="account-stat">
               <dt>
                 <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
