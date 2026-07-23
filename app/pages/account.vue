@@ -19,7 +19,7 @@
           <div class="absolute -right-12 top-8 size-[19rem] rounded-full border border-white/55 opacity-70" />
 
           <div class="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-            <div class="relative size-28 shrink-0 sm:size-36">
+            <div class="relative size-[10.5rem] shrink-0 sm:size-[13.5rem]">
               <img
                 v-if="profileAvatar"
                 :src="profileAvatar"
