@@ -19,7 +19,7 @@
           <div class="absolute -right-12 top-8 size-[19rem] rounded-full border border-white/55 opacity-70" />
 
           <div class="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-            <div class="relative size-24 shrink-0">
+            <div class="relative size-28 shrink-0 sm:size-36">
               <img
                 v-if="profileAvatar"
                 :src="profileAvatar"
@@ -33,11 +33,11 @@
                 {{ userInitial }}
               </div>
               <label
-                class="absolute bottom-0 right-0 flex size-14 cursor-pointer items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-lg transition hover:border-iberia hover:text-iberia"
+                class="absolute bottom-0 right-0 flex size-12 cursor-pointer items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-lg transition hover:border-iberia hover:text-iberia"
                 :title="$t('auth.changePicture')"
                 :aria-label="$t('auth.changePicture')"
               >
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
                   <circle cx="12" cy="13" r="3"/>
                 </svg>
