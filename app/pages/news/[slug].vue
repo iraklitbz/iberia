@@ -113,11 +113,17 @@ const slug = computed(() => route.params.slug as string)
 
 const { data: post, pending } = await useAsyncData(
   () => `post-${slug.value}-${locale.value}`,
-  () => locale.value === 'es'
-    ? getPostBySlug(slug.value)
-    : getGeoPostBySlug(slug.value),
+  () => getPostWithFallback(slug.value),
   { watch: [slug, locale] },
 )
+
+async function getPostWithFallback(currentSlug: string) {
+  if (locale.value === 'es') {
+    return await getPostBySlug(currentSlug) ?? await getGeoPostBySlug(currentSlug)
+  }
+
+  return await getGeoPostBySlug(currentSlug) ?? await getPostBySlug(currentSlug)
+}
 
 function cleanExcerpt(html: string) {
   return html.replace(/<\/?p>/g, '').trim()
