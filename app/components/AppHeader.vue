@@ -111,6 +111,88 @@
 
       <!-- Right side: auth + language + hamburger -->
       <div class="flex items-center gap-3">
+        <ClientOnly>
+          <div ref="notificationsDropdownRef" class="relative hidden lg:block">
+            <button
+              type="button"
+              class="relative flex size-10 items-center justify-center rounded-full transition-colors"
+              :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
+              :aria-label="notificationLabel"
+              @click="toggleNotifications"
+            >
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span
+                v-if="unreadPostCount"
+                class="absolute -right-1 -top-1 flex min-w-5 items-center justify-center rounded-full bg-iberia px-1.5 text-[11px] font-bold leading-5 text-white ring-2 ring-white"
+              >
+                {{ unreadPostCount > 9 ? '9+' : unreadPostCount }}
+              </span>
+            </button>
+
+            <Transition name="dropdown">
+              <div
+                v-if="notificationsOpen"
+                class="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-zinc-100 bg-white shadow-lg shadow-zinc-200/60"
+              >
+                <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+                  <p class="text-sm font-bold text-zinc-950">{{ t('notifications.title') }}</p>
+                  <span v-if="unreadPostCount" class="rounded-full bg-iberia/10 px-2 py-0.5 text-xs font-bold text-iberia">
+                    {{ unreadPostCount }}
+                  </span>
+                </div>
+
+                <div v-if="latestNotifications.length" class="max-h-96 overflow-y-auto py-1">
+                  <NuxtLink
+                    v-for="post in latestNotifications"
+                    :key="post.id"
+                    :to="post.href"
+                    class="flex gap-3 px-4 py-3 transition hover:bg-zinc-50"
+                    @click="handleNotificationClick"
+                  >
+                    <span class="mt-1 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-iberia/10 text-sm font-bold text-iberia">
+                      <img
+                        v-if="post.image"
+                        :src="post.image"
+                        :alt="post.title"
+                        class="size-full object-cover"
+                        loading="lazy"
+                      />
+                      <span v-else>{{ post.initial || 'I' }}</span>
+                    </span>
+                    <span class="min-w-0 flex-1">
+                      <span class="block truncate text-sm font-semibold text-zinc-950">
+                        {{ post.title }}
+                      </span>
+                      <span class="mt-0.5 line-clamp-2 text-xs leading-5 text-zinc-500">
+                        {{ post.message || (post.type === 'web' ? t('notifications.webPost') : t('forum.title')) }}
+                      </span>
+                      <span class="mt-1 block text-[11px] font-medium text-zinc-400">
+                        {{ formatNotificationDate(post.date) }}
+                      </span>
+                    </span>
+                    <span v-if="isUnreadNotification(post)" class="mt-2 size-2 shrink-0 rounded-full bg-iberia" />
+                  </NuxtLink>
+                </div>
+
+                <div v-else class="px-4 py-6 text-center text-sm text-zinc-500">
+                  {{ notificationsLoading ? t('loading') : t('notifications.empty') }}
+                </div>
+
+                <NuxtLink
+                  :to="localePath('/forum')"
+                  class="block border-t border-zinc-100 px-4 py-3 text-center text-sm font-semibold text-iberia transition hover:bg-iberia/5"
+                  @click="handleNotificationClick"
+                >
+                  {{ t('notifications.viewForum') }}
+                </NuxtLink>
+              </div>
+            </Transition>
+          </div>
+        </ClientOnly>
+
         <!-- Auth: desktop -->
         <ClientOnly>
           <div class="hidden items-center gap-2 lg:flex">
@@ -134,86 +216,6 @@
 
             <!-- Authenticated: user dropdown -->
             <template v-else>
-              <div ref="notificationsDropdownRef" class="relative">
-                <button
-                  type="button"
-                  class="relative flex size-10 items-center justify-center rounded-full transition-colors"
-                  :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
-                  :aria-label="notificationLabel"
-                  @click="toggleNotifications"
-                >
-                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
-                  <span
-                    v-if="unreadPostCount"
-                    class="absolute -right-1 -top-1 flex min-w-5 items-center justify-center rounded-full bg-iberia px-1.5 text-[11px] font-bold leading-5 text-white ring-2 ring-white"
-                  >
-                    {{ unreadPostCount > 9 ? '9+' : unreadPostCount }}
-                  </span>
-                </button>
-
-                <Transition name="dropdown">
-                  <div
-                    v-if="notificationsOpen"
-                    class="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-zinc-100 bg-white shadow-lg shadow-zinc-200/60"
-                  >
-                    <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
-                      <p class="text-sm font-bold text-zinc-950">{{ t('notifications.title') }}</p>
-                      <span v-if="unreadPostCount" class="rounded-full bg-iberia/10 px-2 py-0.5 text-xs font-bold text-iberia">
-                        {{ unreadPostCount }}
-                      </span>
-                    </div>
-
-                    <div v-if="latestNotifications.length" class="max-h-96 overflow-y-auto py-1">
-                      <NuxtLink
-                        v-for="post in latestNotifications"
-                        :key="post.id"
-                        :to="post.href"
-                        class="flex gap-3 px-4 py-3 transition hover:bg-zinc-50"
-                        @click="handleNotificationClick"
-                      >
-                        <span class="mt-1 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-iberia/10 text-sm font-bold text-iberia">
-                          <img
-                            v-if="post.image"
-                            :src="post.image"
-                            :alt="post.title"
-                            class="size-full object-cover"
-                            loading="lazy"
-                          />
-                          <span v-else>{{ post.initial || 'I' }}</span>
-                        </span>
-                        <span class="min-w-0 flex-1">
-                          <span class="block truncate text-sm font-semibold text-zinc-950">
-                            {{ post.title }}
-                          </span>
-                          <span class="mt-0.5 line-clamp-2 text-xs leading-5 text-zinc-500">
-                            {{ post.message || (post.type === 'web' ? t('notifications.webPost') : t('forum.title')) }}
-                          </span>
-                          <span class="mt-1 block text-[11px] font-medium text-zinc-400">
-                            {{ formatNotificationDate(post.date) }}
-                          </span>
-                        </span>
-                        <span v-if="isUnreadNotification(post)" class="mt-2 size-2 shrink-0 rounded-full bg-iberia" />
-                      </NuxtLink>
-                    </div>
-
-                    <div v-else class="px-4 py-6 text-center text-sm text-zinc-500">
-                      {{ notificationsLoading ? t('loading') : t('notifications.empty') }}
-                    </div>
-
-                    <NuxtLink
-                      :to="localePath('/forum')"
-                      class="block border-t border-zinc-100 px-4 py-3 text-center text-sm font-semibold text-iberia transition hover:bg-iberia/5"
-                      @click="handleNotificationClick"
-                    >
-                      {{ t('notifications.viewForum') }}
-                    </NuxtLink>
-                  </div>
-                </Transition>
-              </div>
-
               <div ref="userDropdownRef" class="relative">
                 <button
                   class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
@@ -363,8 +365,7 @@
           </a>
 
           <NuxtLink
-            v-if="isAuthenticated"
-            :to="localePath('/forum')"
+            :to="mobileNotificationHref"
             class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
             @click="handleMobileNotificationsClick"
           >
@@ -544,6 +545,7 @@ const latestNotifications = computed(() => {
   })
 })
 const unreadPostCount = computed(() => sortedNotifications.value.filter(isUnreadNotification).length)
+const mobileNotificationHref = computed(() => latestNotifications.value[0]?.href ?? localePath({ name: 'category-slug', params: { slug: 'news' } }))
 const notificationLabel = computed(() => {
   return unreadPostCount.value
     ? t('notifications.ariaWithCount', { count: unreadPostCount.value })
@@ -650,7 +652,7 @@ async function fetchWebNotifications() {
 }
 
 async function fetchNotifications() {
-  if (!isAuthenticated.value || notificationsLoading.value) {
+  if (notificationsLoading.value) {
     return
   }
 
@@ -746,19 +748,8 @@ watch([authReady, isAuthenticated], async () => {
     return
   }
 
-  if (!isAuthenticated.value) {
-    forumPosts.value = []
-    webPosts.value = []
-    lastSeenPostAt.value = null
-    seenNotificationIds.value = []
-    notificationsOpen.value = false
-    if (notificationsTimer) {
-      clearInterval(notificationsTimer)
-      notificationsTimer = null
-    }
-    return
-  }
-
+  lastSeenPostAt.value = null
+  seenNotificationIds.value = []
   await fetchNotifications()
   if (!notificationsTimer) {
     notificationsTimer = setInterval(fetchNotifications, 30000)
@@ -766,7 +757,7 @@ watch([authReady, isAuthenticated], async () => {
 }, { immediate: true })
 
 watch(locale, async () => {
-  if (!import.meta.client || !authReady.value || !isAuthenticated.value) {
+  if (!import.meta.client || !authReady.value) {
     return
   }
 
