@@ -503,13 +503,13 @@ const sortedForumPosts = computed(() => {
   })
 })
 const webNotifications = computed<HeaderNotification[]>(() => {
-  return webPosts.value.map((post) => ({
+  return webPosts.value.filter(post => post.slug).map((post) => ({
     id: `web:${post.documentId}`,
     type: 'web',
     title: post.title || t('notifications.untitledPost'),
     message: cleanNotificationText(post.excerpt ?? ''),
     date: post.publishedAt || post.createdAt || post.updatedAt || new Date().toISOString(),
-    href: post.localeCode === 'ge' ? `/ge/news/${post.slug}` : `/news/${post.slug}`,
+    href: localePath({ name: 'news-slug', params: { slug: post.slug } }, post.localeCode ?? locale.value),
     image: post.cover?.url ?? null,
   }))
 })
