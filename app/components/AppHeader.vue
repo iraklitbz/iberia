@@ -113,7 +113,7 @@
       <div class="flex items-center gap-3">
         <!-- Auth: desktop -->
         <ClientOnly>
-          <div class="hidden items-center lg:flex">
+          <div class="hidden items-center gap-2 lg:flex">
             <!-- Skeleton mientras se resuelve el estado de auth -->
             <div v-if="!authReady" class="h-8 w-16 animate-pulse rounded-lg bg-zinc-200" />
 
@@ -133,59 +133,141 @@
             </NuxtLink>
 
             <!-- Authenticated: user dropdown -->
-            <div v-else ref="userDropdownRef" class="relative">
-              <button
-                class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
-                :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
-                @click="userMenuOpen = !userMenuOpen"
-              >
-                <img
-                  v-if="profileAvatar"
-                  :src="profileAvatar"
-                  :alt="user?.username ?? ''"
-                  class="size-7 rounded-full object-cover ring-1 ring-zinc-200"
-                />
-                <span v-else class="flex size-7 items-center justify-center rounded-full bg-iberia text-xs font-bold text-white">
-                  {{ userInitial }}
-                </span>
-                <span>{{ user?.username }}</span>
-                <svg
-                  class="size-3.5 transition-transform duration-200"
-                  :class="userMenuOpen ? 'rotate-180' : ''"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            <template v-else>
+              <div ref="notificationsDropdownRef" class="relative">
+                <button
+                  type="button"
+                  class="relative flex size-10 items-center justify-center rounded-full transition-colors"
+                  :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
+                  :aria-label="notificationLabel"
+                  @click="toggleNotifications"
                 >
-                  <path d="M6 9l6 6 6-6"/>
-                </svg>
-              </button>
+                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  </svg>
+                  <span
+                    v-if="unreadPostCount"
+                    class="absolute -right-1 -top-1 flex min-w-5 items-center justify-center rounded-full bg-iberia px-1.5 text-[11px] font-bold leading-5 text-white ring-2 ring-white"
+                  >
+                    {{ unreadPostCount > 9 ? '9+' : unreadPostCount }}
+                  </span>
+                </button>
 
-              <Transition name="dropdown">
-                <div
-                  v-if="userMenuOpen"
-                  class="absolute right-0 top-full z-50 mt-2 w-44 rounded-xl border border-zinc-100 bg-white p-1.5 shadow-lg shadow-zinc-200/60"
+                <Transition name="dropdown">
+                  <div
+                    v-if="notificationsOpen"
+                    class="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-zinc-100 bg-white shadow-lg shadow-zinc-200/60"
+                  >
+                    <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+                      <p class="text-sm font-bold text-zinc-950">{{ t('notifications.title') }}</p>
+                      <span v-if="unreadPostCount" class="rounded-full bg-iberia/10 px-2 py-0.5 text-xs font-bold text-iberia">
+                        {{ unreadPostCount }}
+                      </span>
+                    </div>
+
+                    <div v-if="latestNotifications.length" class="max-h-96 overflow-y-auto py-1">
+                      <NuxtLink
+                        v-for="post in latestNotifications"
+                        :key="post.id"
+                        :to="post.href"
+                        class="flex gap-3 px-4 py-3 transition hover:bg-zinc-50"
+                        @click="handleNotificationClick"
+                      >
+                        <span class="mt-1 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-iberia/10 text-sm font-bold text-iberia">
+                          <img
+                            v-if="post.image"
+                            :src="post.image"
+                            :alt="post.title"
+                            class="size-full object-cover"
+                            loading="lazy"
+                          />
+                          <span v-else>{{ post.initial || 'I' }}</span>
+                        </span>
+                        <span class="min-w-0 flex-1">
+                          <span class="block truncate text-sm font-semibold text-zinc-950">
+                            {{ post.title }}
+                          </span>
+                          <span class="mt-0.5 line-clamp-2 text-xs leading-5 text-zinc-500">
+                            {{ post.message || (post.type === 'web' ? t('notifications.webPost') : t('forum.title')) }}
+                          </span>
+                          <span class="mt-1 block text-[11px] font-medium text-zinc-400">
+                            {{ formatNotificationDate(post.date) }}
+                          </span>
+                        </span>
+                        <span v-if="isUnreadNotification(post)" class="mt-2 size-2 shrink-0 rounded-full bg-iberia" />
+                      </NuxtLink>
+                    </div>
+
+                    <div v-else class="px-4 py-6 text-center text-sm text-zinc-500">
+                      {{ notificationsLoading ? t('loading') : t('notifications.empty') }}
+                    </div>
+
+                    <NuxtLink
+                      :to="localePath('/forum')"
+                      class="block border-t border-zinc-100 px-4 py-3 text-center text-sm font-semibold text-iberia transition hover:bg-iberia/5"
+                      @click="handleNotificationClick"
+                    >
+                      {{ t('notifications.viewForum') }}
+                    </NuxtLink>
+                  </div>
+                </Transition>
+              </div>
+
+              <div ref="userDropdownRef" class="relative">
+                <button
+                  class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
+                  :class="solid ? 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' : 'text-white hover:bg-white/10'"
+                  @click="userMenuOpen = !userMenuOpen"
                 >
-                  <NuxtLink
-                    :to="localePath('/account')"
-                    class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
-                    @click="userMenuOpen = false"
+                  <img
+                    v-if="profileAvatar"
+                    :src="profileAvatar"
+                    :alt="user?.username ?? ''"
+                    class="size-7 rounded-full object-cover ring-1 ring-zinc-200"
+                  />
+                  <span v-else class="flex size-7 items-center justify-center rounded-full bg-iberia text-xs font-bold text-white">
+                    {{ userInitial }}
+                  </span>
+                  <span>{{ user?.username }}</span>
+                  <svg
+                    class="size-3.5 transition-transform duration-200"
+                    :class="userMenuOpen ? 'rotate-180' : ''"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
                   >
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                    </svg>
-                    {{ $t('auth.myAccount') }}
-                  </NuxtLink>
-                  <hr class="my-1 border-zinc-100" />
-                  <button
-                    class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-50"
-                    @click="handleLogout"
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </button>
+
+                <Transition name="dropdown">
+                  <div
+                    v-if="userMenuOpen"
+                    class="absolute right-0 top-full z-50 mt-2 w-44 rounded-xl border border-zinc-100 bg-white p-1.5 shadow-lg shadow-zinc-200/60"
                   >
-                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                    {{ $t('auth.logout') }}
-                  </button>
-                </div>
-              </Transition>
-            </div>
+                    <NuxtLink
+                      :to="localePath('/account')"
+                      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+                      @click="userMenuOpen = false"
+                    >
+                      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                      </svg>
+                      {{ $t('auth.myAccount') }}
+                    </NuxtLink>
+                    <hr class="my-1 border-zinc-100" />
+                    <button
+                      class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-50"
+                      @click="handleLogout"
+                    >
+                      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                      </svg>
+                      {{ $t('auth.logout') }}
+                    </button>
+                  </div>
+                </Transition>
+              </div>
+            </template>
           </div>
           <template #fallback>
             <div class="hidden items-center lg:flex">
@@ -280,6 +362,27 @@
             {{ $t('forum.title') }}
           </a>
 
+          <NuxtLink
+            v-if="isAuthenticated"
+            :to="localePath('/forum')"
+            class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+            @click="handleMobileNotificationsClick"
+          >
+            <span class="flex items-center gap-2">
+              <svg class="size-5 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              {{ t('notifications.title') }}
+            </span>
+            <span
+              v-if="unreadPostCount"
+              class="rounded-full bg-iberia px-2 py-0.5 text-xs font-bold text-white"
+            >
+              {{ unreadPostCount > 9 ? '9+' : unreadPostCount }}
+            </span>
+          </NuxtLink>
+
           <!-- Auth mobile -->
           <div class="border-t border-zinc-100 pt-3">
             <NuxtLink
@@ -326,17 +429,61 @@
 </template>
 
 <script setup lang="ts">
+type HeaderForumPost = {
+  id: string
+  name?: string
+  initial?: string
+  title?: string
+  section?: string
+  message?: string
+  createdAt: string
+}
+
+type HeaderWebPost = {
+  documentId: string
+  slug: string
+  title: string
+  excerpt?: string | null
+  publishedAt?: string | null
+  cover?: {
+    url?: string
+  } | null
+}
+
+type HeaderNotification = {
+  id: string
+  type: 'web' | 'forum'
+  title: string
+  message: string
+  date: string
+  href: string
+  image?: string | null
+  initial?: string
+}
+
+type StrapiResponse<T> = {
+  data: T
+}
+
 const localePath = useLocalePath()
 const router = useRouter()
 const route = useRoute()
 const { user, isAuthenticated, logout, authReady, userInitial, profileAvatar } = useAuth()
+const { t, locale } = useI18n()
 
 const solid = true
 const menuOpen = ref(false)
 const newsOpen = ref(false)
 const userMenuOpen = ref(false)
+const notificationsOpen = ref(false)
+const notificationsLoading = ref(false)
+const forumPosts = ref<HeaderForumPost[]>([])
+const webPosts = ref<HeaderWebPost[]>([])
+const lastSeenPostAt = ref<string | null>(null)
 const newsDropdownRef = ref<HTMLElement | null>(null)
 const userDropdownRef = ref<HTMLElement | null>(null)
+const notificationsDropdownRef = ref<HTMLElement | null>(null)
+let notificationsTimer: ReturnType<typeof setInterval> | null = null
 
 const newsCategories = [
   { slug: 'news', labelKey: 'news' },
@@ -347,11 +494,175 @@ const newsCategories = [
   { slug: 'tours', labelKey: 'tours' },
 ]
 
+const sortedForumPosts = computed(() => {
+  return [...forumPosts.value].sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  })
+})
+const webNotifications = computed<HeaderNotification[]>(() => {
+  return webPosts.value.map((post) => ({
+    id: `web:${post.documentId}`,
+    type: 'web',
+    title: post.title || t('notifications.untitledPost'),
+    message: cleanNotificationText(post.excerpt ?? ''),
+    date: post.publishedAt || new Date().toISOString(),
+    href: localePath({ name: 'news-slug', params: { slug: post.slug } }),
+    image: post.cover?.url ?? null,
+  }))
+})
+const forumNotifications = computed<HeaderNotification[]>(() => {
+  return forumPosts.value.map((post) => ({
+    id: `forum:${post.id}`,
+    type: 'forum',
+    title: post.title || t('notifications.untitledPost'),
+    message: post.message ?? '',
+    date: post.createdAt,
+    href: localePath({
+      path: '/forum',
+      query: post.section && post.section !== 'forum' ? { section: post.section } : undefined,
+    }),
+    initial: post.initial || post.name?.charAt(0)?.toUpperCase() || '?',
+  }))
+})
+const sortedNotifications = computed(() => {
+  return [...webNotifications.value, ...forumNotifications.value].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+})
+const latestNotifications = computed(() => sortedNotifications.value.slice(0, 8))
+const unreadPostCount = computed(() => sortedNotifications.value.filter(isUnreadNotification).length)
+const notificationLabel = computed(() => {
+  return unreadPostCount.value
+    ? t('notifications.ariaWithCount', { count: unreadPostCount.value })
+    : t('notifications.aria')
+})
+
 function handleLogout() {
   logout()
   userMenuOpen.value = false
+  notificationsOpen.value = false
   menuOpen.value = false
   router.push(localePath('/'))
+}
+
+function currentNotificationKey() {
+  const identity = user.value?.id ?? user.value?.email ?? user.value?.username ?? 'guest'
+  return `iberia-seen-post-notifications:${identity}:${locale.value}`
+}
+
+function newestNotificationDate() {
+  return sortedNotifications.value[0]?.date ?? new Date().toISOString()
+}
+
+function loadLastSeenPostAt() {
+  const storageKey = currentNotificationKey()
+  const stored = localStorage.getItem(storageKey)
+
+  if (stored) {
+    lastSeenPostAt.value = stored
+    return
+  }
+
+  lastSeenPostAt.value = newestNotificationDate()
+  saveLastSeenPostAt()
+}
+
+function saveLastSeenPostAt() {
+  if (!lastSeenPostAt.value) {
+    return
+  }
+  localStorage.setItem(currentNotificationKey(), lastSeenPostAt.value)
+}
+
+function markNotificationsSeen() {
+  lastSeenPostAt.value = newestNotificationDate()
+  saveLastSeenPostAt()
+}
+
+function isUnreadNotification(item: HeaderNotification) {
+  if (!lastSeenPostAt.value) {
+    return false
+  }
+
+  return new Date(item.date).getTime() > new Date(lastSeenPostAt.value).getTime()
+}
+
+async function fetchForumNotifications() {
+  try {
+    forumPosts.value = await $fetch<HeaderForumPost[]>('/api/forum/posts')
+  }
+  catch {
+    forumPosts.value = []
+  }
+}
+
+async function fetchWebNotifications() {
+  const collection = locale.value === 'es' ? 'entradas' : 'georgians'
+  const response = await $fetch<StrapiResponse<HeaderWebPost[]>>(
+    `/api/strapi/${collection}?populate=cover&pagination[page]=1&pagination[pageSize]=20&sort=publishedAt:desc`,
+  )
+  webPosts.value = response.data ?? []
+}
+
+async function fetchNotifications() {
+  if (!isAuthenticated.value || notificationsLoading.value) {
+    return
+  }
+
+  notificationsLoading.value = true
+  try {
+    await Promise.all([
+      fetchWebNotifications(),
+      fetchForumNotifications(),
+    ])
+    if (!lastSeenPostAt.value) {
+      loadLastSeenPostAt()
+    }
+  }
+  catch {
+    webPosts.value = []
+    forumPosts.value = []
+  }
+  finally {
+    notificationsLoading.value = false
+  }
+}
+
+function toggleNotifications() {
+  notificationsOpen.value = !notificationsOpen.value
+  userMenuOpen.value = false
+
+  if (notificationsOpen.value) {
+    markNotificationsSeen()
+  }
+}
+
+function handleNotificationClick() {
+  markNotificationsSeen()
+  notificationsOpen.value = false
+}
+
+function handleMobileNotificationsClick() {
+  markNotificationsSeen()
+  menuOpen.value = false
+}
+
+function formatNotificationDate(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date)
+}
+
+function cleanNotificationText(value: string) {
+  return value.replace(/<[^>]+>/g, '').trim()
 }
 
 onMounted(() => {
@@ -362,6 +673,9 @@ onMounted(() => {
     if (userDropdownRef.value && !userDropdownRef.value.contains(e.target as Node)) {
       userMenuOpen.value = false
     }
+    if (notificationsDropdownRef.value && !notificationsDropdownRef.value.contains(e.target as Node)) {
+      notificationsOpen.value = false
+    }
   }
   document.addEventListener('click', clickOutsideHandler)
   document.addEventListener('touchstart', clickOutsideHandler)
@@ -369,13 +683,52 @@ onMounted(() => {
   onUnmounted(() => {
     document.removeEventListener('click', clickOutsideHandler)
     document.removeEventListener('touchstart', clickOutsideHandler)
+    if (notificationsTimer) {
+      clearInterval(notificationsTimer)
+    }
   })
+})
+
+watch([authReady, isAuthenticated], async () => {
+  if (!import.meta.client) {
+    return
+  }
+
+  if (!authReady.value) {
+    return
+  }
+
+  if (!isAuthenticated.value) {
+    forumPosts.value = []
+    lastSeenPostAt.value = null
+    notificationsOpen.value = false
+    if (notificationsTimer) {
+      clearInterval(notificationsTimer)
+      notificationsTimer = null
+    }
+    return
+  }
+
+  await fetchNotifications()
+  if (!notificationsTimer) {
+    notificationsTimer = setInterval(fetchNotifications, 30000)
+  }
+}, { immediate: true })
+
+watch(locale, async () => {
+  if (!import.meta.client || !authReady.value || !isAuthenticated.value) {
+    return
+  }
+
+  lastSeenPostAt.value = null
+  await fetchNotifications()
 })
 
 watch(() => route.path, () => {
   menuOpen.value = false
   newsOpen.value = false
   userMenuOpen.value = false
+  notificationsOpen.value = false
 })
 </script>
 
