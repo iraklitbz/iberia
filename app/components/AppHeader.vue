@@ -440,17 +440,13 @@ type HeaderForumPost = {
 }
 
 type HeaderWebPost = {
-  documentId: string
+  id: string
   slug: string
   title: string
-  excerpt?: string | null
-  publishedAt?: string | null
-  createdAt?: string | null
-  updatedAt?: string | null
-  cover?: {
-    url?: string
-  } | null
-  localeCode?: 'es' | 'ge'
+  excerpt: string
+  date: string
+  image: string | null
+  localeCode: 'es' | 'ge'
 }
 
 type HeaderNotification = {
@@ -462,10 +458,6 @@ type HeaderNotification = {
   href: string
   image?: string | null
   initial?: string
-}
-
-type StrapiResponse<T> = {
-  data: T
 }
 
 const localePath = useLocalePath()
@@ -504,13 +496,13 @@ const sortedForumPosts = computed(() => {
 })
 const webNotifications = computed<HeaderNotification[]>(() => {
   return webPosts.value.filter(post => post.slug).map((post) => ({
-    id: `web:${post.documentId}`,
+    id: `web:${post.id}`,
     type: 'web',
     title: post.title || t('notifications.untitledPost'),
-    message: cleanNotificationText(post.excerpt ?? ''),
-    date: post.publishedAt || post.createdAt || post.updatedAt || new Date().toISOString(),
-    href: localePath({ name: 'news-slug', params: { slug: post.slug } }, post.localeCode ?? locale.value),
-    image: post.cover?.url ?? null,
+    message: cleanNotificationText(post.excerpt),
+    date: post.date,
+    href: localePath({ name: 'news-slug', params: { slug: post.slug } }, post.localeCode),
+    image: post.image,
   }))
 })
 const forumNotifications = computed<HeaderNotification[]>(() => {
@@ -600,37 +592,11 @@ async function fetchForumNotifications() {
 }
 
 async function fetchWebNotifications() {
-  const token = useCookie<string | null>('auth_token')
-  const headers: Record<string, string> = {}
-
-  if (token.value) {
-    headers.Authorization = `Bearer ${token.value}`
-    headers['X-Authenticated'] = '1'
-  }
-
-  const [spanishPosts, georgianPosts] = await Promise.all([
-    fetchWebPostCollection('entradas', 'es', headers),
-    fetchWebPostCollection('georgians', 'ge', headers),
-  ])
-
-  webPosts.value = [...spanishPosts, ...georgianPosts]
-}
-
-async function fetchWebPostCollection(
-  collection: 'entradas' | 'georgians',
-  localeCode: 'es' | 'ge',
-  headers: Record<string, string>,
-) {
   try {
-    const response = await $fetch<StrapiResponse<HeaderWebPost[]>>(
-      `/api/strapi/${collection}?populate=cover&pagination[page]=1&pagination[pageSize]=20&sort[0]=publishedAt:desc&sort[1]=createdAt:desc`,
-      { headers },
-    )
-
-    return (response.data ?? []).map(post => ({ ...post, localeCode }))
+    webPosts.value = await $fetch<HeaderWebPost[]>('/api/notifications/posts')
   }
   catch {
-    return []
+    webPosts.value = []
   }
 }
 
