@@ -678,6 +678,18 @@ async function fetchNotifications() {
   }
 }
 
+async function refreshNotificationsForCurrentIdentity() {
+  lastSeenPostAt.value = null
+  seenNotificationIds.value = []
+  await fetchNotifications()
+}
+
+function startNotificationsTimer() {
+  if (!notificationsTimer) {
+    notificationsTimer = setInterval(fetchNotifications, 30000)
+  }
+}
+
 function toggleNotifications() {
   notificationsOpen.value = !notificationsOpen.value
   userMenuOpen.value = false
@@ -737,6 +749,9 @@ onMounted(() => {
       clearInterval(notificationsTimer)
     }
   })
+
+  void refreshNotificationsForCurrentIdentity()
+  startNotificationsTimer()
 })
 
 watch([authReady, isAuthenticated], async () => {
@@ -748,22 +763,16 @@ watch([authReady, isAuthenticated], async () => {
     return
   }
 
-  lastSeenPostAt.value = null
-  seenNotificationIds.value = []
-  await fetchNotifications()
-  if (!notificationsTimer) {
-    notificationsTimer = setInterval(fetchNotifications, 30000)
-  }
+  await refreshNotificationsForCurrentIdentity()
+  startNotificationsTimer()
 }, { immediate: true })
 
 watch(locale, async () => {
-  if (!import.meta.client || !authReady.value) {
+  if (!import.meta.client) {
     return
   }
 
-  lastSeenPostAt.value = null
-  seenNotificationIds.value = []
-  await fetchNotifications()
+  await refreshNotificationsForCurrentIdentity()
 })
 
 watch(() => route.path, () => {
