@@ -140,8 +140,9 @@ export async function getGeoPostsByCategory(
  * Post individual por slug (ES).
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  const encodedSlug = encodeURIComponent(slug)
   const res = await strapiGet<StrapiPost[]>(
-    `entradas?filters[slug][$eq]=${slug}&populate=cover`,
+    `entradas?filters[slug][$eq]=${encodedSlug}&populate=cover`,
   )
   const items = res.data ?? []
   return items.length ? mapPost(items[0]) : null
@@ -151,8 +152,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
  * Geo-post individual por slug (GE).
  */
 export async function getGeoPostBySlug(slug: string): Promise<Post | null> {
+  const encodedSlug = encodeURIComponent(slug)
   const res = await strapiGet<StrapiPost[]>(
-    `georgians?filters[slug][$eq]=${slug}&populate=cover`,
+    `georgians?filters[slug][$eq]=${encodedSlug}&populate=cover`,
   )
   const items = res.data ?? []
   return items.length ? mapPost(items[0]) : null

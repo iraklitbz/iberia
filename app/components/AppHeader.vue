@@ -502,7 +502,7 @@ const webNotifications = computed<HeaderNotification[]>(() => {
     title: post.title || t('notifications.untitledPost'),
     message: cleanNotificationText(post.excerpt),
     date: post.date,
-    href: localePath({ name: 'news-slug', params: { slug: post.slug } }, post.localeCode),
+    href: localePath(`/news/${encodeURIComponent(post.slug)}`, post.localeCode),
     image: post.image,
   }))
 })
