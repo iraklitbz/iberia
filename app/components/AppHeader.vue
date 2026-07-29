@@ -475,6 +475,7 @@ const notificationsLoading = ref(false)
 const forumPosts = ref<HeaderForumPost[]>([])
 const webPosts = ref<HeaderWebPost[]>([])
 const lastSeenPostAt = ref<string | null>(null)
+const seenNotificationIds = ref<string[]>([])
 const newsDropdownRef = ref<HTMLElement | null>(null)
 const userDropdownRef = ref<HTMLElement | null>(null)
 const notificationsDropdownRef = ref<HTMLElement | null>(null)
@@ -524,7 +525,24 @@ const sortedNotifications = computed(() => {
     return new Date(b.date).getTime() - new Date(a.date).getTime()
   })
 })
-const latestNotifications = computed(() => sortedNotifications.value.slice(0, 8))
+const latestNotifications = computed(() => {
+  const pinned = [
+    ...webNotifications.value.slice(0, 5),
+    ...forumNotifications.value.slice(0, 5),
+  ]
+  const unique = new Map<string, HeaderNotification>()
+
+  for (const post of [...sortedNotifications.value.filter(isUnreadNotification), ...pinned, ...sortedNotifications.value]) {
+    unique.set(post.id, post)
+    if (unique.size >= 12) {
+      break
+    }
+  }
+
+  return [...unique.values()].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+})
 const unreadPostCount = computed(() => sortedNotifications.value.filter(isUnreadNotification).length)
 const notificationLabel = computed(() => {
   return unreadPostCount.value
@@ -545,6 +563,11 @@ function currentNotificationKey() {
   return `iberia-seen-post-notifications:${identity}:${locale.value}`
 }
 
+function currentSeenIdsKey() {
+  const identity = user.value?.id ?? user.value?.email ?? user.value?.username ?? 'guest'
+  return `iberia-seen-post-notification-ids:${identity}`
+}
+
 function newestNotificationDate() {
   return sortedNotifications.value[0]?.date ?? new Date().toISOString()
 }
@@ -562,6 +585,26 @@ function loadLastSeenPostAt() {
   saveLastSeenPostAt()
 }
 
+function loadSeenNotificationIds() {
+  try {
+    const stored = localStorage.getItem(currentSeenIdsKey())
+    if (stored) {
+      seenNotificationIds.value = JSON.parse(stored)
+      return
+    }
+  }
+  catch {
+    seenNotificationIds.value = []
+  }
+
+  seenNotificationIds.value = sortedNotifications.value.map(post => post.id)
+  saveSeenNotificationIds()
+}
+
+function saveSeenNotificationIds() {
+  localStorage.setItem(currentSeenIdsKey(), JSON.stringify(seenNotificationIds.value))
+}
+
 function saveLastSeenPostAt() {
   if (!lastSeenPostAt.value) {
     return
@@ -571,15 +614,21 @@ function saveLastSeenPostAt() {
 
 function markNotificationsSeen() {
   lastSeenPostAt.value = newestNotificationDate()
+  seenNotificationIds.value = sortedNotifications.value.map(post => post.id)
   saveLastSeenPostAt()
+  saveSeenNotificationIds()
 }
 
 function isUnreadNotification(item: HeaderNotification) {
-  if (!lastSeenPostAt.value) {
-    return false
+  if (!seenNotificationIds.value.length) {
+    if (!lastSeenPostAt.value) {
+      return false
+    }
+
+    return new Date(item.date).getTime() > new Date(lastSeenPostAt.value).getTime()
   }
 
-  return new Date(item.date).getTime() > new Date(lastSeenPostAt.value).getTime()
+  return !seenNotificationIds.value.includes(item.id)
 }
 
 async function fetchForumNotifications() {
@@ -613,6 +662,9 @@ async function fetchNotifications() {
     ])
     if (!lastSeenPostAt.value) {
       loadLastSeenPostAt()
+    }
+    if (!seenNotificationIds.value.length) {
+      loadSeenNotificationIds()
     }
   }
   catch {
@@ -696,7 +748,9 @@ watch([authReady, isAuthenticated], async () => {
 
   if (!isAuthenticated.value) {
     forumPosts.value = []
+    webPosts.value = []
     lastSeenPostAt.value = null
+    seenNotificationIds.value = []
     notificationsOpen.value = false
     if (notificationsTimer) {
       clearInterval(notificationsTimer)
@@ -717,6 +771,7 @@ watch(locale, async () => {
   }
 
   lastSeenPostAt.value = null
+  seenNotificationIds.value = []
   await fetchNotifications()
 })
 
