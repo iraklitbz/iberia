@@ -445,9 +445,12 @@ type HeaderWebPost = {
   title: string
   excerpt?: string | null
   publishedAt?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
   cover?: {
     url?: string
   } | null
+  localeCode?: 'es' | 'ge'
 }
 
 type HeaderNotification = {
@@ -505,8 +508,8 @@ const webNotifications = computed<HeaderNotification[]>(() => {
     type: 'web',
     title: post.title || t('notifications.untitledPost'),
     message: cleanNotificationText(post.excerpt ?? ''),
-    date: post.publishedAt || new Date().toISOString(),
-    href: localePath({ name: 'news-slug', params: { slug: post.slug } }),
+    date: post.publishedAt || post.createdAt || post.updatedAt || new Date().toISOString(),
+    href: post.localeCode === 'ge' ? `/ge/news/${post.slug}` : `/news/${post.slug}`,
     image: post.cover?.url ?? null,
   }))
 })
@@ -597,11 +600,38 @@ async function fetchForumNotifications() {
 }
 
 async function fetchWebNotifications() {
-  const collection = locale.value === 'es' ? 'entradas' : 'georgians'
-  const response = await $fetch<StrapiResponse<HeaderWebPost[]>>(
-    `/api/strapi/${collection}?populate=cover&pagination[page]=1&pagination[pageSize]=20&sort=publishedAt:desc`,
-  )
-  webPosts.value = response.data ?? []
+  const token = useCookie<string | null>('auth_token')
+  const headers: Record<string, string> = {}
+
+  if (token.value) {
+    headers.Authorization = `Bearer ${token.value}`
+    headers['X-Authenticated'] = '1'
+  }
+
+  const [spanishPosts, georgianPosts] = await Promise.all([
+    fetchWebPostCollection('entradas', 'es', headers),
+    fetchWebPostCollection('georgians', 'ge', headers),
+  ])
+
+  webPosts.value = [...spanishPosts, ...georgianPosts]
+}
+
+async function fetchWebPostCollection(
+  collection: 'entradas' | 'georgians',
+  localeCode: 'es' | 'ge',
+  headers: Record<string, string>,
+) {
+  try {
+    const response = await $fetch<StrapiResponse<HeaderWebPost[]>>(
+      `/api/strapi/${collection}?populate=cover&pagination[page]=1&pagination[pageSize]=20&sort[0]=publishedAt:desc&sort[1]=createdAt:desc`,
+      { headers },
+    )
+
+    return (response.data ?? []).map(post => ({ ...post, localeCode }))
+  }
+  catch {
+    return []
+  }
 }
 
 async function fetchNotifications() {
