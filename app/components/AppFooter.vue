@@ -159,6 +159,7 @@ const newsCategories = [
   { slug: 'news', labelKey: 'news' },
   { slug: 'events', labelKey: 'events' },
   { slug: 'activities', labelKey: 'activities' },
+  { slug: 'icodit-rom', labelKey: 'didYouKnow' },
   { slug: 'programs', labelKey: 'programs' },
   { slug: 'tours', labelKey: 'tours' },
 ]

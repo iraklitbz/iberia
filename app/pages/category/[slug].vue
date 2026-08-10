@@ -76,6 +76,7 @@ const categoryLabels: Record<string, string> = {
   events: 'events',
   activities: 'activities',
   curiosidades: 'curiosidades',
+  'icodit-rom': 'didYouKnow',
   programs: 'programs',
   tours: 'tours',
 }

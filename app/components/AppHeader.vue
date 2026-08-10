@@ -487,6 +487,7 @@ const newsCategories = [
   { slug: 'events', labelKey: 'events' },
   { slug: 'activities', labelKey: 'activities' },
   { slug: 'curiosidades', labelKey: 'curiosidades' },
+  { slug: 'icodit-rom', labelKey: 'didYouKnow' },
   { slug: 'programs', labelKey: 'programs' },
   { slug: 'tours', labelKey: 'tours' },
 ]
