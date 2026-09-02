@@ -57,18 +57,108 @@
           <Transition name="dropdown">
             <div
               v-if="newsOpen"
-              class="absolute left-1/2 top-full z-50 mt-2 w-48 -translate-x-1/2 rounded-xl border border-zinc-100 bg-white p-1.5 shadow-lg shadow-zinc-200/60"
+              class="absolute left-1/2 top-full z-50 mt-4 w-[48rem] -translate-x-[28%] rounded-lg border border-zinc-100 bg-white p-7 shadow-2xl shadow-zinc-200/70"
             >
+              <span class="absolute -top-2 left-[9.75rem] size-4 rotate-45 border-l border-t border-zinc-100 bg-white" />
+
               <NuxtLink
-                v-for="cat in newsCategories"
-                :key="cat.slug"
-                :to="localePath({ name: 'category-slug', params: { slug: cat.slug } })"
-                class="block rounded-lg px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
-                active-class="text-iberia bg-zinc-50"
+                :to="localePath({ name: 'category-slug', params: { slug: 'news' } })"
+                class="group flex items-center gap-7 rounded-lg transition-colors hover:bg-zinc-50"
                 @click="newsOpen = false"
               >
-                {{ $t(cat.labelKey) }}
+                <div class="flex size-20 shrink-0 items-center justify-center rounded-full bg-iberia/10 text-iberia">
+                  <svg class="size-10" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+                    <path d="M26.4 8.8c3.2 19.1 12.3 28.2 31.4 31.4-19.1 3.2-28.2 12.3-31.4 31.4C23.2 52.5 14.1 43.4-5 40.2c19.1-3.2 28.2-12.3 31.4-31.4Z" />
+                    <path d="M47.8 6.5c1.5 8.7 5.6 12.8 14.3 14.3-8.7 1.5-12.8 5.6-14.3 14.3-1.5-8.7-5.6-12.8-14.3-14.3 8.7-1.5 12.8-5.6 14.3-14.3Z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-3xl font-semibold leading-tight text-zinc-950">{{ $t('news') }}</p>
+                  <p class="mt-2 max-w-sm text-sm leading-6 text-zinc-500">{{ newsMenuSubtitle }}</p>
+                </div>
               </NuxtLink>
+
+              <div class="my-7 h-px bg-zinc-100" />
+
+              <div class="grid grid-cols-3 gap-4">
+                <NuxtLink
+                  v-for="cat in newsCategories"
+                  :key="cat.slug"
+                  :to="localePath({ name: 'category-slug', params: { slug: cat.slug } })"
+                  class="group flex min-h-40 flex-col rounded-lg border border-zinc-100 bg-white p-4 shadow-sm shadow-zinc-100/70 transition-all hover:-translate-y-0.5 hover:border-iberia/20 hover:shadow-lg hover:shadow-zinc-200/70"
+                  active-class="border-iberia/30 bg-iberia/5"
+                  @click="newsOpen = false"
+                >
+                  <span
+                    class="mb-5 flex size-14 items-center justify-center rounded-full"
+                    :class="cat.iconBg"
+                  >
+                    <svg class="size-7" :class="cat.iconColor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <template v-if="cat.icon === 'calendar'">
+                        <path d="M8 2v4" />
+                        <path d="M16 2v4" />
+                        <rect x="3" y="5" width="18" height="16" rx="2" />
+                        <path d="M3 10h18" />
+                      </template>
+                      <template v-else-if="cat.icon === 'list'">
+                        <path d="M8 6h11" />
+                        <path d="M8 12h11" />
+                        <path d="M8 18h11" />
+                        <path d="M4 6h.01" />
+                        <path d="M4 12h.01" />
+                        <path d="M4 18h.01" />
+                      </template>
+                      <template v-else-if="cat.icon === 'bulb'">
+                        <path d="M12 2v2.2" />
+                        <path d="m4.9 4.9 1.6 1.6" />
+                        <path d="m19.1 4.9-1.6 1.6" />
+                        <path d="M2 12h2.3" />
+                        <path d="M19.7 12H22" />
+                        <path d="m4.9 19.1 1.6-1.6" />
+                        <path d="m19.1 19.1-1.6-1.6" />
+                        <path d="M8.5 13.9a5.2 5.2 0 1 1 7 0c-.9.8-1.5 1.7-1.5 3.1h-4c0-1.4-.6-2.3-1.5-3.1Z" />
+                        <path d="M9.8 20h4.4" />
+                        <path d="M10.4 22h3.2" />
+                      </template>
+                      <template v-else-if="cat.icon === 'book'">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H21" />
+                        <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H21v20H6.5A2.5 2.5 0 0 1 4 19.5Z" />
+                        <path d="M8 6h9" />
+                        <path d="M8 10h8" />
+                      </template>
+                      <template v-else-if="cat.icon === 'map'">
+                        <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z" />
+                        <path d="M9 3v15" />
+                        <path d="M15 6v15" />
+                      </template>
+                      <template v-else-if="cat.icon === 'help'">
+                        <path d="M9.5 9a2.7 2.7 0 1 1 4.8 1.7c-.9.8-1.8 1.4-1.8 2.8" />
+                        <path d="M12 17h.01" />
+                        <circle cx="12" cy="12" r="9" />
+                      </template>
+                      <template v-else-if="cat.icon === 'hash'">
+                        <path
+                          fill="currentColor"
+                          stroke="none"
+                          transform="translate(1.5 0) scale(0.046875)"
+                          d="M440.7 182.1l7.1-40C449.1 134.8 443.5 128 436 128h-74.9l14.6-81.9C377.1 38.8 371.4 32 363.9 32h-40.6c-5.8 0-10.8 4.1-11.8 9.9L296.1 128h-98.6l14.6-81.9C213.5 38.8 207.8 32 200.4 32h-40.6c-5.8 0-10.8 4.1-11.8 9.9L132.5 128H53.4c-5.8 0-10.8 4.1-11.8 9.9l-7.1 40C33.2 185.2 38.8 192 46.3 192h74.9L98.3 320H19.2c-5.8 0-10.8 4.1-11.8 9.9l-7.1 40C-1.1 377.2 4.6 384 12.1 384h74.9l-14.6 81.9C71 473.2 76.7 480 84.1 480h40.6c5.8 0 10.8-4.1 11.8-9.9L151.9 384h98.6l-14.6 81.9c-1.3 7.3 4.3 14.1 11.8 14.1h40.6c5.8 0 10.8-4.1 11.8-9.9L315.5 384h79.1c5.8 0 10.8-4.1 11.8-9.9l7.1-40c1.3-7.3-4.3-14.1-11.8-14.1h-74.9l22.9-128h79.1c5.8 0 10.8-4.1 11.9-9.9zM261.9 320h-98.6l22.9-128h98.6l-22.9 128z"
+                        />
+                      </template>
+                      <template v-else>
+                        <path d="M12 3v18" />
+                        <path d="M5 8h14" />
+                        <path d="M5 16h14" />
+                        <path d="m8 3 2 18" />
+                        <path d="m16 3-2 18" />
+                      </template>
+                    </svg>
+                  </span>
+
+                  <span class="text-sm font-semibold leading-5 text-zinc-950">{{ $t(cat.labelKey) }}</span>
+                  <span class="mt-2 line-clamp-2 text-xs leading-5 text-zinc-500">{{ cat.description }}</span>
+                  <span class="mt-auto self-end pt-4 text-lg leading-none text-iberia transition-transform group-hover:translate-x-1">-></span>
+                </NuxtLink>
+              </div>
             </div>
           </Transition>
         </div>
@@ -482,15 +572,62 @@ const userDropdownRef = ref<HTMLElement | null>(null)
 const notificationsDropdownRef = ref<HTMLElement | null>(null)
 let notificationsTimer: ReturnType<typeof setInterval> | null = null
 
-const newsCategories = [
-  { slug: 'news', labelKey: 'news' },
-  { slug: 'events', labelKey: 'events' },
-  { slug: 'activities', labelKey: 'activities' },
-  { slug: 'curiosidades', labelKey: 'curiosidades' },
-  { slug: 'programs', labelKey: 'programs' },
-  { slug: 'tours', labelKey: 'tours' },
-  { slug: 'icodit-rom', labelKey: 'didYouKnow' },
-]
+const newsMenuSubtitle = computed(() => {
+  return locale.value === 'es'
+    ? 'Actualidad, eventos y novedades de Iberia.'
+    : 'ჩვენ შესახებ სიახლეები, ღონისძიებები და ამბები.'
+})
+
+const newsCategories = computed(() => [
+  {
+    slug: 'events',
+    labelKey: 'events',
+    description: locale.value === 'es' ? 'Encuentros, fechas y actividades.' : 'შეხვედრები, თარიღები და აქტივობები.',
+    icon: 'calendar',
+    iconBg: 'bg-amber-50',
+    iconColor: 'text-amber-500',
+  },
+  {
+    slug: 'activities',
+    labelKey: 'activities',
+    description: locale.value === 'es' ? 'Proyectos e iniciativas del centro.' : 'ცენტრის პროექტები და ინიციატივები.',
+    icon: 'hash',
+    iconBg: 'bg-fuchsia-50',
+    iconColor: 'text-fuchsia-600',
+  },
+  {
+    slug: 'curiosidades',
+    labelKey: 'curiosidades',
+    description: locale.value === 'es' ? 'Historias y datos interesantes.' : 'საინტერესო ისტორიები და ფაქტები.',
+    icon: 'bulb',
+    iconBg: 'bg-amber-50',
+    iconColor: 'text-amber-500',
+  },
+  {
+    slug: 'programs',
+    labelKey: 'programs',
+    description: locale.value === 'es' ? 'Programas educativos y culturales.' : 'სასწავლო და კულტურული პროგრამები.',
+    icon: 'book',
+    iconBg: 'bg-orange-50',
+    iconColor: 'text-orange-500',
+  },
+  {
+    slug: 'tours',
+    labelKey: 'tours',
+    description: locale.value === 'es' ? 'Guías y viajes por España.' : 'გიდები და მოგზაურობა ესპანეთში.',
+    icon: 'map',
+    iconBg: 'bg-emerald-50',
+    iconColor: 'text-emerald-600',
+  },
+  {
+    slug: 'icodit-rom',
+    labelKey: 'didYouKnow',
+    description: locale.value === 'es' ? 'Notas breves para descubrir más.' : 'მოკლე ცნობები მეტის გასაგებად.',
+    icon: 'help',
+    iconBg: 'bg-blue-50',
+    iconColor: 'text-blue-600',
+  },
+])
 
 const sortedForumPosts = computed(() => {
   return [...forumPosts.value].sort((a, b) => {
