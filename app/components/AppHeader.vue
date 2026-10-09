@@ -203,16 +203,16 @@
       <div class="flex items-center gap-3">
         <NuxtLink
           :to="localePath('/i')"
-          class="hidden size-12 items-center justify-center overflow-visible transition-opacity hover:opacity-80 lg:flex"
+          class="hidden size-10 items-center justify-center overflow-visible transition-opacity hover:opacity-80 lg:flex"
           aria-label="I"
         >
-          <span class="relative block size-12 shrink-0 max-w-none">
+          <span class="relative block size-10 shrink-0 max-w-none">
             <img
               :src="foxLogoUrl"
               alt="I"
-              width="48"
-              height="48"
-              class="size-12 max-w-none object-contain mix-blend-multiply"
+              width="40"
+              height="40"
+              class="size-10 max-w-none object-contain mix-blend-multiply"
             />
             <span
               v-if="isIPage"
@@ -481,12 +481,12 @@
             active-class="text-[#E35335]"
             @click="menuOpen = false"
           >
-            <span class="relative block size-6">
+            <span class="relative block size-5">
               <img
                 :src="foxLogoUrl"
                 alt=""
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 class="size-full object-contain mix-blend-multiply"
               />
               <span
@@ -615,7 +615,7 @@ const newsDropdownRef = ref<HTMLElement | null>(null)
 const userDropdownRef = ref<HTMLElement | null>(null)
 const notificationsDropdownRef = ref<HTMLElement | null>(null)
 let notificationsTimer: ReturnType<typeof setInterval> | null = null
-const foxLogoUrl = 'https://res.cloudinary.com/dj6draudd/image/upload/v1791443591/Minimalist_Black_Line_Art_Fox_Logo_18f8234eab.png'
+const foxLogoUrl = 'https://res.cloudinary.com/dj6draudd/image/upload/v1791556893/Minimalist_Black_Fox_Emblem_2_ed049131ba.png'
 
 const newsMenuSubtitle = computed(() => {
   return locale.value === 'es'
