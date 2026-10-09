@@ -201,6 +201,27 @@
 
       <!-- Right side: auth + language + hamburger -->
       <div class="flex items-center gap-3">
+        <NuxtLink
+          :to="localePath('/i')"
+          class="hidden size-12 items-center justify-center overflow-visible transition-opacity hover:opacity-80 lg:flex"
+          aria-label="I"
+        >
+          <span class="relative block size-12 shrink-0 max-w-none">
+            <img
+              :src="foxLogoUrl"
+              alt="I"
+              width="48"
+              height="48"
+              class="size-12 max-w-none object-contain mix-blend-multiply"
+            />
+            <span
+              v-if="isIPage"
+              class="absolute inset-0 bg-[#E35335] mix-blend-screen"
+              aria-hidden="true"
+            />
+          </span>
+        </NuxtLink>
+
         <ClientOnly>
           <div ref="notificationsDropdownRef" class="relative hidden lg:block">
             <button
@@ -455,6 +476,29 @@
           </a>
 
           <NuxtLink
+            :to="localePath('/i')"
+            class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+            active-class="text-[#E35335]"
+            @click="menuOpen = false"
+          >
+            <span class="relative block size-6">
+              <img
+                :src="foxLogoUrl"
+                alt=""
+                width="24"
+                height="24"
+                class="size-full object-contain mix-blend-multiply"
+              />
+              <span
+                v-if="isIPage"
+                class="absolute inset-0 bg-[#E35335] mix-blend-screen"
+                aria-hidden="true"
+              />
+            </span>
+            I
+          </NuxtLink>
+
+          <NuxtLink
             :to="mobileNotificationHref"
             class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
             @click="handleMobileNotificationsClick"
@@ -571,6 +615,7 @@ const newsDropdownRef = ref<HTMLElement | null>(null)
 const userDropdownRef = ref<HTMLElement | null>(null)
 const notificationsDropdownRef = ref<HTMLElement | null>(null)
 let notificationsTimer: ReturnType<typeof setInterval> | null = null
+const foxLogoUrl = 'https://res.cloudinary.com/dj6draudd/image/upload/v1791443591/Minimalist_Black_Line_Art_Fox_Logo_18f8234eab.png'
 
 const newsMenuSubtitle = computed(() => {
   return locale.value === 'es'
@@ -689,6 +734,7 @@ const notificationLabel = computed(() => {
     ? t('notifications.ariaWithCount', { count: unreadPostCount.value })
     : t('notifications.aria')
 })
+const isIPage = computed(() => route.path.split('/').filter(Boolean).at(-1) === 'i')
 
 function handleLogout() {
   logout()
